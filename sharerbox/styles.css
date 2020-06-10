@@ -2,7 +2,7 @@
 	box-sizing: border-box;
 }
 body{
-	background: linear-gradient(45deg, white, lightblue);
+	background: linear-gradient(white, lightgray);
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	font-family: arial;
