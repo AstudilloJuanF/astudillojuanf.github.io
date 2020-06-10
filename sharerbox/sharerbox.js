@@ -1,17 +1,17 @@
 /*
-							  Sharerbox
+					  Sharerbox
 
 			    Version: 0.0.6; Author: Juan Astudillo
 
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
-	*																*
+	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	*										*
 	*		+-----------------------------------------------+		*
-	*		|	 	 Copyright © 2020 Juan Astudillo		|		*
-	*		|												|		*
-	*		|		<astudillojuanfrancisco@gmail.com>		|		*
+	*		|	 Copyright © 2020 Juan Astudillo	|		*
+	*		|						|		*
+	*		|	<astudillojuanfrancisco@gmail.com>	|		*
 	*		+-----------------------------------------------+		*
-	*																*
-	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+	*										*
+	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 
 
 */
