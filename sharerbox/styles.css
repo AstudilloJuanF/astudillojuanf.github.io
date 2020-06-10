@@ -176,4 +176,10 @@ address a{
 	font-style: italic;
 }
 
+a{
+	display: block;
+	width: fit-content;
+	margin: auto;
+}
+
 
