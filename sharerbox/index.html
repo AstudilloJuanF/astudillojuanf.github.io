@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es-US">
+<html lang="en-US">
 	<head>
-		<title>Sharerbox Preview</title>
+		<title>Sharerbox</title>
 		<meta http-equiv="content-type" content="text/html" charset="utf-8">
 		<meta http-equiv="content-language" content="en-US">
-		<meta name="description" content="SharerBox live preview">
+		<meta name="description" content="Sharerbox project preview">
 		<meta name="distribution" content="global">
 		<meta name="robots" content="all">
 		<meta name="author" content="Juan Francisco Astudillo Palacios">
@@ -12,44 +12,134 @@
 		<meta property="og:description" content="Sharerbox's project live preview">
 		<meta property="og:image" content="https://pbs.twimg.com/media/EZzW_qxWsAAJnZJ.jpg">
 		<meta property="og:url" content="https://astudillojuanf.github.io/sharerbox/">
+		<link rel="shortcut icon" type="image/svg+xml" href="./favicon.svg">
+		<link rel="stylesheet" type="text/css" href="./styles.css">
 		<script type="application/javascript" src="./sharerbox.js" async></script>
-		<style type="text/css">
-			body{
-				font-family: arial;
-				box-sizing: border-box;
-				text-align: center;
-			}
-			
-			a{
-				display: block;
-				margin: auto;
-				text-decoration: none;
-			}
-			
-			#github-link, author{
-				width: fit-content;
-				text-align: center;
-			}
-		</style>
-
 	</head>
 	<body>
-		<script>
+		<script type="application/javascript">
 			window.onload = function(){
 				sharerboxIcons('facebook twitter whatsapp linkedin reddit pinterest');
-				sharerSetup('popup', 'right', 'black', 'visible', 'Check out this website:');
+				sharerSetup('popup', 'right', 'black', 'visible', 'Check out this site!');
 			};
 		</script>
 		<header>
-			<h1>SharerBox</h1>
-			<h2>Live Preview</h2>
+			<h1>Sharerbox</h1>
 		</header>
 		<main>
-			<a id="github-link" href="https://github.com/AstudilloJuanF/sharerbox">Github Repository</a>
+			<article id="main-section">
+					<img id="main-image" height="250" src="sharebox2.jpg">
+					<p style="text-align: center;">Free, minimalist and lightweight JavaScript-based social-media sharer for websites.</p>
+					<a href="https://www.github.com/AstudilloJuanF/sharerbox" target="_blank">
+						<figure id="repository-banner">
+							<img id="github-img" src="github-logo.svg">
+							<p style="margin: 4px; text-align: center;"><b>GitHub Repository</b><br><i>Version 0.0.6</i></p>
+						</figure>
+					</a>
+				<section class="sections">
+					<h2>Description</h2>
+					<p> &nbsp; Sharerbox is a minimalistic and lightweight social-media sharebar developed to provide fast and easy-to-use social-media integration for websites without negatively affecting websites loading speed by calling for heavy or bulky external APIs</p>
+					<p style="text-align: center;"> &nbsp; Sharerbox use is intended for both experienced and unexperienced users</p>
+					<h3 style="text-align: center;">Support:</h3>
+					<div id="supported-icons-wrapper">
+						<figure class="supported-icon-fig">
+							<img class="supported-icon" src="facebook-logo.svg">
+						</figure>
+						<figure class="supported-icon-fig">
+							<img class="supported-icon" src="twitter-icon-soft-square.svg">
+						</figure>
+						<figure class="supported-icon-fig">
+							<img class="supported-icon" src="whatsapp-logo.svg">
+						</figure>
+						<figure class="supported-icon-fig">
+							<img class="supported-icon" src="reddit-icon-soft-square.svg">
+						</figure>
+						<figure class="supported-icon-fig">
+							<img class="supported-icon" src="linkedin-logo.svg">
+						</figure>
+						<figure class="supported-icon-fig">
+							<img class="supported-icon" src="pinterest-icon-soft-square.svg">
+						</figure>
+					</div>
+				</section>
+				<section class="sections">
+					<h2>Installation</h2>
+					<ol>
+						<li>Download and store Sharerbox's <b>JavaScript File</b> on your server.</li><br>
+						<li>Asynchronously load the script inside your webpage's <b>HTML</b> <code><span class="identifyer">&lt;head&gt;</span></code> tag using the <code><span class="html-attribute">async</span></code> attribute.<br>
+						<br>
+						<i>Example:</i><br>
+						<code class="code-snippet">
+							<span class="html-tag">&lt;script</span> <span class="html-attribute">type</span>=<span class="code-quotes">"application/javascript"</span> <span class="html-attribute">src</span>=<span class="code-quotes">"path/to/sharerbox.js"</span> <span class="html-attribute">async</span><span class="html-tag">&gt;</span><span class="html-tag">&lt;/script&gt;</span>
+						</code>
+						</li><br>
+						<li>Copy this code snippet anywhere inside or after your <b>HTML</b> page's <code><span class="identifyer">&lt;body&gt;</span></code> tag.<br>
+						<br>
+						<i>Example:</i>
+					<pre class="code-snippet">
+<span class="html-tag">&lt;script&gt;</span>
+	<span class="method">window</span>.<span class="method">onload</span> = <span class="function">function</span>(){
+		<span class="identifyer">sharerboxIcons</span>( <span class="code-comment">/* list your preferred social-networks here, else options are set to default */</span> );
+		<span class="identifyer">sharerSetup</span>( <span class="code-comment">/* Behavior options go here, else options are set to default */</span> );
+	};
+<span class="html-tag">&lt;script&gt;</span>
+						</pre></li><br>
+						<li>Save Changes</li><br>
+						<ul>
+							<li>All done, sharerbox is now enabled for your site.</li><br>
+						</ul>
+					</ol>
+				</section>
+				<section class="sections">
+					<h2>Options:</h2>
+					<p> &nbsp; Sharerbox 0.0.6 supports four customization options:</p>
+					<ul>
+						<li><strong>List:</strong> a list of social media sites separated by spaces or commas</li><br>
+					</ul>
+					<h3>Behavior Options:</h3>
+					<ul>
+						<li><strong>Behavior:</strong> <code>'pop-up'</code> <i>(default)</i> or <code>'new tab'</code> sets how the sharer menus will be deployed</li><br>
+						<li><strong>Position:</strong> <code>'left'</code> or <code>'right'</code> <i>(default)</i> sets the position of the sharebar in the screen</li><br>
+						<li><strong>Color:</strong> <code>'color name'</code> <i>(Black by default)</i>. selects a color for the toggle button</li><br>
+						<li><strong>Visibility:</strong> <code>'visible'</code>, <code>'yes'</code> or <code><span class="identifyer">true</span></code> enables the icon bar default visibility <i>(hidden by default)</i></li><br>
+						<li><strong>Description:</strong> <code>'quoted text string'</code> creates a predefined message or website description for social-networks</li><br>
+					</ul>
+				</section>
+				<section class="sections">
+					<h2>Customization:</h2>
+					<h3>Setting Icons:</h3>
+					<p> &nbsp; You can specify which social-network icons will be displayed by Sharerbox by going to the <code><span class="identifyer">sharerboxIcons</span>()</code> function inside the <code><span class="identifyer">&lt;body&gt;</span></code> tag code snippet and typing a list of supported social-network items separated by spaces or commas, the full list must be wrapped around quotation marks.</p>
+					<p> &nbsp; <i>Example:</i></p>
+						<code class="code-snippet">
+							<span class="identifyer">sharerboxIcons</span>(<span class="code-quotes">'site1, site2, site3, site...'</span>);
+						</code>
+					<p><i> &nbsp; (if this function is leaved blank sharerbox will display the default buttons)</i></p>
+					<h3>Setting Behavior:</h3>
+					<p> &nbsp; To customize Sharerbox overall behavior enter these options into the <code><span class="identifyer">sharerSetup</span>()</code> function located inside the code snippet pasted on your page's <code><span class="identifyer">&lt;body&gt;</span></code> tag, each argument must be written as a quoted word <i>'word'</i>, each word separated from each other by commas.</p>
+					<p> &nbsp; <i>Example:</i></p>
+						<code class="code-snippet">
+							<span class="identifyer">sharerSetup</span>(<span class="code-quotes">'tab'</span>, <span class="code-quotes">'right'</span>, <span class="code-quotes">'black'</span>, <span class="code-quotes">'visible'</span>);
+						</code>
+					<p><i> &nbsp; (if these options are leaved blank sharerbox will display it's default behavior)</i></p>
+					<h4><i>Full Example:</i></h4>
+					<pre class="code-snippet">
+<span class="html-tag">&lt;script&gt;</span>
+	<span class="method">window</span>.<span class="method">onload</span> = <span class="function">function</span>(){
+
+		<span class="code-comment">// Buttons list: 'site1, site2, site3'</span>
+		<span class="identifyer">sharerboxIcons</span>(<span class="code-quotes">'facebook twitter whatsapp reddit'</span>);
+
+		<span class="code-comment">// Setup arguments: Behavior, Position, Color, Visibility, Description</span>
+		<span class="identifyer">sharerSetup</span>(<span class="code-quotes">'pop-up'</span>, <span class="code-quotes">'left'</span>, <span class="code-quotes">'black'</span>, <span class="boolean">true</span>, <span class="code-quotes">'custom message or description goes here (optional)'</span>);
+	};
+<span class="html-tag">&lt;/script&gt;</span>
+					</pre>
+				</section>
+			</article>
 		</main>
 		<footer>
-			<h3>Author:</h3>
-			<a href="mailto:astudillojuanfrancisco@gmail.com"><p id="author">Juan Astudillo</p></a>
+			<h3>&bull; &nbsp; &bull; &nbsp; &bull; Author &bull; &nbsp; &bull; &nbsp; &bull;</h3>
+			<address><a href="mailto:astudillojuanfrancisco@gmail.com">Juan Astudillo</a></address>
 		</footer>
 	</body>
 </html>
