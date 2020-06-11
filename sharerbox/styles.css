@@ -61,6 +61,12 @@ a{
 	text-decoration: none;
 }
 
+li{
+	background: lightgray;
+	padding: 8px;
+	border-radius: 8px;
+}
+
 #main-image{
 	display: block;
 	margin: auto;
@@ -96,8 +102,15 @@ a{
 	justify-content: center;
 }
 
+.supported-icon-fig-wrapper{
+	display: block;
+	padding: 0;
+	margin: 2rem;
+}
+
 .supported-icon-fig{
 	display: block;
+	margin: auto;
 	width: 50px;
 	height: 50px;
 	padding: 0;
@@ -105,6 +118,21 @@ a{
 
 .supported-icon-fig:hover{
 	transform: scale(1.1);
+}
+
+.supported-icon-title{
+	display: block;
+	background: black;
+	opacity: 0;
+	color: white;
+	font-weight: bold;
+	padding: 4px;
+	border-radius: 4px;
+	box-shadow: 0 0 4px rgb(0,0,0, 0.5)
+}
+
+.supported-icon-fig:hover + .supported-icon-title{
+	opacity: 1;
 }
 
 .supported-icon{
@@ -126,6 +154,7 @@ code{
 	display:block;
 	background: black;
 	color: white;
+	tab-size: 4;
 	width: fit-content;
 	height: fit-content;
 	padding: 8px;
@@ -174,12 +203,6 @@ address a{
 .function, .method{
 	color: #66D9EF;
 	font-style: italic;
-}
-
-a{
-	display: block;
-	width: fit-content;
-	margin: auto;
 }
 
 
