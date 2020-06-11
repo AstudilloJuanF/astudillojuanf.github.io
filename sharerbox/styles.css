@@ -2,7 +2,7 @@
 	box-sizing: border-box;
 }
 body{
-	background: linear-gradient(white, lightgray);
+	background: linear-gradient(white, #f2f2f2);
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	font-family: arial;
@@ -22,6 +22,7 @@ header{
 	margin: 0;
 	padding: 8px;
 	margin-bottom: 5rem;
+	box-shadow: 0 0 3px rgb(0,0,0, 0.5);
 }
 
 header h1, header h2{
