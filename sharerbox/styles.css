@@ -10,11 +10,10 @@ body{
 	text-align: center;
 	margin: 0;
 	padding: 0;
+	font-size: 1rem;
 }
 
 header{
-	position: sticky;
-	top: 0;
 	background: #24292E;
 	color: white;
 	width: 100%;
@@ -31,7 +30,8 @@ header h1, header h2{
 
 h2{
 	text-align: center;
-	margin-bottom: 4rem;
+	margin-top: 2rem;
+	margin-bottom: 2rem;
 }
 
 main{
@@ -57,13 +57,20 @@ figure{
 	box-shadow: 0 0 2px rgb(0,0,0, 0.5)
 }
 
+.setting-option-wrap{
+	padding: 1rem;
+	margin: 2rem;
+	border: solid 1px darkgray;
+	border-radius: 8px;
+}
+
 a{
 	display: block;
 	text-decoration: none;
 }
 
 li{
-	background: lightgray;
+	background: #e6e6e6;
 	padding: 8px;
 	border-radius: 8px;
 }
@@ -100,7 +107,7 @@ li{
 	display: flex;
 	flex-direction: row;
 	flex-wrap: wrap;
-	justify-content: center;
+	justify-content: space-evenly;
 }
 
 .supported-icon-fig-wrapper{
@@ -151,12 +158,22 @@ code{
 	border-radius: 3px;
 }
 
+span{
+	width: auto;
+}
+
+pre{
+	display: block;
+	width: auto;
+	resize: both;
+	overflow: auto;
+}
+
 .code-snippet{
 	display:block;
 	background: black;
 	color: white;
 	tab-size: 4;
-	width: fit-content;
 	height: fit-content;
 	padding: 8px;
 	margin-top: 1rem;
@@ -164,20 +181,13 @@ code{
 	border-radius: 3px;
 }
 
-span{
-	width: auto;
-}
 
-pre{
-	display: block;
-}
 
 footer{
 	background: #24292E;
 	color: white;
 	width: 100%;
 	padding: 1rem;
-	margin-top: 5rem;
 }
 
 address a{
