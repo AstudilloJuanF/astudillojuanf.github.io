@@ -100,7 +100,13 @@ li{
 	border-radius: 10px;
 }
 
-#repository-banner:active{
+#repository-link{
+	display: block;
+	margin: auto;
+	width: fit-content;
+}
+
+#github-repository-banner:active{
 	background: green;
 	color: #f2f2f2;
 }
@@ -213,18 +219,17 @@ address a{
 	text-decoration: underline;
 }
 
-.html-tag, .boolean{
+.html-tag, .operator{
 	color: #F92672;
+}
+
+.boolean{
+	color: mediumpurple;
 }
 
 .html-attribute, .identifyer, .old-listener{
 	color: #A6E22E;
 }
-
-.old-listener, .example-subtitle{
-	font-style: italic;
-}
-
 .code-quotes{
 	color: #E6DB74;
 }
@@ -233,11 +238,11 @@ address a{
 	color: #75715E;
 }
 
-.function, .method{
+.function, .method, .call-function{
 	color: #66D9EF;
 }
 
-.function, .method, .old-listener{
+.function, .method, .example-subtitle{
 	font-style: italic;
 }
 
