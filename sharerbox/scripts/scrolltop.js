@@ -30,10 +30,8 @@ var scrollTopHTML = `<style type="text/css">
 <div id="go-top-link">
 	<figure id="scroll-top-icon-container">
 		<object>
-			<svg id="icon-top" version="1.1" viewBox="0 0 496.95 305.75" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
-				<g transform="translate(4.974 -90.626)" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="20">
-					<path d="m397.7 376.1c20.4 20.4 53.6 20.4 74 0s20.4-53.6 0-74l-191.2-191.2c-20.4-20.4-53.6-20.4-74 0l-191.2 191.2c-20.4 20.4-20.4 53.6 0 74s53.6 20.4 74 0l154.2-154.2z" stroke="#fff" stroke-linecap="round" stroke-linejoin="round" stroke-width="20"/>
-				</g>
+			<svg id="icon-top" enable-background="new 0 0 98.148 98.149" version="1.1" viewBox="0 0 98.13 64.226" xml:space="preserve">
+				<path d="m48.971 2.1263c-15.49 15.774-31.928 31.366-46.84 47.252 4.3647 4.0112 8.5039 9.1643 12.988 12.572 11.293-11.293 22.586-22.586 33.879-33.879 11.386 11.317 22.724 22.857 34.139 34.037 4.2694-4.3276 8.7564-8.6446 12.895-12.979-15.692-15.654-31.341-31.42-47.061-47.004z" stroke="#ffff" stroke-width="3"/>
 			</svg>
 		</object>
 	</figure>
