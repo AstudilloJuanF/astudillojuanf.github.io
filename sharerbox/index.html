@@ -12,15 +12,15 @@
 		<meta property="og:description" content="Sharerbox's project live preview">
 		<meta property="og:image" content="https://pbs.twimg.com/media/EZzW_qxWsAAJnZJ.jpg">
 		<meta property="og:url" content="https://astudillojuanf.github.io/sharerbox/">
-		<link rel="shortcut icon" type="image/svg+xml" href="./favicon.svg">
-		<link rel="stylesheet" type="text/css" href="./styles.css">
-		<script type="application/javascript" src="./sharerbox.js" async></script>
-		<script type="application/javascript" src="./scrolltop.js" async></script>
+		<link rel="shortcut icon" type="image/svg+xml" href="./icons/favicon.svg">
+		<link rel="stylesheet" type="text/css" href="./css/styles.css">
+		<script type="application/javascript" src="./scripts/sharerbox.js" async></script>
+		<script type="application/javascript" src="./scripts/scrolltop.js" async></script>
 	</head>
 	<body>
 		<script type="application/javascript">
 			window.onload = function(){
-				sharerboxIcons('facebook twitter whatsapp linkedin reddit pinterest');
+				sharerboxIcons('facebook twitter whatsapp reddit pinterest linkedin');
 				sharerSetup('popup', 'right', 'black', 'visible', 'Check out this site!');
 			};
 		</script>
@@ -35,12 +35,12 @@
 					<p style="text-align: center;">Free, minimalist and lightweight JavaScript-based social-media sharer for websites.</p>
 					<a href="https://www.github.com/AstudilloJuanF/sharerbox" target="_blank">
 						<figure id="repository-banner">
-							<img id="github-img" src="github-logo.svg">
+							<img id="github-img" src="./icons/github-logo.svg" alt="GitHub logo">
 							<p style="margin: 4px; text-align: center;"><b>GitHub Repository</b><br><i>Version 0.0.7</i></p>
 						</figure>
 					</a>
 					<figure>
-						<img id="main-image" height="250" src="https://camo.githubusercontent.com/820f421998d7e46f535d0f4d91656280c61f8e1f/68747470733a2f2f7062732e7477696d672e636f6d2f6d656469612f455a70534b4d33586741456a5774442e6a7067">
+						<img id="main-cover-image" src="https://camo.githubusercontent.com/820f421998d7e46f535d0f4d91656280c61f8e1f/68747470733a2f2f7062732e7477696d672e636f6d2f6d656469612f455a70534b4d33586741456a5774442e6a7067" alt="SharerBox - Screenshot">
 					</figure>
 					<h2>Description:</h2>
 					<p> &nbsp; Sharerbox is a free, minimalistic and lightweight <span style="text-decoration: underline">JavaScript-Based</span> social-media sharebar developed to provide fast and easy-to-use social-media integration for small websites by eliminating the need for loading heavy or bulky third-party social APIs, which usually have a negative impact on loading speeds and unauthorizedly recolect private user information.</p>
@@ -50,37 +50,37 @@
 					<div id="supported-icons-wrapper">
 						<div class="supported-icon-fig-wrapper">
 							<figure class="supported-icon-fig">
-								<img class="supported-icon" src="facebook-logo.svg">
+								<img class="supported-icon" src="./icons/facebook-logo.svg" alt="Facebook logo">
 							</figure>
 							<p class="supported-icon-title">Facebook</p>
 						</div>
 						<div class="supported-icon-fig-wrapper">
 							<figure class="supported-icon-fig">
-								<img class="supported-icon" src="twitter-icon-soft-square.svg">
+								<img class="supported-icon" src="./icons/twitter-icon-soft-square.svg" alt="Twitter logo">
 							</figure>
 							<p class="supported-icon-title">Twitter</p>
 						</div>
 						<div class="supported-icon-fig-wrapper">
 							<figure class="supported-icon-fig">
-								<img class="supported-icon" src="whatsapp-logo.svg">
+								<img class="supported-icon" src="./icons/whatsapp-logo.svg" alt="WhatsApp logo">
 							</figure>
 							<p class="supported-icon-title">WhatApp</p>
 						</div>
 						<div class="supported-icon-fig-wrapper">
 							<figure class="supported-icon-fig">
-								<img class="supported-icon" src="reddit-icon-soft-square.svg">
+								<img class="supported-icon" src="./icons/reddit-icon-soft-square.svg" alt="Reddit logo">
 							</figure>
 							<p class="supported-icon-title">Reddit</p>
 						</div>
 						<div class="supported-icon-fig-wrapper">
 							<figure class="supported-icon-fig">
-								<img class="supported-icon" src="linkedin-logo.svg">
+								<img class="supported-icon" src="./icons/linkedin-logo.svg" alt="LinkedIn logo">
 							</figure>
 							<p class="supported-icon-title">LinkedIn</p>
 						</div>
 						<div class="supported-icon-fig-wrapper">
 							<figure class="supported-icon-fig">
-								<img class="supported-icon" src="pinterest-icon-soft-square.svg">
+								<img class="supported-icon" src="./icons/pinterest-icon-soft-square.svg" alt="Pinterest logo">
 							</figure>
 							<p class="supported-icon-title">Pinterest</p>
 						</div>
@@ -97,12 +97,12 @@
 							<span class="html-tag">&lt;script</span> <span class="html-attribute">type</span>=<span class="code-quotes">"application/javascript"</span> <span class="html-attribute">src</span>=<span class="code-quotes">"path/to/sharerbox.js"</span> <span class="html-attribute">async</span><span class="html-tag">&gt;</span><span class="html-tag">&lt;/script&gt;</span>
 						</code>
 						</li><br>
-						<li>Copy this code snippet anywhere inside or after your <b>HTML</b> page's <code><span class="identifyer">&lt;body&gt;</span></code> tag.<br>
+						<li>Copy and paste this code snippet as it is (or configure it as listed bellow) anywhere inside or after your <b>HTML</b> page's <code><span class="identifyer">&lt;body&gt;</span></code> tag.<br>
 						<br>
 						<i>Example:</i>
 					<pre class="code-snippet">
 <span class="html-tag">&lt;script&gt;</span>
-	<span class="method">window</span>.<span class="method">onload</span> = <span class="function">function</span>(){
+	<span class="method">window</span>.<span class="old-listener">onload</span> = <span class="function">function</span>(){
 		<span class="identifyer">sharerboxIcons</span>( <span class="code-comment">/* list your preferred social-networks here, else options are set to default */</span> );
 		<span class="identifyer">sharerSetup</span>( <span class="code-comment">/* Behavior options go here, else options are set to default */</span> );
 	};
@@ -149,7 +149,7 @@
 					<h4><i>Full Example:</i></h4>
 					<pre class="code-snippet">
 <span class="html-tag">&lt;script&gt;</span>
-	<span class="method">window</span>.<span class="method">onload</span> = <span class="function">function</span>(){
+	<span class="method">window</span>.<span class="old-listener">onload</span> = <span class="function">function</span>(){
 
 		<span class="code-comment">// Buttons list: 'site1, site2, site3'</span>
 		<span class="identifyer">sharerboxIcons</span>(<span class="code-quotes">'facebook twitter whatsapp reddit'</span>);
@@ -164,7 +164,7 @@
 		</main>
 		<footer>
 			<h3>&bull; &nbsp; &bull; &nbsp; &bull; Author &bull; &nbsp; &bull; &nbsp; &bull;</h3>
-			<address><a href="mailto:astudillojuanfrancisco@gmail.com"> Copyright © 2020 Juan Astudillo</a></address>
+			<address><a href="mailto:astudillojuanfrancisco@gmail.com" title="Copyright © 2020 Juan Astudillo"> Copyright © 2020 Juan Astudillo</a></address>
 		</footer>
 	</body>
 </html>
