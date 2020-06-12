@@ -2,10 +2,10 @@
 	box-sizing: border-box;
 }
 body{
-	background: linear-gradient(white, #f2f2f2);
+	background: #f7f7f7;
 	background-repeat: no-repeat;
 	background-attachment: fixed;
-	font-family: arial;
+	font-family: calibri, arial, verdana, ubuntu;
 	box-sizing: border-box;
 	text-align: center;
 	margin: 0;
@@ -51,17 +51,15 @@ figure{
 .sections{
 	display: block;
 	background: white;
-	margin: 2rem auto;
+	margin: 5rem auto;
 	padding: 2rem;
-	border-radius: 3px;
-	box-shadow: 0 0 2px rgb(0,0,0, 0.5)
+	box-shadow: 0 0 2px rgb(0,0,0, 0.5);
 }
 
 .setting-option-wrap{
 	padding: 1rem;
 	margin: 2rem;
-	border: solid 1px darkgray;
-	border-radius: 8px;
+	border: dashed 2.5px palevioletred;
 }
 
 a{
@@ -75,11 +73,13 @@ li{
 	border-radius: 8px;
 }
 
-#main-image{
+#main-cover-image{
 	display: block;
 	margin: auto;
+	width: fit-content;
+	height: 250px;
 	padding: 0;
-	box-shadow: 0 0 4px rgb(0,0,0, 0.5);
+	box-shadow: 0 0 2px rgb(0,0,0, 0.25);
 }
 
 #repository-banner{
@@ -94,6 +94,11 @@ li{
 	padding: 4px;
 	margin: auto;
 	border-radius: 10px;
+}
+
+#repository-banner:active{
+	background: linear-gradient(green, limegreen);
+	color: #f2f2f2;
 }
 
 #github-img{
@@ -128,6 +133,16 @@ li{
 	transform: scale(1.1);
 }
 
+.supported-icon{
+	display: block;
+	width: 100%;
+	height: 100%;
+}
+
+.supported-icon-fig:hover + .supported-icon-title{
+	opacity: 1;
+}
+
 .supported-icon-title{
 	display: block;
 	background: black;
@@ -139,14 +154,9 @@ li{
 	box-shadow: 0 0 4px rgb(0,0,0, 0.5)
 }
 
-.supported-icon-fig:hover + .supported-icon-title{
-	opacity: 1;
-}
-
-.supported-icon{
-	display: block;
-	width: 100%;
-	height: 100%;
+code, pre{
+	font-family: Consolas, Monospace;
+	font-size: small;
 }
 
 code{
@@ -155,7 +165,8 @@ code{
 	width: fit-content;
 	height: fit-content;
 	padding: 4px;
-	border-radius: 3px;
+	border-radius: 4px;
+
 }
 
 span{
@@ -171,14 +182,12 @@ pre{
 
 .code-snippet{
 	display:block;
-	background: black;
+	background: #272822;
 	color: white;
 	tab-size: 4;
 	height: fit-content;
 	padding: 8px;
-	margin-top: 1rem;
-	margin-bottom: 1rem;
-	border-radius: 3px;
+	margin: 1rem;
 }
 
 
@@ -199,12 +208,16 @@ address a{
 	color: #F92672;
 }
 
-.html-attribute, .identifyer{
+.html-attribute, .identifyer, .old-listener{
 	color: #A6E22E;
 }
 
+.old-listener{
+	font-style: italic;
+}
+
 .code-quotes{
-	color: #D1C76A;
+	color: #E6DB74;
 }
 
 .code-comment{
@@ -213,6 +226,9 @@ address a{
 
 .function, .method{
 	color: #66D9EF;
+}
+
+.function, .method, .old-listener{
 	font-style: italic;
 }
 
