@@ -76,7 +76,7 @@ li{
 #main-cover-image{
 	display: block;
 	margin: auto;
-	width: fit-content;
+	width: auto;
 	height: 250px;
 	padding: 0;
 	box-shadow: 0 0 2px rgb(0,0,0, 0.25);
