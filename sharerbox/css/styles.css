@@ -76,7 +76,7 @@ li{
 #main-cover-image{
 	display: block;
 	margin: auto;
-	width: auto;
+	width: fit-content;
 	height: 250px;
 	padding: 0;
 	box-shadow: 0 0 2px rgb(0,0,0, 0.25);
@@ -89,15 +89,15 @@ li{
 	align-items: center;
 	background: linear-gradient(limegreen, green);
 	color: white;
-	text-stroke: 1px;
 	width: fit-content;
 	padding: 4px;
 	margin: auto;
+	border: solid 1px rgb(0,0,0, 0.5);
 	border-radius: 10px;
 }
 
 #repository-banner:active{
-	background: linear-gradient(green, limegreen);
+	background: green;
 	color: #f2f2f2;
 }
 
