@@ -28,6 +28,9 @@ header h1, header h2{
 	margin: 0;
 }
 
+h1, h2, h3, h4{
+	cursor: default;
+}
 h2{
 	text-align: center;
 	margin-top: 2rem;
@@ -96,19 +99,20 @@ li{
 	width: fit-content;
 	padding: 4px;
 	margin: auto;
-	border: solid 1px rgb(0,0,0, 0.5);
+	border: solid 1px darkgray;
 	border-radius: 10px;
+}
+
+#github-repository-banner:active{
+	background: green;
+	color: #f2f2f2;
+	border-color: rgb(0,0,0, 0.5);
 }
 
 #repository-link{
 	display: block;
 	margin: auto;
 	width: fit-content;
-}
-
-#github-repository-banner:active{
-	background: green;
-	color: #f2f2f2;
 }
 
 #github-logo{
@@ -129,6 +133,7 @@ li{
 	display: block;
 	padding: 0;
 	margin: 2rem;
+	margin-bottom: 0;
 }
 
 .supported-icon-fig{
@@ -224,7 +229,7 @@ address a{
 }
 
 .boolean{
-	color: mediumpurple;
+	color: #AE81FF;
 }
 
 .html-attribute, .identifyer, .old-listener{
