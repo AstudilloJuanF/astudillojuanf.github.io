@@ -159,6 +159,8 @@ li{
 }
 
 .supported-icon-title{
+	position:absolute;
+	margin:auto;
 	display: block;
 	background: black;
 	opacity: 0;
