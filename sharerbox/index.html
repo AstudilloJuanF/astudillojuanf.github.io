@@ -51,8 +51,8 @@
 						<img id="main-cover-image" src="./images/cover/sharerbox.svg" alt="SharerBox - Screenshot" title="Cover">
 					</figure>
 					<p> &nbsp; <strong>SharerBox</strong> is a free, minimalistic and lightweight <i>JavaScript-Based</i> social-media sharebar feature developed to provide fast and easy-to-use social-media sharing integration for small websites by eliminating the need for loading heavy or bulky third-party social APIs, which usually have a negative impact on loading speeds and unauthorizedly recolect private user information.</p>
-					<p> &nbsp; Integrating SharerBox directly on your website for social-media sharing instead of external APIs should significantly reduce loading speeds for visitors connected from slow networks, which will result on improved SEO indexation and enhanced user experience and device portability, specially for visitors connected from old computers or low-end devices. Plus, since there is no need for integrating obscure third-party code there is also no unauthorized recolection of private user information derived from using SharerBox.</p>
-					<p> &nbsp; SharerBox is currently a personal project, but it's integration process is intended to be easy for unexperienced users as well as very easy to customize for developers</p>
+					<p> &nbsp; Integrating SharerBox directly on your website for social-media sharing instead of external social APIs should significantly reduce loading speeds for visitors connected with slow networks, which will result on improved SEO indexation for your website and enhanced user experience and device portability for visitors, specially for users connected from old computers or low-end devices. Plus, since there is no need for integrating obscure social third-party code there is no unauthorized recolection of private user information derived from using SharerBox.</p>
+					<p> &nbsp; SharerBox is currently a personal development project, but it's implementation is intended to be simple for unexperienced users as well as very easy to customize for developers</p>
 					<h3 style="text-align: center;">Support:</h3>
 					<div id="supported-icons-wrapper">
 						<div class="supported-icon-fig-wrapper">
@@ -109,17 +109,17 @@
 					<h2>Installation:</h2>
 					<ol>
 						<li>Download and store Sharerbox's <b>JavaScript File</b> on your server.</li><br>
-						<li>Asynchronously load the script inside your webpage's <b>HTML</b> <code><span class="identifyer">&lt;head&gt;</span></code> tag using the <code><span class="html-attribute">async</span></code> attribute.<br>
+						<li>Asynchronously load the script within your webpage's <b>HTML</b> <code><span class="identifyer">&lt;head&gt;</span></code> tag using the <code><span class="html-attribute">async</span></code> attribute.<br>
 						<br>
 						<i class="example-subtitle">Example:</i><br>
-						<code class="code-snippet" title="paste inside <head> section">
+						<code class="code-snippet" title="paste within <head> section">
 							&lt;<span class="html-tag">script</span> <span class="html-attribute">type</span>=<span class="code-quotes">"application/javascript"</span> <span class="html-attribute">src</span>=<span class="code-quotes">"path/to/sharerbox.js"</span> <span class="html-attribute">async</span>&gt;&lt;/<span class="html-tag">script</span>&gt;
 						</code>
 						</li><br>
-						<li>Copy and paste this code snippet as it is (or configure it as listed bellow) anywhere inside or after your <b>HTML</b> page's <code><span class="identifyer">&lt;body&gt;</span></code> tag to execute SharerBox.<br>
+						<li>Copy and paste this code snippet as it is (or configure it as listed bellow) anywhere within or after your <b>HTML</b> page's <code><span class="identifyer">&lt;body&gt;</span></code> tag to execute SharerBox.<br>
 						<br>
 						<i class="example-subtitle">Code Snippet:</i>
-					<pre class="code-snippet" title="paste inside <body> section">
+					<pre class="code-snippet" title="paste within <body> section">
 &lt;<span class="html-tag">script</span>&gt;
 	<span class="method">window</span>.<span class="old-listener">onload</span> <span class="operator">=</span> <span class="function">function</span>(){
 		<span class="call-function">sharerboxIcons</span>( <span class="code-comment">/* list your preferred social-networks here, else options are set to default */</span> );
@@ -135,7 +135,7 @@
 					<h2>Options:</h2>
 					<h3>Icons:</h3>
 					<ul>
-						<li><strong> Social-Networks:</strong> a list of social media sites separated by spaces or commas</li><br>
+						<li><strong> Social-Networks:</strong> A list of supported social-network platforms separated by spaces or commas.</li><br>
 					</ul>
 					<div class="setting-option-wrap">
 						<h4>Setting Icons:</h4>
@@ -148,7 +148,7 @@
 					</div>
 					<h3>Behavior:</h3>
 					<ul>
-						<li><strong>Behavior:</strong> <code><span class="code-quotes">'pop-up'</span></code> <i>(default)</i> or <code><span class="code-quotes">'new tab'</span></code>; Sets how the sharer menus will be deployed.</li><br>
+						<li><strong>Behavior:</strong> <code><span class="code-quotes">'pop-up'</span></code> <i>(default)</i> or <code><span class="code-quotes">'new tab'</span></code>; Sets how the sharer window will be deployed.</li><br>
 						<li><strong>Position:</strong> <code><span class="code-quotes">'left'</span></code> or <code><span class="code-quotes">'right'</span></code> <i>(default)</i>; Sets the position of the sharebar in the screen.</li><br>
 						<li><strong>Color:</strong> <code><span class="code-quotes">'color name'</span></code> <i>(Black by default)</i>; Selects a color for the toggle button.</li><br>
 						<li><strong>Visibility:</strong> <code><span class="code-quotes">'visible'</span></code>, <code><span class="code-quotes">'yes'</span></code> or <code><span class="identifyer">true</span></code>; Enables the icon bar default visibility <i>(hidden by default)</i>.</li><br>
