@@ -109,7 +109,7 @@ li{
 	border-color: rgb(0,0,0, 0.5);
 }
 
-#repository-link{
+a{
 	display: block;
 	margin: auto;
 	width: fit-content;
@@ -216,7 +216,7 @@ footer{
 	padding: 1rem;
 }
 
-address a{
+footer a{
 	text-decoration: none;
 	color: lightgray;
 }
@@ -245,7 +245,7 @@ address a{
 	color: #75715E;
 }
 
-.function, .method, .call-function{
+.function, .method, .function-call{
 	color: #66D9EF;
 }
 
