@@ -122,8 +122,8 @@
 					<pre class="code-snippet" title="paste within <body> section">
 &lt;<span class="html-tag">script</span>&gt;
 	<span class="method">window</span>.<span class="old-listener">onload</span> <span class="operator">=</span> <span class="function">function</span>(){
-		<span class="call-function">sharerboxIcons</span>( <span class="code-comment">/* list your preferred social-networks here, else options are set to default */</span> );
-		<span class="call-function">sharerSetup</span>( <span class="code-comment">/* Behavior options go here, else options are set to default */</span> );
+		<span class="function-call">sharerboxIcons</span>( <span class="code-comment">/* list your preferred social-networks here, else options are set to default */</span> );
+		<span class="function-call">sharerSetup</span>( <span class="code-comment">/* Behavior options go here, else options are set to default */</span> );
 	};
 &lt;/<span class="html-tag">script</span>&gt;
 						</kbd></li><br>
@@ -139,10 +139,10 @@
 					</ul>
 					<div class="setting-option-wrap">
 						<h4>Setting Icons:</h4>
-						<p> &nbsp; You can specify which social-network icons will be displayed by SharerBox by going to the <code><span class="call-function">sharerboxIcons</span>()</code> function inside the <code><span class="identifyer">&lt;body&gt;</span></code> tag code snippet and typing a list of supported social-network items separated by spaces or commas, the full list must be wrapped around quotation marks.</p>
+						<p> &nbsp; You can specify which social-network icons will be displayed by SharerBox by going to the <code><span class="function-call">sharerboxIcons</span>()</code> function inside the <code><span class="identifyer">&lt;body&gt;</span></code> tag code snippet and typing a list of supported social-network items separated by spaces or commas, the full list must be wrapped around quotation marks.</p>
 						<p> &nbsp; <i class="example-subtitle">Example:</i></p>
 							<code class="code-snippet">
-								<span class="call-function">sharerboxIcons</span>(<span class="code-quotes">'site1, site2, site3, site...'</span>);
+								<span class="function-call">sharerboxIcons</span>(<span class="code-quotes">'site1, site2, site3, site...'</span>);
 							</code>
 						<p><i> &nbsp; (if this function is leaved blank SharerBox will display it's default social icons)</i></p>
 					</div>
@@ -156,10 +156,10 @@
 					</ul>
 					<div class="setting-option-wrap">
 						<h4>Setting Behavior:</h4>
-						<p> &nbsp; To customize SharerBox overall behavior enter these options into the <code><span class="call-function">sharerSetup</span>()</code> function located inside the code snippet pasted within your page's <code><span class="identifyer">&lt;body&gt;</span></code> tag, each argument must be written as a quoted word <code><span class="code-quotes">'word'</span></code>, each quoted word separated from each other by commas.</p>
+						<p> &nbsp; To customize SharerBox overall behavior enter these options into the <code><span class="function-call">sharerSetup</span>()</code> function located inside the code snippet pasted within your page's <code><span class="identifyer">&lt;body&gt;</span></code> tag, each argument must be written as a quoted word <code><span class="code-quotes">'word'</span></code>, each quoted word separated from each other by commas.</p>
 						<p> &nbsp; <i class="example-subtitle">Example:</i></p>
 							<code class="code-snippet">
-								<span class="call-function">sharerSetup</span>(<span class="code-quotes">'tab'</span>, <span class="code-quotes">'right'</span>, <span class="code-quotes">'black'</span>, <span class="code-quotes">'visible'</span>);
+								<span class="function-call">sharerSetup</span>(<span class="code-quotes">'tab'</span>, <span class="code-quotes">'right'</span>, <span class="code-quotes">'black'</span>, <span class="code-quotes">'visible'</span>);
 							</code>
 						<p><i> &nbsp; (if these options are leaved blank SharerBox will display it's default behavior)</i></p>
 					</div>
@@ -171,10 +171,10 @@
 	<span class="method">window</span>.<span class="old-listener">onload</span> <span class="operator">=</span> <span class="function">function</span>(){
 
 		<span class="code-comment">// Buttons list: 'site1, site2, site3'</span>
-		<span class="call-function">sharerboxIcons</span>(<span class="code-quotes">'facebook twitter whatsapp reddit'</span>);
+		<span class="function-call">sharerboxIcons</span>(<span class="code-quotes">'facebook twitter whatsapp reddit'</span>);
 
 		<span class="code-comment">// Setup arguments: Behavior, Position, Color, Visibility, Description</span>
-		<span class="call-function">sharerSetup</span>(<span class="code-quotes">'pop-up'</span>, <span class="code-quotes">'left'</span>, <span class="code-quotes">'black'</span>, <span class="boolean">true</span>, <span class="code-quotes">'custom message or description goes here (optional)'</span>);
+		<span class="function-call">sharerSetup</span>(<span class="code-quotes">'pop-up'</span>, <span class="code-quotes">'left'</span>, <span class="code-quotes">'black'</span>, <span class="boolean">true</span>, <span class="code-quotes">'custom message or description goes here (optional)'</span>);
 	};
 &lt;/<span class="html-tag">script</span>&gt;
 					</pre>
@@ -182,6 +182,7 @@
 			</article>
 		</main>
 		<footer>
+			<a href="https://github.com/AstudilloJuanF/sharerbox/issues" target="_blank">Issues & Requests</a>
 			<h3>&bull; &nbsp; &bull; &nbsp; &bull; &nbsp; Author &nbsp; &bull; &nbsp; &bull; &nbsp; &bull;</h3>
 			<address><a href="mailto:astudillojuanfrancisco@gmail.com" title="Copyright © 2020 Juan Astudillo"> Copyright © 2020 Juan Astudillo</a></address>
 		</footer>
