@@ -30,13 +30,8 @@ function sharerboxIcons(socialNetworksList = 'facebook, twitter, whatsapp, reddi
 	var facebookHTML = `<!--Facebook-->
 	<object class="sharerbox-icon-fig" id="fb-fig">
 		<a class="sharerbox-socialmedia-link" id="fb-link" target="_blank">
-			<svg class="sharerbox-icon" id="fb-icon" viewBox="0 0 72 72">
-				<g transform="translate(-152,-43)">
-					<g transform="translate(152,43)">
-						<rect width="72" height="72" rx="0" ry="0" fill="#4267b2"/>
-						<path d="m60.464 13.417v9.3105l-5.5259.01439c-4.3315 0-5.1661 2.0578-5.1661 5.0654v6.6627h10.318l-1.3383 10.419h-8.9795v27.111h-10.762v-27.111h-9.0097v-10.419h9.0097v-7.6844c0-8.922 5.4381-13.786 13.41-13.786 3.8005 0 7.08.2878 8.0441.41732z" fill="#fff"/>
-					</g>
-				</g>
+			<svg class="sharerbox-icon" id="fb-icon" width="400" height="400" viewBox="0 0 36 36">
+				<path d="M25 23l.8-5H21v-3.5c0-1.4.5-2.5 2.7-2.5H26V7.4c-1.3-.2-2.7-.4-4-.4-4.1 0-7 2.5-7 7v4h-4.5v5H15v12.7c1 .2 2 .3 3 .3s2-.1 3-.3V23h4z" fill="#fff"/>
 			</svg>
 		</a>
 	</object>`;
@@ -262,7 +257,8 @@ function sharerboxIcons(socialNetworksList = 'facebook, twitter, whatsapp, reddi
 	}
 
 	#fb-fig{
-		background: #4267b2;
+		/*background: #4267b2;*/
+		background: #0062E0;
 	}
 
 	#tw-fig{

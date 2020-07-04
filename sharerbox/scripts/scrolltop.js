@@ -9,7 +9,7 @@ var scrollTopHTML = `<style type="text/css">
 	#go-top-link{
 		position: sticky;
 		display: block;
-		opacity: 0;
+		opacity: 0.5;
 		bottom: 0;
 		width: fit-content;
 		height: fit-content;
@@ -61,9 +61,9 @@ function toggleUpArrow(){
 		goTopLink.style.opacity = '0';
 	}else{
 		if(window.pageYOffset === (document.body.offsetHeight - window.innerHeight)){
-			goTopLink.style.opacity = '1';
+			goTopLink.setAttribute('style', 'opacity: 1');
 		}else{
-			goTopLink.style.opacity = '0.5';
+			goTopLink.removeAttribute('style');
 		}
 	}
 }
