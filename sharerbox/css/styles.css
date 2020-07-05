@@ -2,7 +2,7 @@
 	box-sizing: border-box;
 }
 body{
-	background: #f7f7f7;
+	background: #fafafa;
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	font-family: carlito, calibri, arial, verdana, ubuntu;
@@ -14,7 +14,8 @@ body{
 }
 
 header{
-	background: #24292E;
+	/*background: #24292E;*/
+	background: linear-gradient(90deg, limegreen, deepskyblue);
 	color: white;
 	width: 100%;
 	height: auto;
@@ -24,8 +25,9 @@ header{
 	box-shadow: 0 0 3px rgb(0,0,0, 0.5);
 }
 
-header h1, header h2{
+header h1{
 	margin: 0;
+	text-shadow: 0 0 5px rgb(0,0,0, 0.25);
 }
 
 h1, h2, h3, h4{
@@ -60,6 +62,7 @@ figure{
 	background: white;
 	margin: 5rem auto;
 	padding: 2rem;
+	border-radius: 4px;
 	box-shadow: 0 0 2px rgb(0,0,0, 0.5);
 }
 
@@ -77,7 +80,7 @@ a{
 li{
 	background: #e6e6e6;
 	padding: 8px;
-	border-radius: 8px;
+	border-radius: 4px;
 }
 
 #main-cover-image{
@@ -116,7 +119,7 @@ a{
 }
 
 #github-logo{
-	background: white;
+	background: rgb(255,255,255, 0.8);
 	width: 40px;
 	height: 40px;
 	border-radius: 100%;
@@ -124,13 +127,15 @@ a{
 
 #supported-icons-wrapper{
 	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
+	flex-flow: row wrap;
 	justify-content: space-evenly;
 }
 
 .supported-icon-fig-wrapper{
-	display: block;
+	position: relative;
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: center;
 	padding: 0;
 	margin: 2rem;
 	margin-bottom: 0;
@@ -159,16 +164,33 @@ a{
 }
 
 .supported-icon-title{
-	position:absolute;
-	margin:auto;
+	position: absolute;
+	bottom: -2rem;
 	display: block;
 	background: black;
 	opacity: 0;
 	color: white;
 	font-weight: bold;
 	padding: 4px;
+	margin:auto;
 	border-radius: 4px;
 	box-shadow: 0 0 4px rgb(0,0,0, 0.5)
+}
+
+#input-options-wrap{
+	margin: auto;
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: space-between;
+}
+
+#input-options-wrap div p{
+	width: fit-content;
+}
+
+#form-buttons-wrap{
+	width: fit-content;
+	margin: auto;
 }
 
 code, pre{
@@ -205,12 +227,13 @@ pre{
 	height: fit-content;
 	padding: 8px;
 	margin: 1rem;
+	border-radius: unset;
 }
 
 
 
 footer{
-	background: #24292E;
+	background: #2a3d9d;
 	color: white;
 	width: 100%;
 	padding: 1rem;
@@ -254,3 +277,13 @@ footer a{
 }
 
 
+
+@media only screen and (max-width: 750px){
+	#input-options-wrap{
+		display: block;
+	}
+
+	#input-options-wrap div{
+		width: unset;
+	}
+}
