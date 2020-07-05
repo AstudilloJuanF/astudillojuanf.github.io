@@ -1,7 +1,9 @@
 /*
 							  Sharerbox
+						(preview page adaptation)
 
-			    Version: 0.7.0; Author: Juan Astudillo
+							Version: 0.7.0;
+						Author: Juan Astudillo
 
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
 	*																*
@@ -184,7 +186,7 @@ function sharerboxIcons(socialNetworksList = 'facebook, twitter, whatsapp, reddi
 	}
 
 	// SharerBox's HTML markup
-	var content = `<style type="text/css">
+	var content = `<style id="sharerbox-styles" type="text/css">
 	#sharerbox-section{
 		box-sizing: border-box;
 		z-index: 9999;
@@ -228,6 +230,7 @@ function sharerboxIcons(socialNetworksList = 'facebook, twitter, whatsapp, reddi
 		margin: 0;
 		padding: 0;
 		height: 45px;
+		width: 100%;
 	}
 
 	.sharerbox-icon-fig, #sharerbox-share-icon-fig{
@@ -385,6 +388,14 @@ function sharerboxIcons(socialNetworksList = 'facebook, twitter, whatsapp, reddi
 	</div>
 </section>`;
 
+	var sharerboxStyles = document.getElementById('sharerbox-styles');
+	var sharerboxBody = document.getElementById('sharerbox-section');
+
+	if(sharerboxStyles && sharerboxBody){
+		sharerboxStyles.remove();
+		sharerboxBody.remove();
+	}
+
 	document.body.insertAdjacentHTML('beforeend', content);
 
 }
@@ -402,6 +413,14 @@ function sharerSetup(behavior = 'popup', position = 'right', color = 'black', vi
 	var hiddenIconsContainer = document.getElementById('sharerbox-hidden-icons-wrap');
 	var shareIconWrap = document.getElementById('sharerbox-share-icon-wrap');
 	var shareIcon = document.getElementById('sharerbox-share-icon');
+
+	hiddenIconsContainer.style.transition = 'linear 0.5s';
+	hiddenIconsContainer.style.boxShadow = 'none';
+	setTimeout(function(){hiddenIconsContainer.style.boxShadow = '0 0 15px limegreen';}, 0);
+	setTimeout(function(){hiddenIconsContainer.style.boxShadow = 'none';}, 900);
+	setTimeout(function(){hiddenIconsContainer.transition = 'none'}, 2000);
+
+
 
 	var socialIconsCollection = document.getElementsByClassName('sharerbox-icon');
 
@@ -471,21 +490,28 @@ function sharerSetup(behavior = 'popup', position = 'right', color = 'black', vi
 	if(behavior.match(/(popup|pop-up|window)/) || behavior === ''){
 
 		// Event listeners for Pop-up window opener
-
+		fbLink ? fbLink.removeAttribute('href') : undefined;
 		fbLink ? fbLink.onclick = function(){openWindow(facebookURL)} : undefined; // Facebook
 
+		twLink ? twLink.removeAttribute('href') : undefined;
 		twLink ? twLink.onclick = function(){openWindow(tweetURL)} : undefined; // Twitter
 
+		wsLink ? wsLink.removeAttribute('href') : undefined;
 		wsLink ? wsLink.onclick = function(){openWindow(whatsappURL)} : undefined; // Whatsapp
 
+		redditLink ? redditLink.removeAttribute('href') : undefined;
 		redditLink ? redditLink.onclick = function(){openWindow(redditURL)} : undefined; // Reddit
 
+		linkedinLink ? linkedinLink.removeAttribute('href') : undefined;
 		linkedinLink ? linkedinLink.onclick = function(){openWindow(linkedinURL)} : undefined; // LinkedIn
 
+		pinterestLink ? pinterestLink.removeAttribute('href') : undefined;
 		pinterestLink ? pinterestLink.onclick = function(){openWindow(pinterestURL)} : undefined; // Pinterest
 
+		tumblrLink ? tumblrLink.removeAttribute('href') : undefined;
 		tumblrLink ? tumblrLink.onclick = function(){openWindow(tumblrURL)} : undefined; // Tumblr
 
+		telegramLink ? telegramLink.removeAttribute('href') : undefined;
 		telegramLink ? telegramLink.onclick = function(){openWindow(telegramURL)} : undefined; // telegram
 
 
@@ -493,21 +519,21 @@ function sharerSetup(behavior = 'popup', position = 'right', color = 'black', vi
 
 		// HREF attributes for new tabs
 
-		fbLink ? fbLink.href = facebookURL: undefined; // Facebook
+		fbLink ? fbLink.href = facebookURL : undefined; // Facebook
 
-		twLink ? twLink.href = tweetURL: undefined; // Twitter
+		twLink ? twLink.href = tweetURL : undefined; // Twitter
 
-		wsLink ? wsLink.href = whatsappURL: undefined; // WhatsApp
+		wsLink ? wsLink.href = whatsappURL : undefined; // WhatsApp
 
-		redditLink ? redditLink.href = redditURL: undefined; // Reddit
+		redditLink ? redditLink.href = redditURL : undefined; // Reddit
 
-		linkedinLink ? linkedinLink.href = linkedinURL: undefined; // LinkedIn
+		linkedinLink ? linkedinLink.href = linkedinURL : undefined; // LinkedIn
 
-		pinterestLink ? pinterestLink.href = pinterestURL: undefined; // Pinterest
+		pinterestLink ? pinterestLink.href = pinterestURL : undefined; // Pinterest
 
-		tumblrLink ? tumblrLink.href = tumblrURL: undefined; // Tumblr
+		tumblrLink ? tumblrLink.href = tumblrURL : undefined; // Tumblr
 
-		telegramLink ? telegramLink.href = telegramURL: undefined; // telegram
+		telegramLink ? telegramLink.href = telegramURL : undefined; // telegram
 
 	}
 
@@ -570,6 +596,9 @@ function sharerSetup(behavior = 'popup', position = 'right', color = 'black', vi
 	// Setting default visibility (hidden by default)
 	if(visibility.match(/(visible|yes|true)/)){
 		flipIcon();
+	}else{
+		setTimeout(function(){flipIcon()}, 500);
+		setTimeout(function(){flipIcon()}, 1000);
 	}
 
 	// Handling icons interaction
