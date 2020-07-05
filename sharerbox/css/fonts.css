@@ -1,6 +1,7 @@
 @font-face{
 	font-family: carlitos;
 	src: local("carlitos"),
+		url(../fonts/carlito-regular-webfont.woff2) format('woff2'),
 		url(../fonts/carlito-regular.woff) format('woff'),
 		url(../fonts/carlito-regular.ttf) format('truetype');
 
