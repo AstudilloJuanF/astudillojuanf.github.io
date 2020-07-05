@@ -28,12 +28,12 @@
 	<body>
 		<script type="application/javascript">
 			window.onload = function(){
-				sharerboxIcons('facebook twitter whatsapp linkedin pinterest reddit tumblr telegram');
+				sharerboxIcons('twitter facebook whatsapp linkedin pinterest reddit tumblr telegram');
 				sharerSetup('popup', 'right', 'black', 'visible', 'Check out this site!');
 			};
 		</script>
 		<header>
-			<h1>SharerBox</h1>
+			<h1><img style="width:1.5rem; height:1.5rem; transform: rotate(180deg)" src="./icons/favicon.svg"> SharerBox</h1>
 		</header>
 		<main>
 			<article id="main-section">
@@ -43,7 +43,7 @@
 					<a id="repository-link" href="https://www.github.com/AstudilloJuanF/sharerbox" target="_blank">
 						<figure id="github-repository-banner">
 							<img id="github-logo" src="./icons/github-logo.svg" alt="GitHub logo">
-							<p style="margin: 4px; text-align: center;"><b>GitHub Repository</b><br><i>Version 0.7.0</i></p>
+							<p style="margin: 4px; text-align: center;"><b>GitHub Repository</b><br><i>SharerBox v0.7.0</i></p>
 						</figure>
 					</a>
 					<h2 style="border-top: solid 1px rgb(0,0,0, 0.2); padding: 2.5rem 0 0 0;">Overview:</h2>
@@ -104,6 +104,102 @@
 							<p class="supported-icon-title">Telegram</p>
 						</div>
 					</div>
+				</section>
+				<section class="sections">
+					<h2>Test Sharerbox</h2>
+					<form>
+						<div id="input-options-wrap">
+							<div>
+								<h3>Social Networks</h3>
+								<p style="border: solid 1px blue">&nbsp; Mark All <input id="check-all" type="checkbox"></p>
+								<p><input class="social-network-check" type="checkbox" value="facebook" checked> Facebook</p>
+								<p><input class="social-network-check" type="checkbox" value="whatsapp" checked> WhatsApp</p>
+								<p><input class="social-network-check" type="checkbox" value="twitter" checked> Twitter</p>
+								<p><input class="social-network-check" type="checkbox" value="linkedin" checked> LinkedIn</p>
+								<p><input class="social-network-check" type="checkbox" value="reddit"> Reddit</p>
+								<p><input class="social-network-check" type="checkbox" value="pinterest"> Pinterest</p>
+								<p><input class="social-network-check" type="checkbox" value="tumblr"> Tumblr</p>
+								<p><input class="social-network-check" type="checkbox" value="telegram"> Telegram</p>
+							</div>
+							<div>
+								<h3>Behavior</h3>
+								<p><input class="behavior-radio-check" type="radio" name="behavior" value="pop-up" checked> Pop-up Window</p>
+								<p><input class="behavior-radio-check" type="radio" name="behavior" value="new tab"> New Tab</p>
+							</div>
+							<div>
+								<h3>Position</h3>
+								<p><input class="position-radio-check" type="radio" name="position" value="left"> Left</p>
+								<p><input class="position-radio-check" type="radio" name="position" value="right" checked> Right</p>
+							</div>
+							<div>
+								<h3>Visibility</h3>
+								<p><input class="visibility-radio-check" type="radio" name="visibility" value="hidden" checked> Hidden</p>
+								<p><input class="visibility-radio-check" type="radio" name="visibility" value="visible"> Visible</p>
+							</div>
+						</div>
+						<div id="form-buttons-wrap">
+							<input type="reset" value="Reset">
+							<input id="submit-button" type="button" value="Apply">
+						</div>
+					</form>
+					<script>
+						var checkArray = document.getElementsByClassName('social-network-check');
+						var checkAll = document.getElementById('check-all');
+						var behaviorRadioInput = document.getElementsByClassName('behavior-radio-check');
+						var positionRadioInput = document.getElementsByClassName('position-radio-check');
+						var visibilityRadioInput = document.getElementsByClassName('visibility-radio-check');
+
+						var submit = document.getElementById('submit-button');
+
+						checkAll.addEventListener('click', toggleAll);
+
+						function toggleAll(){
+
+							if(checkAll.checked){
+								for(var i = 0; i < checkArray.length; i++){checkArray[i].checked = true};
+							}else{
+								for(var i = 0; i < checkArray.length; i++){checkArray[i].checked = false};
+							}
+						}
+
+						for(var i = 0; i < checkArray.length; i++){
+								checkArray[i].addEventListener('click', syncCheckbox);
+						}
+
+						function syncCheckbox(){
+							for(var i = 0; i < checkArray.length; i++){
+								if(checkArray[i].checked === false){
+									checkAll.checked = false;
+									break;
+								}else{
+									checkAll.checked = true;
+								}
+							}
+						}
+
+						submit.addEventListener('click', customizeSharerbox);
+
+						function customizeSharerbox(){
+
+							var sNetworksList = '';
+							var behavior;
+							var position;
+							var visibility;
+
+							for(var i = 0; i < checkArray.length; i++){
+								checkArray[i].checked ? sNetworksList = sNetworksList.concat(`${checkArray[i].value} `) : undefined;
+							}
+
+							for(var i = 0; i < 2; i++){
+								behaviorRadioInput[i].checked ? behavior = behaviorRadioInput[i].value : undefined;
+								positionRadioInput[i].checked ? position = positionRadioInput[i].value : undefined;
+								visibilityRadioInput[i].checked ? visibility = visibilityRadioInput[i].value : undefined;
+							}
+							console.log(sNetworksList)
+							sharerboxIcons(sNetworksList);
+							sharerSetup(behavior, position, 'black', visibility);
+						}
+					</script>
 				</section>
 				<section class="sections">
 					<h2>Installation:</h2>
