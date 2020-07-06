@@ -25,12 +25,13 @@
 		<link rel="stylesheet" type="text/css" href="./css/styles.css">
 		<script type="application/javascript" src="./scripts/sharerbox.js" async></script>
 		<script type="application/javascript" src="./scripts/scrolltop.js" async></script>
+		<script type="application/javascript" src="./scripts/dev-badge.js" async></script>
 	</head>
 	<body>
 		<script type="application/javascript">
 			window.onload = function(){
 				sharerboxIcons('twitter facebook whatsapp linkedin pinterest reddit tumblr telegram');
-				sharerSetup('popup', 'right', 'black', 'visible', 'Check out this site!');
+				sharerSetup('popup', 'right', 'black', 'visible', 'Check out SharerBox! website social-media integration by AstudilloJuanF');
 			};
 		</script>
 		<header>
@@ -47,7 +48,9 @@
 							<p style="margin: 4px; text-align: center;"><b>GitHub Repository</b><br><i>SharerBox v0.7.0</i></p>
 						</figure>
 					</a>
-					<h2 style="border-top: solid 1px rgb(0,0,0, 0.2); padding: 2.5rem 0 0 0;">Overview:</h2>
+				</section>
+				<section class="sections">
+					<h2>Overview:</h2>
 					<figure>
 						<img id="main-cover-image" src="./images/cover/sharerbox.svg" alt="SharerBox - Screenshot" title="Cover">
 					</figure>
@@ -139,8 +142,10 @@
 							</div>
 						</div>
 						<div id="form-buttons-wrap">
+							<img class="form-buttons-icon" src="./icons/reload.svg">
 							<input type="reset" value="Reset">
 							<input id="submit-button" type="button" value="Apply">
+							<img class="form-buttons-icon" src="./icons/approve-sign-green.svg">
 						</div>
 					</form>
 					<script>
@@ -204,10 +209,28 @@
 								positionRadioInput[i].checked ? position = positionRadioInput[i].value : undefined;
 								visibilityRadioInput[i].checked ? visibility = visibilityRadioInput[i].value : undefined;
 							}
-							console.log(sNetworksList)
 							sharerboxIcons(sNetworksList);
 							sharerSetup(behavior, position, 'black', visibility);
 						}
+
+						var formButtonsIcons = document.getElementsByClassName('form-buttons-icon');
+						var formButtonsWrap = document.getElementById('form-buttons-wrap');
+
+
+
+						function displayButtonIcon(number){
+							formButtonsIcons[number].removeAttribute('style');
+							if(number === 0){
+								formButtonsIcons[number].style.cssText = 'transition: linear 0.35s; opacity: 1; transform: rotate(360deg)';
+							}else if(number === 1){
+								formButtonsIcons[number].style.cssText = 'transition: linear 0.1s; opacity: 1;';
+							}
+							setTimeout(function(){formButtonsIcons[number].style.opacity = '0';}, 2000);
+							setTimeout(function(){formButtonsIcons[number].removeAttribute('style')}, 2500);
+						}
+
+						formButtonsWrap.children[1].onclick = function(){displayButtonIcon(0)};
+						formButtonsWrap.children[2].onclick = function(){displayButtonIcon(1)};
 					</script>
 				</section>
 				<section class="sections">
@@ -216,14 +239,14 @@
 						<li>Download and store Sharerbox's <b>JavaScript File</b> on your server.</li><br>
 						<li>Asynchronously load the script within your webpage's <b>HTML</b> <code><span class="identifyer">&lt;head&gt;</span></code> tag using the <code><span class="html-attribute">async</span></code> attribute.<br>
 						<br>
-						<i class="example-subtitle">Example:</i><br>
+						<p><i class="example-subtitle">Example:</i> <b>&lt;/&gt;</b></p>
 						<code class="code-snippet" title="paste within <head> section">
 							&lt;<span class="html-tag">script</span> <span class="html-attribute">type</span>=<span class="code-quotes">"application/javascript"</span> <span class="html-attribute">src</span>=<span class="code-quotes">"path/to/sharerbox.js"</span> <span class="html-attribute">async</span>&gt;&lt;/<span class="html-tag">script</span>&gt;
 						</code>
 						</li><br>
 						<li>Copy and paste this code snippet as it is (or configure it as listed bellow) anywhere within or after your <b>HTML</b> page's <code><span class="identifyer">&lt;body&gt;</span></code> tag to execute SharerBox.<br>
 						<br>
-						<i class="example-subtitle">Code Snippet:</i>
+						<p><i class="example-subtitle">Snippet:</i> <b>&lt;/&gt;</b></p>
 					<pre class="code-snippet" title="paste within <body> section">
 &lt;<span class="html-tag">script</span>&gt;
 	<span class="method">window</span>.<span class="old-listener">onload</span> <span class="operator">=</span> <span class="function">function</span>(){
@@ -245,7 +268,7 @@
 					<div class="setting-option-wrap">
 						<h4>Setting Icons:</h4>
 						<p> &nbsp; You can specify which social-network icons will be displayed by SharerBox by going to the <code><span class="function-call">sharerboxIcons</span>()</code> function inside the <code><span class="identifyer">&lt;body&gt;</span></code> tag code snippet and typing a list of supported social-network items separated by spaces or commas, the full list must be wrapped around quotation marks.</p>
-						<p> &nbsp; <i class="example-subtitle">Example:</i></p>
+						<p><i class="example-subtitle">Example:</i> <b>&lt;/&gt;</b></p>
 							<code class="code-snippet">
 								<span class="function-call">sharerboxIcons</span>(<span class="code-quotes">'site1, site2, site3, site...'</span>);
 							</code>
@@ -262,7 +285,7 @@
 					<div class="setting-option-wrap">
 						<h4>Setting Behavior:</h4>
 						<p> &nbsp; To customize SharerBox overall behavior enter these options into the <code><span class="function-call">sharerSetup</span>()</code> function located inside the code snippet pasted within your page's <code><span class="identifyer">&lt;body&gt;</span></code> tag, each argument must be written as a quoted word <code><span class="code-quotes">'word'</span></code>, each quoted word separated from each other by commas.</p>
-						<p> &nbsp; <i class="example-subtitle">Example:</i></p>
+						<p><i class="example-subtitle">Example:</i> <b>&lt;/&gt;</b></p>
 							<code class="code-snippet">
 								<span class="function-call">sharerSetup</span>(<span class="code-quotes">'tab'</span>, <span class="code-quotes">'right'</span>, <span class="code-quotes">'black'</span>, <span class="code-quotes">'visible'</span>);
 							</code>
@@ -270,7 +293,7 @@
 					</div>
 				</section>
 				<section class="sections">
-					<h4><i class="example-subtitle">Full Example:</i> &lt;/&gt;</h4>
+					<h4><i class="example-subtitle">Full Example:</i> <b>&lt;/&gt;</b></h4>
 					<pre class="code-snippet">
 &lt;<span class="html-tag">script</span>&gt;
 	<span class="method">window</span>.<span class="old-listener">onload</span> <span class="operator">=</span> <span class="function">function</span>(){
@@ -288,8 +311,10 @@
 		</main>
 		<footer>
 			<a href="https://github.com/AstudilloJuanF/sharerbox/issues" target="_blank">Issues & Requests</a>
-			<h3>&bull; &nbsp; &bull; &nbsp; &bull; &nbsp; Author &nbsp; &bull; &nbsp; &bull; &nbsp; &bull;</h3>
-			<address><a href="mailto:astudillojuanfrancisco@gmail.com" title="Copyright © 2020 Juan Astudillo"> Copyright © 2020 Juan Astudillo</a></address>
+			<div id="author-disclaimer" >
+				<h3>&bull; &bull; &bull; &nbsp; Author &nbsp; &bull; &bull; &bull;</h3>
+				<a title="Copyright © 2020 Juan Astudillo"> Copyright © 2020 Juan Astudillo</a>
+			</div>
 		</footer>
 	</body>
 </html>
