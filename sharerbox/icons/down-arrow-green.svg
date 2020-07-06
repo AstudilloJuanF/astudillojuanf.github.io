@@ -1,5 +1,11 @@
-<svg width="384.4" height="467.3" version="1.1" viewBox="0 0 384.4 467.3" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
-<g transform="rotate(180,218.6,228.65)" fill="#2ebe27">
-	<path d="m437.2 178.7h-139.5v278.6h-105.4v-278.6h-139.5l192.2-188.7z" fill="#2ebe27" stroke="green" stroke-width="16"/>
-</g>
+<svg width="500" height="500" version="1.1" viewBox="0 0 500 500" xml:space="preserve" xmlns="http://www.w3.org/2000/svg">
+	<defs>
+		<linearGradient id="grad" x1="0" x2="500" y1="0" y2="500" gradientUnits="userSpaceOnUse">
+			<stop stop-color="green" offset="0"/>
+			<stop stop-color="limegreen" offset="1"/>
+		</linearGradient>
+	</defs>
+	<g transform="rotate(180 247.5 236.02)" fill="#2ebe27">
+		<path d="m437.2 178.7h-139.5v278.6h-105.4v-278.6h-139.5l192.2-188.7z" fill="url(#grad)" stroke="#008000" stroke-width="16"/>
+	</g>
 </svg>
