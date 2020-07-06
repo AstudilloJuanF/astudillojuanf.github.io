@@ -40,7 +40,7 @@
 			<article id="main-section">
 				<section class="sections">
 					<p style="text-align: center;">Free, minimalist and lightweight JavaScript-based social-media sharer for websites.</p>
-					<h2>Download</h2>
+					<h2><img class="h2-title-img" src="./icons/down-arrow-green.svg"> Download</h2>
 					<a id="repository-link" href="https://www.github.com/AstudilloJuanF/sharerbox" target="_blank">
 						<figure id="github-repository-banner">
 							<img id="github-logo" src="./icons/github-logo.svg" alt="GitHub logo">
@@ -111,29 +111,29 @@
 					<form>
 						<div id="input-options-wrap">
 							<div>
-								<h3><img class="interactive-preview-title-img" src="./icons/worldwide-icon-color.svg"> Social Networks</h3>
-								<p style="background: red; color: white">&nbsp; Mark All <input id="check-all" type="checkbox"></p>
-								<p><input class="social-network-check" type="checkbox" value="twitter" checked> - <img class="interactive-preview-title-img" src="./icons/twitter-icon-soft-square.svg"> Twitter</p>
-								<p><input class="social-network-check" type="checkbox" value="facebook" checked> - <img class="interactive-preview-title-img" src="./icons/facebook-logo.svg"> Facebook</p>
-								<p><input class="social-network-check" type="checkbox" value="whatsapp" checked> - <img class="interactive-preview-title-img" src="./icons/whatsapp-icon-soft-square.svg"> WhatsApp</p>
-								<p><input class="social-network-check" type="checkbox" value="linkedin" checked> - <img class="interactive-preview-title-img" src="./icons/linkedin-logo.svg"> LinkedIn</p>
-								<p><input class="social-network-check" type="checkbox" value="reddit"> - <img class="interactive-preview-title-img" src="./icons/reddit-icon-soft-square.svg"> Reddit</p>
-								<p><input class="social-network-check" type="checkbox" value="pinterest"> - <img class="interactive-preview-title-img" src="./icons/pinterest-icon-soft-square.svg"> Pinterest</p>
-								<p><input class="social-network-check" type="checkbox" value="tumblr"> - <img class="interactive-preview-title-img" src="./icons/tumblr-icon-soft-square.svg"> Tumblr</p>
-								<p><input class="social-network-check" type="checkbox" value="telegram"> - <img class="interactive-preview-title-img" src="./icons/telegram-icon-soft-square.svg"> Telegram</p>
+								<h3>Social Networks <img class="h3-title-img" src="./icons/worldwide-icon-color.svg"></h3>
+								<p style="background: red; color: white">&nbsp; <b>Mark All</b> <input id="check-all" type="checkbox"></p>
+								<p><input class="social-network-check" type="checkbox" value="twitter" checked> - <img class="h3-title-img" src="./icons/twitter-icon-soft-square.svg"> Twitter</p>
+								<p><input class="social-network-check" type="checkbox" value="facebook" checked> - <img class="h3-title-img" src="./icons/facebook-logo.svg"> Facebook</p>
+								<p><input class="social-network-check" type="checkbox" value="whatsapp" checked> - <img class="h3-title-img" src="./icons/whatsapp-icon-soft-square.svg"> WhatsApp</p>
+								<p><input class="social-network-check" type="checkbox" value="linkedin" checked> - <img class="h3-title-img" src="./icons/linkedin-logo.svg"> LinkedIn</p>
+								<p><input class="social-network-check" type="checkbox" value="reddit"> - <img class="h3-title-img" src="./icons/reddit-icon-soft-square.svg"> Reddit</p>
+								<p><input class="social-network-check" type="checkbox" value="pinterest"> - <img class="h3-title-img" src="./icons/pinterest-icon-soft-square.svg"> Pinterest</p>
+								<p><input class="social-network-check" type="checkbox" value="tumblr"> - <img class="h3-title-img" src="./icons/tumblr-icon-soft-square.svg"> Tumblr</p>
+								<p><input class="social-network-check" type="checkbox" value="telegram"> - <img class="h3-title-img" src="./icons/telegram-icon-soft-square.svg"> Telegram</p>
 							</div>
 							<div>
-								<h3><img class="interactive-preview-title-img" src="./icons/gear.svg"> Behavior</h3>
+								<h3>Behavior <img class="h3-title-img" src="./icons/browser-window.svg"></h3>
 								<p><input class="behavior-radio-check" type="radio" name="behavior" value="pop-up" checked> Pop-up Window</p>
 								<p><input class="behavior-radio-check" type="radio" name="behavior" value="new tab"> New Tab</p>
 							</div>
 							<div>
-								<h3><img class="interactive-preview-title-img" src="./icons/left-right.svg"> Position</h3>
+								<h3>Position <img class="h3-title-img" src="./icons/left-right.svg"></h3>
 								<p><input class="position-radio-check" type="radio" name="position" value="left"> Left</p>
 								<p><input class="position-radio-check" type="radio" name="position" value="right" checked> Right</p>
 							</div>
 							<div>
-								<h3><img class="interactive-preview-title-img" src="./icons/eye.svg"> Visibility</h3>
+								<h3>Visibility <img class="h3-title-img" src="./icons/eye.svg"></h3>
 								<p><input class="visibility-radio-check" type="radio" name="visibility" value="hidden" checked> Hidden</p>
 								<p><input class="visibility-radio-check" type="radio" name="visibility" value="visible"> Visible</p>
 							</div>
@@ -157,9 +157,15 @@
 						function toggleAll(){
 
 							if(checkAll.checked){
-								for(var i = 0; i < checkArray.length; i++){checkArray[i].checked = true};
+								for(var i = 0; i < checkArray.length; i++){
+									checkArray[i].checked = true;
+									checkAll.previousElementSibling.innerText = 'Unmark All';
+								};
 							}else{
-								for(var i = 0; i < checkArray.length; i++){checkArray[i].checked = false};
+								for(var i = 0; i < checkArray.length; i++){
+									checkArray[i].checked = false
+									checkAll.previousElementSibling.innerText = 'Mark All';
+								};
 							}
 						}
 
@@ -171,9 +177,11 @@
 							for(var i = 0; i < checkArray.length; i++){
 								if(checkArray[i].checked === false){
 									checkAll.checked = false;
+									checkAll.previousElementSibling.innerText = 'Mark All';
 									break;
 								}else{
 									checkAll.checked = true;
+									checkAll.previousElementSibling.innerText = 'Unmark All';
 								}
 							}
 						}
@@ -203,7 +211,7 @@
 					</script>
 				</section>
 				<section class="sections">
-					<h2>Installation:</h2>
+					<h2><img class="h2-title-img" src="./icons/package-icon.svg"> Installation</h2>
 					<ol>
 						<li>Download and store Sharerbox's <b>JavaScript File</b> on your server.</li><br>
 						<li>Asynchronously load the script within your webpage's <b>HTML</b> <code><span class="identifyer">&lt;head&gt;</span></code> tag using the <code><span class="html-attribute">async</span></code> attribute.<br>
@@ -229,8 +237,8 @@
 					</ol>
 				</section>
 				<section class="sections">
-					<h2>Options:</h2>
-					<h3>Icons:</h3>
+					<h2><img class="h2-title-img" src="./icons/gear.svg"> Options:</h2>
+					<h3>Icons <img class="h3-title-img" src="./icons/share-slateblue.svg"></h3>
 					<ul>
 						<li><strong> Social-Networks:</strong> A list of supported social-network platforms separated by spaces or commas.</li><br>
 					</ul>
@@ -243,7 +251,7 @@
 							</code>
 						<p><i> &nbsp; (if this function is leaved blank SharerBox will display it's default social icons)</i></p>
 					</div>
-					<h3>Behavior:</h3>
+					<h3>Behavior <img class="h3-title-img" src="./icons/browser-window.svg"></h3>
 					<ul>
 						<li><strong>Behavior:</strong> <code><span class="code-quotes">'pop-up'</span></code> <i>(default)</i> or <code><span class="code-quotes">'new tab'</span></code>; Sets how the sharer window will be deployed.</li><br>
 						<li><strong>Position:</strong> <code><span class="code-quotes">'left'</span></code> or <code><span class="code-quotes">'right'</span></code> <i>(default)</i>; Sets the position of the sharebar in the screen.</li><br>
@@ -262,7 +270,7 @@
 					</div>
 				</section>
 				<section class="sections">
-					<h4><i class="example-subtitle">Full Example:</i></h4>
+					<h4><i class="example-subtitle">Full Example:</i> &lt;/&gt;</h4>
 					<pre class="code-snippet">
 &lt;<span class="html-tag">script</span>&gt;
 	<span class="method">window</span>.<span class="old-listener">onload</span> <span class="operator">=</span> <span class="function">function</span>(){
