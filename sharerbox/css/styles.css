@@ -302,13 +302,12 @@ footer{
 	padding: 1rem;
 }
 
-footer a{
-	cursor: default;
+footer a , #author-disclaimer{
 	text-decoration: none;
 	color: lightgray;
 }
 
-footer a:hover{
+footer a:hover, #author-disclaimer:hover{
 	color: white;
 }
 
@@ -317,7 +316,7 @@ footer img{
 }
 
 #author-disclaimer{
-	cursor: default;
+	cursor: pointer;
 	width: fit-content;
 	height: fit-content;
 	margin: auto;
