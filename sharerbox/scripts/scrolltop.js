@@ -40,7 +40,7 @@ var scrollTopHTML = `<style type="text/css">
 
 (function(){
 	var footer = document.getElementsByTagName('footer')[0];
-	footer.insertAdjacentHTML('beforebegin', scrollTopHTML)
+	footer.insertAdjacentHTML('beforebegin', scrollTopHTML);
 })();
 
 var goTopLink = document.getElementById('go-top-link');
