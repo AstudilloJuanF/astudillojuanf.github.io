@@ -220,6 +220,12 @@ a{
 	color: white;
 }
 
+.form-buttons-icon{
+	width: 1.5rem;
+	height: 1.5rem;
+	opacity: 0;
+}
+
 code, pre{
 	font-family: Consolas, Monospace;
 	font-size: small;
@@ -257,20 +263,6 @@ pre{
 	border-radius: unset;
 }
 
-
-
-footer{
-	background: #2a3d9d;
-	color: white;
-	width: 100%;
-	padding: 1rem;
-}
-
-footer a{
-	text-decoration: none;
-	color: lightgray;
-}
-
 .example-subtitle{
 	color: #272822;
 	text-decoration: underline;
@@ -301,6 +293,34 @@ footer a{
 
 .function, .method, .example-subtitle{
 	font-style: italic;
+}
+
+footer{
+	background: #24368f;
+	color: white;
+	width: 100%;
+	padding: 1rem;
+}
+
+footer a{
+	cursor: default;
+	text-decoration: none;
+	color: lightgray;
+}
+
+footer a:hover{
+	color: white;
+}
+
+footer img{
+	display: block;
+}
+
+#author-disclaimer{
+	cursor: default;
+	width: fit-content;
+	height: fit-content;
+	margin: auto;
 }
 
 
