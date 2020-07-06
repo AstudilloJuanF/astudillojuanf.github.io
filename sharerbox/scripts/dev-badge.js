@@ -114,7 +114,7 @@ var badgeHTML = `<section class="disclaimer">
 		</div>
 		<div id="badge-wrapper">
 			<figure>
-				<img src="./images/developer.jpg" alt="Site Developer">
+				<img src="https://pbs.twimg.com/profile_images/1123611528341729281/jPF-yd9q_400x400.png" alt="Developer">
 			</figure>
 			<div id="badge-text-wrapper">
 				<p style="font-weight:bold; margin-top: 0.5rem;">Juan Astudillo</p>
