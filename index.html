@@ -1,0 +1,1582 @@
+<!DOCTYPE html>
+<html lang="es">
+	<head>
+		<title>Videojuego JS</title>
+		<meta http-equiv="content-type" content="text/html" charset="utf-8">
+		<meta http-equiv="content-language" content="es">
+		<meta name="description" content="Página de pruebas para minijuego JavaScript">
+		<meta name="keywords" content="código, JavaScript, página, prueba, práctica, canvas, api, minijuego, navegador, juego, videojuego">
+		<meta name="distribution" content="IU">
+		<meta name="robots" content="noindex, noimageindex, noarchive, nofollow, notranslate, noodp, noydir">
+		<meta name="author" content="Juan Francisco Astudillo Palacios">
+		<style>
+			body{font-family: calibri, arial, verdana}
+			canvas{display: block; margin: auto; border: solid 1px black;}
+			h1,h2,h3{text-align:center;}
+		</style>
+	</head>
+	<body>
+		<header>
+			<h1>Videojuego JavaScript</h1>
+		</header>
+		<main>
+			<h2>(Canvas API)</h2>
+			<section id="canvas-section">
+				<canvas id="canvas-frame" width="1024" height="755">Su dispositivo o navegador no soporta canvas.</canvas>
+				<script>
+
+					/*
+						Booster Lander - Moon Lander inspired JavaScript Minigame
+						Copyright 2020 © Juan Astudillo
+						<astudillojuanfrancisco@gmail.com>
+					*/
+
+					const canvas = document.getElementById('canvas-frame');
+					const ctx = canvas.getContext('2d');
+					ctx.imageSmoothingEnabled = false;
+
+					// Earth's Gravity
+					const EARTH_GRAVITY = 9.80665; // meters per squared seconds;
+
+					var canvasW = canvas.width;
+					var canvasH = canvas.height;
+
+					var startGameBtn = new Path2D;
+					var menuControlsBtn = new Path2D;
+					var menuInstructionsBtn = new Path2D;
+					var menuLangBtn = new Path2D;
+					var menuLangLeftArrow = new Path2D;
+					var menuLangRightArrow = new Path2D;
+					var spanishLangBtn = new Path2D;
+					var englishLangBtn = new Path2D;
+					var germanLangBtn = new Path2D;
+					var japaneseLangBtn = new Path2D;
+
+					var landingPlatform = new Path2D;
+
+					var lEngineExhaust = new Path2D();
+					var rEngineExhaust = new Path2D();
+					var mainEngineExhaust = new Path2D();
+
+					var airplane = new Path2D();
+
+					// animation frames per second
+					if(navigator.platform.match(/win/ig)){
+						var fps = 1000;
+					}else{
+						var fps = 60;
+					}
+
+					// cronometer object and methods
+					var cronometer = {
+						hours: 0,
+						mins: 0,
+						secs: 0,
+						elapsed: '0s',
+						cronometerCount: undefined,
+						start: function(){
+							this.cronometerCount = setInterval(function(){
+
+								++cronometer.secs;
+
+								if(cronometer.secs === 60){cronometer.secs = 0; cronometer.mins++;}
+
+								if(cronometer.mins === 60){cronometer.secs = 0; cronometer.hours++;}
+
+								if(cronometer.mins === 0 && cronometer.hours === 0){
+									cronometer.elapsed = `${cronometer.secs + text.seconds}`;
+								}else if(cronometer.hours === 0){
+									cronometer.elapsed = `${cronometer.mins + text.minutes}: ${cronometer.secs + text.seconds}`;
+								}else{
+									cronometer.elapsed = `${cronometer.hours + text.hours}: ${cronometer.mins + text.minutes}: ${cronometer.secs + text.seconds}`;
+								}
+							},1000);
+						},
+						pause: function(){
+							clearInterval(this.cronometerCount.valueOf());
+						},
+						stop: function(){
+							this.hours = 0, this.mins = 0, this.secs = 0;
+							clearInterval(this.cronometerCount.valueOf());
+						}
+					}
+
+					var game = {
+						language: 'en',
+						langInt: 1,
+						langArray: ['es', 'en', 'de', 'ja'],
+						status: 'reset',
+						graphics: 'low',
+						difficulty: undefined,
+						level: 1,
+						scenario: 'ground',
+						sky: 'day',
+						points: undefined,
+						start: function(){
+
+							game.status = 'started';
+							game.scenario = 'ground';
+
+							platform.x = Math.abs(Math.random() * canvasW - platform.width);
+
+							booster.status = 're-entry';
+							booster.x = canvasW / 2;
+							booster.y = 0;
+							booster.vx = 0;
+							booster.vy = 0;
+							booster.fuel = 245620;
+
+							//canvas.scrollIntoView({behavior: 'smooth'});
+							canvas.removeEventListener('click', game.start);
+
+							clear();
+							cronometer.start();
+
+
+							gravity(EARTH_GRAVITY);
+							booster.draw();
+
+							document.addEventListener('keydown', gameInput);
+							document.addEventListener('keypress', gameInput);
+							document.addEventListener('keyup', gameInput);
+
+							canvas.addEventListener('mousemove', gameInput);
+
+						},
+						resume: function(){
+							game.status = 'started';
+							clear();
+							cronometer.start();
+							gravity(EARTH_GRAVITY);
+							booster.draw();
+
+							canvas.removeEventListener('click', game.resume);
+						},
+						pause: function(){
+							game.status = 'paused';
+							cronometer.pause();
+							clearInterval(gravityInterval.valueOf());
+
+							ctx.save();
+
+							ctx.fillStyle = 'rgba(0,0,0, 0.5)';
+							ctx.fillRect(0, 0, canvasW, canvasH);
+							ctx.strokeStyle = 'dimgray'
+							ctx.fillStyle = 'white';
+							ctx.font = '25px sans-serif';
+							ctx.textAlign = 'end';
+							ctx.fillText(text.quitGame, canvasW - 25, canvasH - 25);
+							ctx.strokeText(text.quitGame, canvasW - 25, canvasH - 25);
+							ctx.font = '50px sans-serif';
+							ctx.textAlign = 'center';
+							ctx.strokeText(text.resume, canvasW/2, canvasH/2);
+							ctx.fillText(text.resume, canvasW/2, canvasH/2);
+
+							ctx.restore();
+
+							canvas.addEventListener('click', this.resume);
+
+						},
+						over: function(message, color = 'red'){
+
+							this.status = 'over';
+							cronometer.stop();
+
+							canvas.removeEventListener('click', game.resume);
+
+							ctx.fillStyle = 'black';
+							ctx.fillRect(0, 0, canvasW, canvasH);
+
+							ctx.fillStyle = 'gray';
+							ctx.font = '25px sans-serif';
+							ctx.textAlign = 'end';
+							ctx.fillText(text.quitGame, canvasW - 25, canvasH - 25);
+
+							game.language === 'ja' ? ctx.font = '50px sans-serif': ctx.font = 'bold 50px sans-serif';
+							ctx.fillStyle = color;
+							ctx.textAlign = 'center';
+							ctx.fillText(message, canvasW/2, canvasH/5*2);
+							ctx.fillStyle = 'white';
+							ctx.font = '50px sans-serif';
+
+							var successsFailureMsg;
+							booster.status === 'landed' ? successsFailureMsg = text.next : successsFailureMsg = text.retry;
+
+							ctx.fillText(successsFailureMsg, canvasW/2, canvasH/5*3);
+
+							ctx.font = '35px sans-serif';
+							if(booster.status === 'crashed'){
+								ctx.fillText('The rocket has crashed', canvasW/2, canvasH/5*1);
+								ctx.fillStyle = 'lightgray';
+
+								var gameOverMsg = ['But cool guys don\'t look at the explosions!', 'The rocket could not keep it together, but we can', 'Rapid unscheduled disassembly', 'The landing has failed successfully', 'Hey, it\'s not my fault, there is no bottom in space', 'Per aspera ad astra', 'In space, no one can hear you explode'];
+
+								ctx.fillText(gameOverMsg[Math.floor(Math.random()*gameOverMsg.length)], canvasW/2, canvasH/8*2.25);
+
+							}else if(booster.status === 'missed target'){
+								ctx.fillStyle = 'gray';
+
+								var gameOverMsg = ['I find your lack of aiming... disturbing', 'Target practice is not supposed to be that expensive', 'I told you we should have asked for directions!', 'the rocket has lost it\'s course, but at some point haven\'t we all?'];
+
+								ctx.fillText(gameOverMsg[Math.floor(Math.random()*gameOverMsg.length)], canvasW/2, canvasH/6*3);
+							}
+
+							if(game.level !== 4){
+								booster.status === 'landed' ? game.level++ : undefined;
+								canvas.addEventListener('click', game.start);
+							}else{
+								if(booster.status !== 'landed'){
+									canvas.addEventListener('click', game.start);
+								}else{
+									this.reset();
+								}
+							}
+						},
+						reset: function(){
+							this.status = 'reset';
+
+							cronometer.cronometerCount !== undefined ? cronometer.stop() : undefined;
+
+							document.removeEventListener('keydown', gameInput);
+							document.removeEventListener('keypress', gameInput);
+							document.removeEventListener('keyup', gameInput);
+
+							canvas.removeEventListener('mousemove', gameInput);
+							canvas.removeEventListener('click', game.resume);
+
+							setTimeout(()=> welcomeScreen(), 1000);
+
+						}
+					};
+
+					var text;
+
+					var spanish = {
+						start: 'Iniciar',
+						controls: 'Controles',
+						instructions: 'Instrucciones',
+						predeterminated: 'Por Defecto',
+						settings: 'Opciones',
+						language: 'Idioma',
+						level: 'Nivel',
+						altitude: 'Altitud',
+						meters: 'metros',
+						gravity: 'Gravedad',
+						time: 'Tiempo',
+						hours: 'h',
+						minutes: 'm',
+						seconds: 's',
+						zero: 0,
+						up: 'Arriba',
+						thrust: 'Impulso',
+						fullThrust: 'Impulso (Máximo)',
+						left: 'Izquierda',
+						right: 'Derecha',
+						mouse: 'Ratón',
+						keyboard: 'Teclado',
+						key: 'Tecla',
+						space: 'Espacio',
+						backspace: 'Backspace',
+						pause: 'Pausar',
+						resume: 'Reanudar',
+						menu: 'Menú',
+						esc: 'Escape',
+						exit: 'Salir',
+						quitGame: 'Salir (Tecla Escape)',
+						back: 'Atrás',
+						goBack: 'Atrás (Tecla Escape)',
+						gameover: 'Fin del Juego',
+						retry: '¿Reintentar?',
+						next: 'Siguiente',
+						nextLevel: 'Siguiente Nivel',
+						rocket: 'Cohete',
+						booster: 'Quemador',
+						engine: 'Motor',
+						goodSpeed: '¡Buena Velocidad!',
+						decelerate: '¡Desacelera!',
+						unstable: 'Inestable',
+						stable: 'Estable',
+						adjustCourse: 'Corregir Trayectoria',
+						fuel: 'Combustible',
+						lowFuel: 'Combustible Bajo',
+						noFuel: 'SIN COMBUSTIBLE',
+						litres: 'lts',
+						proximityWarning: 'Alerta de Proximidad',
+						imminentContact: '¡Contacto Inminente!',
+						contact: 'Contacto',
+						impact: 'Impacto',
+						land: 'Aterrizar',
+						landing: 'Aterrizaje',
+						sucessfulLanding: '¡Aterrizaje Exitoso!',
+						unstableLanding: 'Aterrizaje Inestable',
+						missedTarget: 'Objetivo Perdido',
+						spanish: 'Español',
+						english: 'Inglés',
+						german: 'Alemán',
+						japanese: 'Japonés'
+					};
+
+					var english = {
+						start: 'Start',
+						controls: 'Controls',
+						instructions: 'Instructions',
+						predeterminated: 'Default',
+						settings: 'Settings',
+						language: 'Language',
+						level: 'Level',
+						altitude: 'Altitude',
+						meters: 'meters',
+						gravity: 'Gravity',
+						time: 'Time',
+						hours: 'h',
+						minutes: 'm',
+						seconds: 's',
+						zero: 0,
+						up: 'Up',
+						thrust: 'Thrust',
+						fullThrust: 'Full Thrust',
+						left: 'Left',
+						right: 'Right',
+						mouse: 'Mouse',
+						keyboard: 'Keyboard',
+						key: 'key',
+						space: 'Space',
+						backspace: 'Backspace',
+						pause: 'Pause',
+						resume: 'Continue',
+						menu: 'Menu',
+						esc: 'Escape',
+						exit: 'Exit',
+						quitGame: 'Quit (Escape Key)',
+						back: 'Back',
+						goBack: 'Back (Escape Key)',
+						gameover: 'GAME OVER',
+						retry: 'Retry?',
+						next: 'Next',
+						nextLevel: 'Next Level',
+						rocket: 'Rocket',
+						booster: 'Booster',
+						engine: 'Engine',
+						goodSpeed: 'Good Speed!',
+						decelerate: 'Decelerate!',
+						unstable: 'Unstable',
+						stable: 'Stable',
+						adjustCourse: 'Adjust Trajectory',
+						fuel: 'Fuel',
+						lowFuel: 'Low Fuel',
+						noFuel: 'OUT OF FUEL',
+						litres: 'lts',
+						proximityWarning: 'Proximity Warning',
+						imminentContact: 'Imminent Contact!',
+						contact: 'Contact',
+						impact: 'Impact',
+						land: 'Land',
+						landing: 'Landing',
+						sucessfulLanding: 'Successful Landing!',
+						unstableLanding: 'Unstable Landing',
+						missedTarget: 'Missed Target',
+						spanish: 'Spanish',
+						english: 'English',
+						german: 'German',
+						japanese: 'Japanese'
+					};
+
+					// German translations pending
+					var german = {
+						start: 'Starten',
+						controls: 'Kontrollen',
+						instructions: 'Anleitung',
+						predeterminated: 'Standard',
+						settings: 'Einstellungen',
+						language: 'Sprache',
+						level: 'Level',
+						altitude: 'Höhe', // Check translation
+						meters: 'meter',
+						gravity: 'Schwerkraft',
+						time: 'Zeit',
+						hours: 'h',
+						minutes: 'm',
+						seconds: 's',
+						zero: 0,
+						up: 'Rauf',
+						thrust: 'Schub',
+						fullThrust: 'Voller Schub',
+						left: 'Links',
+						right: 'Reghts',
+						mouse: 'Maus',
+						keyboard: 'Tastatur',
+						key: 'taste',
+						space: 'Leertaste',
+						backspace: 'Rücktaste',
+						pause: 'Anhalten',
+						resume: 'Fortsetzen',
+						menu: 'Menü',
+						esc: 'Flucht',
+						exit: 'Beenden',
+						quitGame: 'Ende (Escape-Taste)',
+						back: 'Zurück',
+						goBack: 'Zurück (Escape-Taste)',
+						gameover: 'SPIEL IST AUS',
+						retry: 'Wiederholen?',
+						next: 'Nächste',
+						nextLevel: 'Nächste Level',
+						rocket: 'Rakete',
+						booster: 'Booster',
+						engine: 'Motor',
+						goodSpeed: 'Gutten Schnell!',
+						decelerate: 'Verlangsamen!',
+						unstable: 'Instabil',
+						stable: 'Standfest',
+						adjustCourse: 'Flugbahn anpassen',
+						fuel: 'Raketentreibstoff',
+						lowFuel: 'Kraftstoffmangel',
+						noFuel: 'DAS TREIBSTOFF IST ALLE',
+						litres: 'lts',
+						proximityWarning: 'Grund Warnung',
+						imminentContact: 'Bevorstehender Kontakt!',
+						contact: 'Kontakt',
+						impact: 'Auswirkung',
+						land: 'Landen',
+						landing: 'Landung',
+						sucessfulLanding: 'Erfolgreiche Landung!',
+						unstableLanding: 'Instabile Landung',
+						missedTarget: 'Verpasstes Ziel',
+						spanish: 'Spanisch',
+						english: 'English',
+						german: 'Deutsch',
+						japanese: 'Japanisch'
+					};
+
+					var japanese = {
+						start: '「始まる」',
+						controls: 'コントロール',
+						instructions: '指示',
+						predeterminated: '既定', // Kitei
+						settings: '設定',
+						language: '言語',
+						level: 'レベル',
+						altitude: '高度',
+						meters: 'メートル',
+						gravity: '重力', // Shouryoku
+						time: '時',
+						hours: '時間',
+						minutes: '分',
+						seconds: '秒', // Byou
+						zero: '霊',
+						up: '上',
+						thrust: '推力',
+						fullThrust: 'いっぱい推力',
+						left: '左',
+						right: '右',
+						mouse: 'マウス',
+						keyboard: '鍵盤',
+						key: 'キー',
+						space: 'スパース',
+						backspace: 'バックスパース',
+						pause: '一時停止',
+						resume: '続ける',
+						menu: 'メニュー',
+						esc: '逃れる',
+						exit: '終了する',
+						quitGame: '終了する（逃れるのキー）',
+						back: '後ろ',
+						goBack: '返る（逃れるのキー）',
+						gameover: 'ゲームオーバー',
+						retry: '再試行しゅますか？',
+						next: '次', // tsugi
+						nextLevel: '次のレベル', // Check and update translation
+						rocket: 'ロケット',
+						booster: '増幅器',
+						engine: '機関',
+						goodSpeed: '完璧な速度です！',
+						decelerate: '減速する！',
+						unstable: '不安定',
+						stable: '安定した', // Anseishita
+						adjustCourse: '軌道を調整して',
+						fuel: '燃料', // Nenryou
+						lowFuel: '低燃料',
+						noFuel: '燃料なし',
+						litres: 'lts', // リットル
+						proximityWarning: '警告',
+						imminentContact: '差し迫った接触',
+						contact: '接触',
+						impact: '衝撃',
+						land: '着地させる',
+						landing: '着陸',
+						sucessfulLanding: '着陸成功！',
+						unstableLanding: '不安定な着陸',
+						missedTarget: '逃したターゲット',
+						spanish: 'スペイン語',
+						english: '英語',
+						german: 'ドイツ語',
+						japanese: '日本語'
+					};
+
+					var instructions = {
+						current: undefined,
+						spanish: [' Usa tu ratón y teclado para controlar el descenso', 'del cohete y aterrizarlo seguro en el objetivo!',
+						' Para ganar, debes usar los controles y evitar los', 'obstaculos mientras mantienes al cohete estable',
+						'y en curso, presta especial atención a la altitud', 'del cohete y aterriza en la plataforma antes de', 'que se agote el conbustible.'],
+						english: [' Use your mouse and keyboard to control the', 'rocket\'s descend and land it safely on it\'s target!',
+						' To win, you must use the controls to avoid', 'the obstacles while keeping the rocket stable',
+						'on it\'s course, pay special attention to the rocket', 'altitude and land over the landing platform', 'before the fuel runs out.']
+					};
+
+					game.language = navigator.language.slice(0,2);
+					game.langInt = game.langArray.indexOf(game.language);
+
+					function setLanguage(){
+						if(game.language.match(/^es|^en|^de|^ja/)){
+							game.language === 'es' ? text = spanish : undefined;
+							game.language === 'en' ? text = english : undefined;
+							game.language === 'de' ? text = german : undefined;
+							game.language === 'ja' ? text = japanese : undefined;
+						}else{
+							text = english;
+						}
+					}
+
+					var menu = {
+						active: undefined,
+						current: 'welcome',
+						background: function(){
+							drawRocket();
+							ctx.fillStyle = 'black';
+							ctx.fillRect(canvasW/2, 0, canvasW, canvasH - canvasW/20);
+
+							ctx.fillStyle = 'rgba(0,0,0, 0.5)';
+							ctx.fillRect(0, 0, canvasW/2, canvasH);
+
+							ctx.font = '25px sans-serif';
+							ctx.fillStyle = 'white';
+							ctx.textBaseline = 'center';
+							ctx.textAlign = 'start';
+							ctx.fillText(text.goBack, 15, 35);
+						},
+						controls: function(){
+
+							this.current = 'controls';
+
+							ctx.save();
+
+							this.background();
+
+							ctx.fillStyle = 'white';
+							ctx.font = '40px sans-serif';
+							ctx.fillText(text.controls, canvasW/6*4, canvasH/8);
+
+							ctx.font = '22px sans-serif';
+
+							ctx.fillStyle = 'skyblue';
+							ctx.fillText(text.rocket, canvasW/20*11, canvasH/10*2);
+							ctx.fillStyle = 'red';
+							ctx.fillText(text.menu, canvasW/20*11, canvasH/10*7);
+
+							ctx.font = '20px sans-serif';
+
+							ctx.fillStyle = 'lightgray';
+							ctx.fillText(text.up, canvasW/20*12, canvasH/10*3);
+							ctx.fillText(text.fullThrust, canvasW/20*12, canvasH/10*4);
+							ctx.fillText(text.left, canvasW/20*12, canvasH/10*5);
+							ctx.fillText(text.right, canvasW/20*12, canvasH/10*6);
+
+							ctx.fillText(`${text.pause} / ${text.resume}`, canvasW/20*12, canvasH/10*8);
+							ctx.fillText(`${text.exit} / ${text.back}`, canvasW/20*12, canvasH/10*9);
+
+							ctx.fillStyle = 'black';
+							ctx.font = '18px sans-serif';
+							ctx.textAlign = 'start';
+							ctx.textBaseline = 'top';
+
+							ctx.clearRect(canvasW/20*15.5, canvasH/10*3 - 15, 30, 30);
+							ctx.fillText('W', canvasW/20*15.5 + 5, canvasH/10*3 - 10);
+
+							ctx.clearRect(canvasW/20*15.5, canvasH/10*4 - 15, 30, 30);
+							ctx.fillText('L', canvasW/20*15.5 + 5, canvasH/10*4 - 10);
+
+							ctx.clearRect(canvasW/20*16.5, canvasH/10*4 - 15, ctx.measureText(text.space).width + 10, 30);
+							ctx.fillText(text.space, canvasW/20*16.5 + 5, canvasH/10*4 - 10);
+
+							ctx.clearRect(canvasW/20*15.5, canvasH/10*5 - 15, 30, 30);
+							ctx.fillText('A', canvasW/20*15.5 + 5, canvasH/10*5 - 10);
+
+							ctx.clearRect(canvasW/20*16.5, canvasH/10*5 - 15, ctx.measureText(`${text.mouse} ${text.left}`).width + 10, 30);
+							ctx.fillText(`${text.mouse} ${text.left}`, canvasW/20*16.5 + 5, canvasH/10*5 - 10);
+
+							ctx.clearRect(canvasW/20*15.5, canvasH/10*6 - 15, 30, 30);
+							ctx.fillText('D', canvasW/20*15.5 + 5, canvasH/10*6 - 10);
+
+							ctx.clearRect(canvasW/20*16.5, canvasH/10*6 - 15, ctx.measureText(`${text.mouse} ${text.right}`).width + 10, 30);
+							ctx.fillText(`${text.mouse} ${text.right}`, canvasW/20*16.5 + 5, canvasH/10*6 - 10);
+
+							ctx.clearRect(canvasW/20*15.5, canvasH/10*8 - 15, 30, 30);
+							ctx.fillText('P', canvasW/20*15.5 + 5, canvasH/10*8 - 10);
+
+							ctx.clearRect(canvasW/20*15.5, canvasH/10*9 - 15, 30, 30);
+							ctx.fillText('Esc', canvasW/20*15.4 + 5, canvasH/10*9 - 10);
+
+							ctx.clearRect(canvasW/20*16.5, canvasH/10*9 - 15, ctx.measureText(text.backspace).width + 10, 30);
+							ctx.fillText(text.backspace, canvasW/20*16.5 + 5, canvasH/10*9 - 10);
+
+							ctx.restore();
+						},
+						instructions: function(){
+
+							this.current = 'instructions';
+
+							ctx.save();
+
+							this.background();
+
+							ctx.fillStyle = 'white';
+							ctx.font = '40px sans-serif';
+							ctx.textAlign = 'center';
+							ctx.fillText(text.instructions, canvasW/8*6, canvasH/8);
+
+							ctx.font = '22px sans-serif';
+							ctx.textAlign = 'start';
+
+							(()=> game.language === 'es' ? (ctx.font = '20px sans-serif',instructions.current = instructions.spanish) : instructions.current = instructions.english)();
+
+							ctx.fillText(instructions.current[0], canvasW/20*10.5, canvasH/20*4);
+							ctx.fillText(instructions.current[1], canvasW/20*10.5, canvasH/20*5);
+
+							ctx.fillText(instructions.current[2], canvasW/20*10.5, canvasH/20*7);
+							ctx.fillText(instructions.current[3], canvasW/20*10.5, canvasH/20*8);
+							ctx.fillText(instructions.current[4], canvasW/20*10.5, canvasH/20*9);
+							ctx.fillText(instructions.current[5], canvasW/20*10.5, canvasH/20*10);
+							ctx.fillText(instructions.current[6], canvasW/20*10.5, canvasH/20*11);
+
+							menuControlsBtn = new Path2D;
+							ctx.lineWidth = 2;
+							ctx.fillStyle = 'blue';
+							ctx.font = '40px sans-serif';
+							ctx.textBaseline = 'top';
+							ctx.textAlign = 'center';
+
+							menuControlsBtn.rect(canvasW/6*4 - 1, canvasH/6*5 - 1, ctx.measureText(text.controls).width, 40);
+							ctx.fillText(text.controls, canvasW/6*4.5, canvasH/6*5);
+
+							ctx.restore();
+						},
+						language: function(){
+
+							this.current = 'language';
+							this.current === 'language' ? setLanguage() : undefined;
+
+							ctx.save();
+							this.background();
+
+							ctx.fillStyle = 'white';
+							ctx.font = '40px sans-serif';
+							ctx.textAlign = 'center';
+							ctx.fillText(text.language, canvasW/8*6, canvasH/8);
+
+							ctx.font = '35px sans-serif';
+
+							var selectedLanguage;
+
+							game.language === 'es' ? selectedLanguage = text.spanish : undefined;
+							game.language === 'en' ? selectedLanguage = text.english : undefined;
+							game.language === 'de' ? selectedLanguage = text.german : undefined;
+							game.language === 'ja' ? selectedLanguage = text.japanese : undefined;
+
+							ctx.fillStyle = 'gray';
+							ctx.fillText(selectedLanguage, canvasW/8*6, canvasH/8*2);
+
+							ctx.fillStyle = 'white';
+							ctx.fillText(text.spanish, canvasW/8*6, canvasH/8*4);
+							ctx.fillText(text.english, canvasW/8*6, canvasH/8*5);
+							ctx.fillText(text.german, canvasW/8*6, canvasH/8*6);
+							ctx.fillText(text.japanese, canvasW/8*6, canvasH/8*7);
+
+
+							langSelectorBtn = new Path2D;
+
+							langSelectorBtn.rect(canvasW/8*6 - 100, canvasH/8*2 - 30, 200, 50);
+
+							menuLangLeftArrow = new Path2D;
+							menuLangLeftArrow.moveTo(canvasW/8*6 - 110, canvasH/8*2 - 30);
+							menuLangLeftArrow.lineTo(canvasW/8*6 - 110, canvasH/8*2 + 10);
+							menuLangLeftArrow.lineTo(canvasW/8*6 - 130, canvasH/8*2 - 10);
+							ctx.fill(menuLangLeftArrow);
+
+							menuLangRightArrow = new Path2D;
+							menuLangRightArrow.moveTo(canvasW/8*6 + 110, canvasH/8*2 - 30);
+							menuLangRightArrow.lineTo(canvasW/8*6 + 110, canvasH/8*2 + 10);
+							menuLangRightArrow.lineTo(canvasW/8*6 + 130, canvasH/8*2 - 10);
+							ctx.fill(menuLangRightArrow);
+
+							var textWidth = (text)=> ctx.measureText(text).width;
+
+							spanishLangBtn = new Path2D;
+							spanishLangBtn.rect(canvasW/8*6-textWidth(text.spanish)/2, canvasH/8*4 - 35, textWidth(text.spanish), 50);
+
+							englishLangBtn = new Path2D;
+							englishLangBtn.rect(canvasW/8*6-textWidth(text.english)/2, canvasH/8*5 - 35, textWidth(text.english), 50);
+
+							germanLangBtn = new Path2D;
+							germanLangBtn.rect(canvasW/8*6-textWidth(text.german)/2, canvasH/8*6 - 35, textWidth(text.german), 50);
+
+							japaneseLangBtn = new Path2D;
+							japaneseLangBtn.rect(canvasW/8*6-textWidth(text.japanese)/2, canvasH/8*7 - 35, textWidth(text.japanese), 50);
+
+							ctx.fillStyle = 'forestgreen';
+
+							ctx.beginPath();
+
+							var greenCircleXYArray = function(){
+								if(game.language === 'es'){return [textWidth(text.spanish), canvasH/8*4]};
+								if(game.language === 'en'){return [textWidth(text.english), canvasH/8*5]};
+								if(game.language === 'de'){return [textWidth(text.german), canvasH/8*6]};
+								if(game.language === 'ja'){return [textWidth(text.japanese), canvasH/8*7]};
+							};
+
+							ctx.arc(canvasW/8*6 - greenCircleXYArray()[0]/2 - 40, greenCircleXYArray()[1] - 12.5, 12.5, 0, Math.PI*2);
+							ctx.closePath();
+							ctx.fill();
+
+							ctx.restore();
+						}
+					};
+
+					// rocket object
+					var booster = {
+						x: canvasW / 2, // Meters;
+						y: 0, // Meters;
+						vx: 0, // Meters per Second;
+						vy: 0, // Meters per Second;
+						width: 3.6576, // Meters;
+						height: 75, // 70 meters height + 5 meters of free space for landing legs deploy;
+						mass: 549054, //Kg;
+						color: 'white',
+						legsColor: 'black',
+						legsLength: 3.6576 * 3,
+						stroke: 'rgba(0,0,0, 0.25)',
+						strokeWidth: ctx.lineWidth,
+						fuelCapacity: 245620,
+						fuel: 245620,
+						status: 're-entry',
+						// projectile: [0, canvasH],
+						draw: function(){
+
+							ctx.save();
+
+							game.level === 2 || game.level === 4 ? background('night') : background('day');
+
+							// Rocket's main body
+							ctx.beginPath();
+							ctx.fillStyle = this.color;
+							ctx.strokeStyle = this.stroke;
+							ctx.fillRect(this.x, this.y, this.width, this.height - 5);
+							ctx.strokeRect(this.x, this.y, this.width, this.height - 5);
+							ctx.fillStyle = 'black';
+							ctx.fillRect(this.x, this.y, this.width, 5);
+							ctx.fillRect(this.x - 2, this.y + 6, 2, 1);
+							ctx.fillRect(this.x + this.width/3, this.y + 6, this.width/3, 1);
+							ctx.fillRect(this.x + this.width, this.y + 6, 2, 1);
+							ctx.fillRect(this.x, this.y + this.height - 5 - this.legsLength, this.width, this.legsLength);
+							ctx.closePath();
+							ctx.fill();
+
+							// Draws rocket legs when a given altitude is reached
+							if(this.y + this.height >= canvasH - 100){
+								ctx.beginPath();
+								ctx.fillStyle = this.legsColor;
+								ctx.moveTo(this.x, this.y + this.height - 7);
+								ctx.lineTo(this.x - this.legsLength, this.y + this.height);
+								ctx.lineTo(this.x, this.y + this.height - 5);
+								ctx.moveTo(this.x + this.width/3, this.y + this.height - 5);
+								ctx.lineTo(this.x + this.width/2, this.y + this.height);
+								ctx.lineTo(this.x + this.width/3*2, this.y + this.height - 5);
+								ctx.moveTo(this.x + this.width, this.y + this.height - 5);
+								ctx.lineTo(this.x + this.width + this.legsLength, this.y + this.height);
+								ctx.lineTo(this.x + this.width, this.y + this.height - 7);
+								ctx.closePath();
+								ctx.fill();
+								ctx.stroke();
+							}
+							if(booster.status === 'crashed'){
+								var explosionRadius = 75;
+								var explosionInterval = setInterval(function(){
+
+									var explosionGrad = ctx.createRadialGradient(booster.x + booster.width/2 ,booster.y + booster.height - 5,explosionRadius/10,booster.x + booster.width/2 ,booster.y + booster.height, explosionRadius);
+									explosionGrad.addColorStop(0,'white');
+									explosionGrad.addColorStop(0.5,'rgba(255,255,50, 0.25)');
+									explosionGrad.addColorStop(0.75,'rgba(255,165,0, 0.125)');
+									explosionGrad.addColorStop(1,'transparent');
+
+									ctx.fillStyle = explosionGrad;
+									ctx.arc(booster.x + booster.width/2 ,booster.y + booster.height - 5, explosionRadius, 0, Math.PI*2);
+									ctx.fill();
+
+									explosionRadius <= 160 ? explosionRadius += 10 : clearInterval(explosionInterval.valueOf());
+								}, 5);
+							}
+
+							stats();
+
+							// Draws Landing target
+							platform.draw();
+
+							if(booster.status === 'landed'){
+								if(booster.vx >= -0.1 && booster.vx <= 0.1 && ctx.isPointInPath(landingPlatform, booster.x + booster.width/2, booster.y + booster.height)){
+									game.over(text.sucessfulLanding, 'limegreen');
+								}else if(ctx.isPointInPath(landingPlatform, booster.x + booster.width/2, booster.y + booster.height)){
+									game.over(text.unstableLanding, 'yellow');
+								}
+							}else if(booster.status === 'missed target'){
+								game.over(text.missedTarget,'orange')
+							}
+
+							if(booster.status === 'crashed'){
+								setTimeout(function(){
+									game.over(text.gameover);
+								}, 1000);
+							}
+
+							ctx.restore();
+						}
+					};
+
+					var platform = {
+						vx: 0.25,
+						vy: 0.25,
+						x: Math.abs(Math.random() * canvasW - 100),
+						y: canvasH - 15,
+						width: 100,
+						height: 10,
+						draw: function(){
+
+							landingPlatform = new Path2D;
+
+							ctx.save();
+
+
+							ctx.strokeStyle = 'rgba(0,0,0, 0.5)';
+							landingPlatform.rect(this.x, this.y, this.width, this.height);
+
+							ctx.fillStyle = 'darkgray';
+							ctx.stroke(landingPlatform);
+							ctx.fill(landingPlatform);
+
+							if(ctx.isPointInPath(landingPlatform, booster.x - booster.legsLength, platform.y) && ctx.isPointInPath(landingPlatform, booster.x + booster.width + booster.legsLength, platform.y)){
+								ctx.fillStyle = 'limegreen';
+							}else{
+								booster.y + booster.height < canvasH - 200 ? ctx.fillStyle = 'orange' : ctx.fillStyle = 'red';
+							}
+
+							ctx.fillRect(platform.x, platform.y, 10, platform.height);
+							ctx.fillRect(platform.x + platform.width - 10, platform.y, 10, platform.height);
+							ctx.strokeRect(platform.x, platform.y, 10, platform.height);
+							ctx.strokeRect(platform.x + platform.width - 10, platform.y, 10, platform.height);
+
+							ctx.fillStyle = 'black';
+							ctx.textAlign = 'center';
+							ctx.textBaseline = 'middle';
+							ctx.font = `${this.height}px sans-serif`;
+							ctx.font = 'bold 15px sans-serif';
+							ctx.fillText('X', this.x + this.width/2, this.y + this.height/2 + 1);
+
+							game.level === 1 ? scenario('ground') : undefined;
+							game.level === 2 ? scenario('ground') : undefined;
+							game.level === 3 ? scenario('ocean') : undefined;
+							game.level === 4 ? scenario('ocean') : undefined;
+
+							if(game.scenario !== 'ocean'){
+								ctx.fillRect(this.x - 25, canvasH - 70, 3, 65);
+								ctx.fillRect(this.x - 15, canvasH - 50, 3, 40);
+								ctx.fillRect(this.x + this.width + 15, canvasH - 50, 3, 40);
+								ctx.fillRect(this.x + this.width + 25, canvasH - 70, 3, 65);
+							}else if(game.scenario === 'ocean' && game.graphics === 'high'){
+								ctx.beginPath();
+								ctx.moveTo(this.x + this.width, this.y + this.height/2);
+								ctx.lineTo(this.x + this.width + 15, this.y + this.height/2);
+								ctx.lineTo(this.x + this.width, this.y + this.height + 5);
+								ctx.lineTo(this.x, this.y + this.height + 5);
+								ctx.lineTo(this.x - 15, this.y + this.height/2);
+								ctx.closePath();
+								ctx.fill();
+							}
+
+							ctx.restore();
+						}
+					}
+
+					// Engines object with methods for drawing each engine
+					var engines = {
+						sideEnginesWidth: 20,
+						sideEnginesHeight: 5,
+						mainEngineWidth: booster.width/5*3,
+						mainEngineHeight: 50,
+						drawLeft: function(){
+
+							var lEngineGrad = ctx.createLinearGradient(booster.x - 15, booster.y + booster.height + 15, booster.x + booster.width/10, booster.y + booster.height - 5);
+
+							lEngineGrad.addColorStop(0,'rgba(166,182,255, 0.5)');
+							lEngineGrad.addColorStop(0.5,'rgba(255,255,128, 0.8)');
+							lEngineGrad.addColorStop(1,'rgba(255,255,255, 0.8)');
+
+							ctx.fillStyle = lEngineGrad;
+
+							lEngineExhaust = new Path2D();
+							lEngineExhaust.moveTo(booster.x, booster.y + booster.height - 5);
+							lEngineExhaust.quadraticCurveTo(booster.x - 5, booster.y + booster.height + 2, booster.x - 15, booster.y + booster.height + 15);
+							lEngineExhaust.quadraticCurveTo(booster.x, booster.y + booster.height, booster.x + booster.width/5, booster.y + booster.height - 5);
+							lEngineExhaust.lineTo(booster.x, booster.y + booster.height - 5);
+							ctx.fill(lEngineExhaust);
+						},
+
+						drawRight: function(){
+
+							var rEngineGrad = ctx.createLinearGradient(booster.x + booster.width/10*9, booster.y + booster.height - 5, booster.x + booster.width + 15, booster.y + booster.height + 15);
+
+							rEngineGrad.addColorStop(0,'rgba(255,255,255, 0.8)');
+							rEngineGrad.addColorStop(0.5,'rgba(255,255,128, 0.8)');
+							rEngineGrad.addColorStop(1,'rgba(166,182,255, 0.5)');
+
+							ctx.fillStyle = rEngineGrad;
+
+							rEngineExhaust = new Path2D();
+							rEngineExhaust.moveTo(booster.x + booster.width, booster.y + booster.height - 5);
+							rEngineExhaust.quadraticCurveTo(booster.x + booster.width + 5, booster.y + booster.height + 2, booster.x + booster.width + 15, booster.y + booster.height + 15);
+							rEngineExhaust.quadraticCurveTo(booster.x + booster.width, booster.y + booster.height, booster.x + booster.width/5*4, booster.y + booster.height - 5);
+							rEngineExhaust.lineTo(booster.x + booster.width/10*9, booster.y + booster.height - 5);
+							ctx.fill(rEngineExhaust);
+						},
+
+						drawMain: function(){
+
+							var mainEngineGrad = ctx.createLinearGradient(booster.x + booster.width/2, booster.y + booster.height, booster.x + booster.width/2, booster.y + booster.height + 45);
+
+							mainEngineGrad.addColorStop(0,'rgba(255,255,255, 0.8)');
+							mainEngineGrad.addColorStop(0.5,'rgba(255,255,128, 0.8)');
+							mainEngineGrad.addColorStop(1,'rgba(166,182,255, 0.5)');
+
+							ctx.fillStyle = mainEngineGrad;
+
+							mainEngineExhaust = new Path2D();
+							mainEngineExhaust.moveTo(booster.x + booster.width/5, booster.y + booster.height - 5)
+							mainEngineExhaust.quadraticCurveTo(booster.x, booster.y + booster.height + 25, booster.x + booster.width/2, booster.y + booster.height + 50);
+							mainEngineExhaust.quadraticCurveTo(booster.x + booster.width, booster.y + booster.height + 25, booster.x + booster.width/5*4, booster.y + booster.height);
+							mainEngineExhaust.lineTo(booster.x + booster.width/5*4, booster.y + booster.height - 5);
+							mainEngineExhaust.closePath();
+							ctx.fill(mainEngineExhaust);
+						}
+					}
+
+					// Clear the Canvas
+					function clear(){
+						ctx.clearRect(0, 0, canvasW, canvasH);
+					}
+
+					// Turns gravity on
+					var gravityInterval;
+					function gravity(g = 9.80665){
+						gravityInterval = setInterval(function(){
+
+							booster.vx = (Math.sign(booster.vx) * Math.abs(booster.vx)) * 0.98;
+							Math.abs(booster.vx) > 0.001 ? booster.x += booster.vx : booster.vx = 0;
+
+							if(navigator.platform.match(/win/ig)){
+								booster.vy += g/fps;
+							}else{
+								booster.vy += g/fps/60;
+							}
+							booster.y += booster.vy;
+
+							if(booster.y + booster.height >= canvasH || ctx.isPointInPath(landingPlatform, booster.x + booster.width/2, booster.y + booster.height)){
+								if(Math.abs(booster.vy) > 0.2){
+									booster.status = 'crashed';
+								}else{
+									if(ctx.isPointInPath(landingPlatform, booster.x - booster.legsLength, booster.y + booster.height) && ctx.isPointInPath(landingPlatform, booster.x + booster.width + booster.legsLength, booster.y + booster.height)){
+										booster.status = 'landed';
+									}else{
+										booster.status = 'missed target';
+									}
+								}
+							}
+
+							if(booster.y >= canvasH - booster.height || booster.y + booster.vy < 0 || ctx.isPointInPath(landingPlatform, booster.x + booster.width/2, booster.y + booster.height)){
+								booster.vy = -booster.vy;
+								booster.vy /= 2;
+							}
+							if(booster.x + booster.vx > canvasW - booster.width || booster.x + booster.vx < 0){
+								booster.vx = -booster.vx;
+							}
+
+							if(booster.status === 'landed' || booster.status === 'missed target' || booster.status === 'crashed' || game.status === 'over' || game.status === 'reset'){
+									clearInterval(gravityInterval.valueOf());
+									//clearInterval(scenarioInterval.valueOf());
+							}
+
+							booster.status !== 'reset' ? booster.draw() : undefined;
+
+						}, 1000/fps);
+					}
+
+					// shows game statistic
+					function stats(){
+
+						ctx.save();
+						ctx.font = '20px sans-serif';
+						ctx.textAlign = 'start';
+						ctx.fillStyle = 'rgba(0,0,0, 0.75)';
+						ctx.fillRect(0, 0, canvasW, 35);
+						ctx.fillStyle = 'white';
+						if(game.sky !== 'day'){
+							ctx.strokeStyle = 'rgba(255,255,255, 0.5)';
+							ctx.lineWidth = 0.5;
+							ctx.beginPath();
+							ctx.moveTo(0,35);
+							ctx.lineTo(canvasW, 35);
+							ctx.closePath();
+							ctx.stroke();
+						}
+
+						ctx.fillText(`${text.altitude} = ${Math.round(Math.abs(canvasH - booster.y - booster.height))} ${text.meters}`, 5, 25);
+						ctx.fillText(`${text.gravity} = ${EARTH_GRAVITY} m/s²`, canvasW/5, 25, 175);
+						ctx.fillText(`Vx = ${(booster.vx*60).toPrecision(6)} m/s`, canvasW/5*2 + 5, 25);
+						ctx.fillText(`Vy = ${(booster.vy * 60).toPrecision(6)} m/s`, canvasW/5*3 + 5, 25);
+						ctx.fillText(`${text.time} = ${cronometer.elapsed}`, canvasW/5*4 + 5, 25);
+						//ctx.fillText(`Momentum Y = ${(booster.mass * booster.vy).toPrecision(7)} Kg*m/s`, 5, 55);
+						game.sky === 'day' ? ctx.fillStyle = 'black' : ctx.fillStyle = 'white';
+						ctx.fillText(`${text.level} ${game.level}`, 5, 60);
+						ctx.textAlign = 'end';
+						ctx.fillText(text.fuel, canvasW - 15, 55);
+
+
+						var fuelPercentage = (booster.fuel * 100 / booster.fuelCapacity).toPrecision(3);
+
+						if(booster.fuel > 0){
+							ctx.fillText(`${fuelPercentage} %`, canvasW - 10, 250);
+						}
+
+						ctx.textAlign = 'start';
+						ctx.fillStyle = 'black';
+						ctx.strokeStyle = 'dimgray';
+						ctx.fillRect(canvasW - 51, 61.5 ,27, 164.6);
+						ctx.strokeRect(canvasW - 51, 61.5 ,27, 164.6);
+
+						var fuelGrad = ctx.createLinearGradient(canvasW - 12.5, 61, canvasW - 12.5, 162.6);
+						fuelGrad.addColorStop(0, 'yellow');
+						fuelGrad.addColorStop(0.5, 'orange');
+						fuelGrad.addColorStop(1, 'red');
+
+						ctx.fillStyle = fuelGrad;
+						ctx.fillRect(canvasW -50, 225 - booster.fuel /755/2 ,25, booster.fuel / 755/2);
+
+						if(booster.fuel <= 0){
+							ctx.fillStyle = 'white';
+							ctx.textAlign = 'center';
+							ctx.fillText(text.zero, canvasW - 37.5, 220);
+						}
+
+						game.sky === 'day' ? ctx.fillStyle = 'rgba(0,0,0, 0.5)' : ctx.fillStyle = 'rgba(255,255,255, 0.075)';
+						ctx.fillRect(815, 65, 150, 75);
+						game.sky !== 'day' ? (ctx.lineWidth = 0.5, ctx.strokeRect(815, 65, 150, 75)) : undefined;
+						ctx.fillStyle = 'rgba(0,0,0, 0.5)';
+						ctx.fillRect(815, 65, 150, 25);
+						ctx.fillStyle = 'white';
+						ctx.textAlign = 'end';
+						ctx.fillText(`${booster.fuel} ${text.litres}`, 950, 85);
+						Math.abs(booster.vx) > 0.1 ? (ctx.fillStyle = 'yellow', ctx.fillText(text.unstable, 950, 110)) : (ctx.fillStyle = 'white', ctx.fillText(text.stable, 950, 110));
+						Math.abs(booster.vy) > 0.2 || booster.status === 'crashed'? (ctx.fillStyle = 'red', ctx.fillText(text.decelerate, 950, 135)) : (ctx.fillStyle = 'limegreen', ctx.fillText(text.goodSpeed, 950, 135, 125));
+
+						ctx.textAlign = 'start';
+
+						if(booster.y + booster.height >= canvasH - 200){
+
+							ctx.fillRect(815, 150, 150, 35);
+							ctx.strokeStyle = 'black';
+							ctx.strokeRect(815, 150, 150, 35);
+							ctx.fillStyle = 'white';
+
+							if(booster.y + booster.height >= canvasH || ctx.isPointInPath(landingPlatform, booster.x + booster.width/2, booster.y + booster.height)){
+								var landingStatus = function(){
+									if(Math.abs(booster.vy) > 0.2){
+										return text.impact;
+									}else{
+										return text.contact;
+									}
+								};
+								ctx.fillText(landingStatus(), 825, 175);
+							}else if(booster.y + booster.height >= canvasH - 100){
+								ctx.fillText(text.imminentContact, 825, 175, 135);
+							}else{
+								ctx.fillText(text.proximityWarning, 825, 175, 135);
+							}
+						}
+
+						if(booster.fuel <= 0 || fuelPercentage <= 25){
+							var fuelWarningY, fuelTextWarningY;
+							var fuelWarning = function(){
+								if(booster.fuel <= 0){
+									return text.noFuel;
+								}else{
+									return text.lowFuel;
+								}
+							};
+
+							booster.y + booster.height >= canvasH - 200 ? (fuelWarningY = 195, fuelTextWarningY = 220)
+							 : (fuelWarningY = 150, fuelTextWarningY = 175);
+
+							booster.fuel === 0 ? ctx.fillStyle = 'red' : ctx.fillStyle = 'orange';
+							ctx.strokeStyle = 'black';
+							ctx.fillRect(815, fuelWarningY, 150, 35);
+							ctx.strokeRect(815, fuelWarningY, 150, 35);
+							ctx.fillStyle = 'white';
+							ctx.fillText(fuelWarning(), 825, fuelTextWarningY, 135);
+						}
+
+						game.sky === 'day' ? ctx.fillStyle = 'rgba(0,0,0, 0.7)' : ctx.fillStyle = 'rgba(255,255,255, 0.7)';
+						if(booster.x < platform.x){
+							Math.sign(booster.vx) === -1 ? ctx.fillText(text.adjustCourse, 650, 87.5, 150) : undefined;
+						}else if(booster.x > platform.x + platform.width){
+							Math.sign(booster.vx) === 1 ? ctx.fillText(text.adjustCourse, 650, 87.5, 150) : undefined;
+						}
+						ctx.restore();
+					}
+
+					// Displays a welcome screen for the game
+					function welcomeScreen(){
+
+						setLanguage();
+
+						menu.current = 'welcome';
+
+						cronometer.cronometerCount !== undefined ? cronometer.stop() : undefined;
+
+						document.removeEventListener('keydown', gameInput);
+						document.removeEventListener('keypress', gameInput);
+						document.removeEventListener('keyup', gameInput);
+
+						canvas.removeEventListener('mousemove', gameInput);
+						canvas.removeEventListener('click', game.resume);
+
+						clear();
+
+						ctx.save();
+
+						ctx.fillStyle = 'black';
+						ctx.fillRect(0, 0, canvasW, canvasH);
+						ctx.fillStyle = 'white';
+						ctx.textAlign = 'start';
+						ctx.textBaseline = 'top';
+						ctx.font = '60px sans-serif';
+						ctx.fillText('Booster Lander', canvasW/20*11, canvasH/8);
+						ctx.font = '50px sans-serif';
+						ctx.fillStyle = 'lawngreen';
+						ctx.fillText(text.start, canvasW/10*6, canvasH/6*2);
+						ctx.fillStyle = 'darkgray';
+						ctx.fillText(text.instructions, canvasW/10*6, canvasH/6*3);
+						ctx.fillText(text.language, canvasW/10*6, canvasH/6*4);
+						ctx.fillText(text.controls, canvasW/10*6, canvasH/6*5);
+
+						startGameBtn = new Path2D;
+						menuControlsBtn = new Path2D;
+						menuInstructionsBtn = new Path2D;
+						menuLangBtn = new Path2D;
+
+						ctx.strokeStyle = 'red';
+						ctx.strokeRect(canvasW/20*11 - 1, canvasH/8 - 1, canvasW, 65);
+						ctx.strokeStyle = 'white';
+
+						startGameBtn.rect(canvasW/10*6 - 1, canvasH/6*2 - 1, ctx.measureText(text.start).width, 50);
+
+						menuInstructionsBtn.rect(canvasW/10*6 - 1, canvasH/6*3 - 1, ctx.measureText(text.instructions).width, 50);
+
+						menuLangBtn.rect(canvasW/10*6 - 1, canvasH/6*4 - 1, ctx.measureText(text.language).width, 50);
+
+						menuControlsBtn.rect(canvasW/10*6 - 1, canvasH/6*5 - 1, ctx.measureText(text.controls).width, 50);
+
+						ctx.font = '15px sans-serif';
+						ctx.fillStyle = 'gray';
+						ctx.textAlign = 'center';
+						ctx.fillText('Copyright 2020 © Juan Astudillo', canvasW/10*8.8, canvasH/20*19.25);
+
+						ctx.restore();
+
+						drawRocket();
+
+						canvas.addEventListener('click', menuInput);
+						document.addEventListener('keydown', menuInput);
+
+						game.level = 1;
+						game.sky = 'day';
+						game.scenario = 'ground';
+					}
+
+					welcomeScreen();
+
+					// Captures mouse and/or keyboard input
+					function gameInput(e){
+
+						if(game.status === 'started'){
+
+							var reEntryBoosterThrust = EARTH_GRAVITY/fps;
+
+							if(game.status === 'started'){
+								if(booster.fuel > 0){
+									if(e.code === 'KeyW'){
+										booster.vy += -booster.vy / 40;
+										engines.drawMain();
+										booster.fuel -= 500;
+									}
+
+									if(e.code === 'KeyL' || e.code === 'Space'){
+										engines.drawLeft();
+										engines.drawMain();
+										engines.drawRight();
+
+										booster.vy += -booster.vy / 20;
+										booster.vx += -booster.vx / 100;
+										booster.fuel -= 1000;
+									}
+
+									if(e.code === 'KeyA'){
+										engines.drawRight();
+										booster.vx -= 0.5;
+										booster.vy += -booster.vy / 80;
+										booster.fuel -= 250;
+									}
+									if(e.code === 'KeyD'){
+										engines.drawLeft();
+										booster.vx += 0.5;
+										booster.vy += -booster.vy / 80;
+										booster.fuel -= 250;
+									}
+									if(Math.sign(e.movementX) === -1){
+										engines.drawRight();
+										booster.vx -= 0.5;
+										booster.vy += -booster.vy / 80;
+										booster.fuel -= 250;
+									}
+									if(Math.sign(e.movementX) === 1){
+										engines.drawLeft();
+										booster.vx += 0.5;
+										booster.vy += -booster.vy / 80;
+										booster.fuel -= 250;
+									}
+								}else{
+									booster.fuel = 0;
+								}
+
+								if(e.code === 'KeyP' || e.code === 'Enter'){
+									game.pause();
+								}
+							}
+						}else if(game.status === 'paused'){
+							if(e.code === 'KeyP' || e.code === 'Enter' || e.code === 'Backspace'){
+									game.resume();
+							}
+						}
+
+						if(e.code === 'Escape'){
+							game.reset();
+						}
+					}
+
+					function menuInput(e){
+
+						var eX = e.offsetX, eY = e.offsetY;
+
+						if(menu.current === 'welcome' || menu.current === 'instructions'){
+							if(ctx.isPointInPath(menuControlsBtn, eX, eY) && (game.status === 'started' || game.status === 'reset')){
+								menu.controls();
+							}
+						}
+
+						if(menu.current === 'welcome'){
+							if(ctx.isPointInPath(startGameBtn, eX, eY) && (game.status === 'started' || game.status === 'reset')){
+								game.start();
+								canvas.removeEventListener('click', menuInput);
+								document.removeEventListener('keydown', menuInput);
+							}
+
+							if(ctx.isPointInPath(menuInstructionsBtn, eX, eY) && (game.status === 'started' || game.status === 'reset')){
+								menu.instructions();
+							}
+
+							if(ctx.isPointInPath(menuLangBtn, eX, eY) && (game.status === 'started' || game.status === 'reset')){
+								menu.language();
+							}
+						}
+
+						if(menu.current === 'language'){
+							if(ctx.isPointInPath(langSelectorBtn, eX, eY) || ctx.isPointInPath(menuLangRightArrow, eX, eY)){
+
+								game.langInt < game.langArray.length - 1 ? game.langInt++ : game.langInt = 0;
+
+							}else if(ctx.isPointInPath(menuLangLeftArrow, eX, eY)){
+
+								game.langInt > 0 ? game.langInt-- : game.langInt = game.langArray.length - 1;
+							}
+
+							ctx.isPointInPath(spanishLangBtn, eX, eY) ? game.langInt = game.langArray.indexOf('es') : undefined;
+							ctx.isPointInPath(englishLangBtn, eX, eY) ? game.langInt = game.langArray.indexOf('en') : undefined;
+							ctx.isPointInPath(germanLangBtn, eX, eY) ? game.langInt = game.langArray.indexOf('de') : undefined;
+							ctx.isPointInPath(japaneseLangBtn, eX, eY) ? game.langInt = game.langArray.indexOf('ja') : undefined;
+
+							game.language = game.langArray[game.langInt];
+							menu.language();
+						}
+
+						if(e.code === 'Escape' || e.code === 'Backspace'){
+							canvas.removeEventListener('click', menuInput);
+							document.removeEventListener('keydown', menuInput);
+							game.reset();
+						}
+					}
+
+					// Draws rocket background for the welcome screen, needs polishing
+					function drawRocket(){
+
+						ctx.save();
+						ctx.scale(canvasH/1200, canvasH/1200);
+
+						var skyGradient = ctx.createLinearGradient(400, 0, 400, 1200);
+						skyGradient.addColorStop(0, 'deepskyblue');
+						skyGradient.addColorStop(1, 'lightskyblue');
+
+						var sky = skyGradient;
+
+						var rocketGradient = ctx.createLinearGradient(350, 1200/2, 450, 1200/2);
+						rocketGradient.addColorStop(0, 'white');
+						rocketGradient.addColorStop(1, 'lightgray');
+
+						var rocketDarkGradient = ctx.createLinearGradient(350, 1200/2, 450, 1200/2);
+						rocketDarkGradient.addColorStop(0, '#303030');
+						rocketDarkGradient.addColorStop(1, 'black');
+
+						var smokeGrad = ctx.createRadialGradient(800/2, 1200, 1, 800/2, 1200, 800/4);
+						smokeGrad.addColorStop(0, 'rgba(255,255,255, 0.25)');
+						smokeGrad.addColorStop(1, 'transparent');
+
+						var sunCrown = ctx.createRadialGradient(100, 100, 12.5, 100, 100, 50);
+						sunCrown.addColorStop(0, '#FFFFCC');
+						sunCrown.addColorStop(1, 'rgba(255,255,255, 0)');
+
+						var sun = new Path2D;
+
+						var rocketPayload = new Path2D;
+						var rocketFirstStage = new Path2D;
+						var rocketBase = new Path2D;
+
+						var thruster1 = new Path2D;
+						var thrusters2 = new Path2D;
+						var thrusters3 = new Path2D;
+
+						ctx.fillStyle = sky;
+						ctx.fillRect(0, 0, 800, 1200);
+						sun.arc(100, 100, 75, 0, Math.PI * 2);
+						ctx.fillStyle = sunCrown;
+						ctx.fill(sun);
+						ctx.fillStyle = 'rgb(0,75,0, 0.5)';
+						ctx.beginPath();
+						ctx.moveTo(0, 1200 - 50);
+						ctx.bezierCurveTo(170, 1025, 250, 1150, 350, 1150);
+						ctx.quadraticCurveTo(350,1150,400,1150);
+						ctx.quadraticCurveTo(500,1100,700,1175);
+						ctx.lineTo(0,1200 - 25);
+						ctx.closePath();
+						ctx.fill();
+						ctx.fillStyle = 'rgb(0,75,0)';
+						ctx.fillRect(0, 1200 - 25, 800, 25)
+
+						ctx.strokeStyle = 'rgb(0,0,0, 0.8)';
+
+						rocketPayload.moveTo(430, 75);
+						rocketPayload.quadraticCurveTo(400, 10, 370, 75);
+						rocketPayload.lineTo(357.5, 100);
+						rocketPayload.lineTo(442.5, 100);
+						rocketPayload.lineTo(357.5, 100);
+						rocketPayload.lineTo(357.5, 230);
+						rocketPayload.lineTo(442.5, 230);
+						rocketPayload.moveTo(357.5, 230);
+						rocketPayload.lineTo(370, 250);
+						rocketPayload.lineTo(430, 250);
+						rocketPayload.lineTo(442.5, 230);
+						rocketPayload.lineTo(442.5, 100);
+						rocketPayload.lineTo(430, 75);
+						ctx.fillStyle = rocketGradient;
+						ctx.fill(rocketPayload);
+						ctx.stroke(rocketPayload);
+						rocketFirstStage.rect(370, 250, 60, 700);
+						ctx.fillStyle = rocketGradient;
+						ctx.fill(rocketFirstStage);
+						ctx.stroke(rocketFirstStage);
+
+						ctx.fillStyle = rocketDarkGradient;
+						ctx.fillRect(370, 450, 60, 300);
+						ctx.strokeRect(370, 450, 60, 300);
+
+						rocketBase.moveTo(370, 950);
+						rocketBase.lineTo(362, 1000);
+						rocketBase.lineTo(362, 1125);
+						rocketBase.lineTo(370, 1150);
+						rocketBase.lineTo(430, 1150);
+						rocketBase.lineTo(438, 1125);
+						rocketBase.lineTo(438, 1000);
+						rocketBase.lineTo(430, 950);
+						ctx.fillStyle = rocketDarkGradient;
+						ctx.fill(rocketBase);
+						ctx.stroke(rocketBase);
+
+						ctx.fillStyle = 'gray';
+						ctx.strokeStyle = '#505050';
+						thrusters3.arc(377.5, 1156.25, 6.25, 0, Math.PI, true);
+						thrusters3.arc(423.5, 1156.25, 6.25, 0, Math.PI, true);
+						ctx.fill(thrusters3);
+						ctx.stroke(thrusters3);
+						thrusters2.arc(388.25, 1156.25, 6.25, 0, Math.PI, true);
+						thrusters2.arc(412.25, 1156.25, 6.25, 0, Math.PI, true);
+						ctx.fill(thrusters2);
+						ctx.stroke(thrusters2);
+						thruster1.arc(400, 1156.25, 6.25, 0, Math.PI, true);
+						ctx.fill(thruster1);
+						ctx.stroke(thruster1);
+
+						ctx.fillStyle = 'gray';
+						ctx.strokeStyle = 'black';
+						ctx.fillRect(225, 75, 50, 1106.25);
+						ctx.strokeRect(225, 75, 50, 1106.25);
+						ctx.fillStyle = 'darkgray';
+						ctx.fillRect(225, 475, 275, 25);
+						ctx.strokeRect(225, 475, 275, 25);
+						ctx.fillRect(225, 1156.25, 325, 35);
+						ctx.strokeRect(225, 1156.25, 325, 35);
+
+						ctx.restore();
+					};
+
+					var scenarioInterval;
+					var my = 0, myprev = 1, wy = canvasH - 20;
+					function scenario(environment = 'ground'){
+
+						game.scenario = environment;
+
+						ctx.save();
+
+						switch(environment){
+							case 'ground':
+								platform.y = canvasH - 15;
+							break;
+							case 'ocean':
+								my === 0 ? (my += 0.25, myprev = my-1) : undefined;
+								my === 5 ? (my -= 0.25, myprev = my+1) : undefined;
+								my < 5 && my < myprev ? (my -= 0.25, myprev = my+1) : undefined;
+								my > 0 && my > myprev ? (my += 0.25, myprev = my-1) : undefined;
+
+								platform.y = wy - my - platform.height/2;
+
+								if(platform.x <= 0 || platform.x >= canvasW - platform.width){
+									platform.vx *= -1;
+								}
+
+								platform.x += platform.vx;
+
+								ctx.fillStyle = 'rgba(0,0,206, 0.75)';
+								ctx.beginPath();
+								ctx.moveTo(0,wy);
+
+								for(var i = 0; i <= 10; i++){
+									ctx.bezierCurveTo(i*canvasW/10-canvasW/40, wy-my, i*canvasW/10-canvasW/40*2, wy+my, i*canvasW/10, wy);
+								}
+
+								ctx.lineTo(canvasW, canvasH);
+								ctx.lineTo(0, canvasH);
+								ctx.closePath();
+								ctx.fill();
+							break;
+						}
+						ctx.restore();
+					}
+
+					function background(time = 'day'){
+
+						// Sky background gradient
+						var skyGrad = ctx.createLinearGradient(canvasW/2, 0, canvasW/2, canvasH);
+						skyGrad.addColorStop(0,'deepskyblue');
+						skyGrad.addColorStop(1,'lightskyblue');
+
+						if(time === 'day'){
+							game.sky = 'day';
+							ctx.fillStyle = skyGrad;
+						}else{
+							ctx.fillStyle = 'navy';
+						}
+
+						ctx.fillRect(0,0, canvasW, canvasH);
+
+						// Background
+						if(game.scenario === 'ground'){
+							ctx.fillStyle = 'rgba(0,75,0, 0.5)';
+							ctx.beginPath();
+							ctx.moveTo(0, canvasH - 25);
+							ctx.bezierCurveTo(canvasW/4*1.5, canvasH/1.5, canvasW/3, canvasH + 80, canvasW, canvasH/10*9);
+							ctx.lineTo(canvasW, canvasH);
+							ctx.lineTo(0, canvasH);
+							ctx.closePath();
+							ctx.fill();
+
+							ctx.fillStyle = 'darkgreen';
+							ctx.fillRect(0, canvasH - 10, canvasW, 10);
+						}
+
+						if(time === 'night'){
+							game.sky = 'night';
+							ctx.fillStyle = 'rgba(0,0,0, 0.5)';
+							ctx.fillRect(0,0, canvasW, canvasH);
+						}
+
+						var sunMoonOrb = {
+							x: 100,
+							y: 100,
+							r: 30,
+						};
+
+						time === 'day' ? (sunMoonOrb.x = 100, sunMoonOrb.y = 100) :  (sunMoonOrb.x = canvasW/2, sunMoonOrb.y = 150);
+
+						// Sun gradient
+						var sunGrad = ctx.createRadialGradient(sunMoonOrb.x, sunMoonOrb.y, 5, sunMoonOrb.x, sunMoonOrb.y, 25);
+						sunGrad.addColorStop(0, '#FFFFA1');
+						sunGrad.addColorStop(1, 'rgba(255,255,255, 0)');
+
+						// Moon gradient
+						var moonGrad = ctx.createRadialGradient(sunMoonOrb.x, sunMoonOrb.y, 5, sunMoonOrb.x, sunMoonOrb.y, 25);
+						moonGrad.addColorStop(0, 'white');
+						moonGrad.addColorStop(0.5, 'white');
+						moonGrad.addColorStop(1, 'rgba(0,0,0, 0)');
+
+						ctx.arc(sunMoonOrb.x, sunMoonOrb.y, sunMoonOrb.r, 1, Math.PI*2);
+						time === 'day' ? ctx.fillStyle = sunGrad : ctx.fillStyle = moonGrad;
+						ctx.fill();
+					}
+
+					function angle(){
+						var realY = Math.abs(booster.y - canvasH);
+						var x = function(){
+							if(booster.x >= 90){
+								return 90;
+							}else{
+								return booster.x;
+							}
+						};
+						var y = function(){
+							if(booster.y >= 90){
+								return 90;
+							}else{
+								return realY;
+							}
+						};
+						var angle = (y() / x()) * 90 / 2;
+						console.log(angle);
+					}
+				</script>
+			</section>
+		</main>
+		<footer>
+		</footer>
+	</body>
+</html>
