@@ -9,6 +9,7 @@
 		<meta name="distribution" content="global">
 		<meta name="robots" content="all">
 		<meta name="author" content="Juan Francisco Astudillo Palacios">
+		<script type="application/javascript" src="./scripts/sharerbox.js" async></script>
 		<style>
 			body{font-family: calibri, arial, verdana}
 			canvas{display: block; margin: auto; border: solid 1px black;}
@@ -16,6 +17,12 @@
 		</style>
 	</head>
 	<body>
+		<script type="application/javascript">
+			window.onload = function(){
+				sharerboxIcons('twitter facebook whatsapp linkedin pinterest reddit tumblr telegram');
+				sharerSetup('popup', 'right', 'black', 'visible', 'Check out SharerBox! website social-media integration by AstudilloJuanF');
+			};
+		</script>
 		<header>
 			<h1>Booster Lander</h1>
 		</header>
