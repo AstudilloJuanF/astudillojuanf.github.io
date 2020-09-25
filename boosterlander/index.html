@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>Videojuego JS</title>
+		<title>Booster Lander</title>
 		<meta http-equiv="content-type" content="text/html" charset="utf-8">
 		<meta http-equiv="content-language" content="en">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -175,7 +175,7 @@
 							document.addEventListener('keypress', gameInput);
 							document.addEventListener('keyup', gameInput);
 
-							canvas.addEventListener('mousemove', gameInput);
+							canvas.addEventListener('pointermove', gameInput);
 
 						},
 						resume: function(){
@@ -293,7 +293,7 @@
 							document.removeEventListener('keypress', gameInput);
 							document.removeEventListener('keyup', gameInput);
 
-							canvas.removeEventListener('mousemove', gameInput);
+							canvas.removeEventListener('pointermove', gameInput);
 							canvas.removeEventListener('click', game.resume);
 
 							setTimeout(()=> welcomeScreen(), 1000);
@@ -1209,7 +1209,7 @@
 						document.removeEventListener('keypress', gameInput);
 						document.removeEventListener('keyup', gameInput);
 
-						canvas.removeEventListener('mousemove', gameInput);
+						canvas.removeEventListener('pointermove', gameInput);
 						canvas.removeEventListener('click', game.resume);
 
 						clear();
@@ -1319,13 +1319,28 @@
 										booster.fuel -= 250;
 									}
 
+									if(e.movementY < -5){
+										engines.drawLeft();
+										engines.drawMain();
+										engines.drawRight();
+
+										booster.vy += -booster.vy / 10;
+										booster.vx += -booster.vx / 100;
+										booster.fuel -= 1000;
+
+									}else if(e.movementY < 0){
+										booster.vy += -booster.vy / 20;
+										engines.drawMain();
+										booster.fuel -= 500;
+									}
+
 									if(e.code && e.code.match(/Key[AWDL]+|Space/ig)){
 										e.type !== 'keyup' ? sounds.engines.play() : stopAudio(sounds.engines);
 									}
 
-									if(e.type === 'mousemove'){
+									if(e.type === 'pointermove'){
 										clearTimeout(soundTimeout);
-										sounds.engines.play();
+										e.movementY <= 0 ? sounds.engines.play() : undefined;
 
 										soundTimeout = setTimeout(function(){
 											sounds.engines.pause();
