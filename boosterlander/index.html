@@ -248,9 +248,7 @@
 
 							ctx.font = '35px sans-serif';
 							if(booster.status === 'crashed'){
-								var crashMsg;
-								game.language === 'es' ? crashMsg = 'El cohete ha chocado': crashMsg = 'The rocket has crashed';
-								ctx.fillText(crashMsg, canvasW/2, canvasH/5*1);
+								ctx.fillText(text.rocketCrashed, canvasW/2, canvasH/5*1);
 								ctx.fillStyle = 'lightgray';
 
 								if(game.language === 'es'){
@@ -362,6 +360,7 @@
 						sucessfulLanding: '¡Aterrizaje Exitoso!',
 						unstableLanding: 'Aterrizaje Inestable',
 						missedTarget: 'Objetivo Perdido',
+						rocketCrashed: 'El cohete ha chocado',
 						spanish: 'Español',
 						english: 'Inglés',
 						german: 'Alemán',
@@ -427,6 +426,7 @@
 						sucessfulLanding: 'Successful Landing!',
 						unstableLanding: 'Unstable Landing',
 						missedTarget: 'Missed Target',
+						rocketCrashed: 'The rocket has crashed',
 						spanish: 'Spanish',
 						english: 'English',
 						german: 'German',
@@ -493,6 +493,7 @@
 						sucessfulLanding: 'Erfolgreiche Landung!',
 						unstableLanding: 'Instabile Landung',
 						missedTarget: 'Verpasstes Ziel',
+						rocketCrashed: 'Die Rakete ist abgestürzt',
 						spanish: 'Spanisch',
 						english: 'English',
 						german: 'Deutsch',
@@ -558,6 +559,7 @@
 						sucessfulLanding: '着陸成功！',
 						unstableLanding: '不安定な着陸',
 						missedTarget: '逃したターゲット',
+						rocketCrashed: 'ロケットが墜落した',
 						spanish: 'スペイン語',
 						english: '英語',
 						german: 'ドイツ語',
