@@ -1,33 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
 	<head>
-		<title>Booster Lander (minigame)</title>
+		<title>Videojuego JS</title>
 		<meta http-equiv="content-type" content="text/html" charset="utf-8">
 		<meta http-equiv="content-language" content="en">
-		<meta name="description" content="Booster Lander, SpaceX inspired JavaScript Minigame">
-		<meta name="keywords" content="JavaScript, minigame, game, spacex, canvas, api">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="description" content="Booster Lander, SpaceX inspired JavaScript minigame by AstudilloJuanF">
+		<meta name="keywords" content="code, JavaScript, page, webpage, canvas, api, minigame, navigator, game, videogame, SpaceX, AstudilloJuanF">
 		<meta name="distribution" content="global">
 		<meta name="robots" content="all">
 		<meta name="author" content="Juan Francisco Astudillo Palacios">
+		<link rel="shortcut icon" type="image/svg+xml" href="./icons/favicon.svg">
 		<script type="application/javascript" src="./scripts/sharerbox.js" async></script>
 		<style>
 			body{font-family: calibri, arial, verdana}
 			canvas{display: block; margin: auto; border: solid 1px black;}
-			h1,h2,h3{text-align:center;}
+			h1,h2,h3{text-align: center;}
+			a{text-decoration: none; display: block; width: fit-content; margin: auto;}
 		</style>
 	</head>
 	<body>
-		<script type="application/javascript">
+		<script>
 			window.onload = function(){
-				sharerboxIcons('twitter facebook whatsapp linkedin pinterest reddit tumblr telegram');
-				sharerSetup('popup', 'right', 'black', 'visible', 'Check out "Booster Lander", SpaceX inspired JavaScript minigame by AstudilloJuanF');
+				sharerboxIcons('twitter facebook whatsapp linkedin reddit tumblr pinterest telegram');
+				sharerSetup('popup', 'right', 'dimgray', 'hidden', 'Check out Booster Lander! SpaceX inspired JavaScript minigame by AstudilloJuanF');
 			};
 		</script>
 		<header>
 			<h1>Booster Lander</h1>
 		</header>
 		<main>
-			<h2>JavaScript minigame</h2>
+			<h2>SpaceX inspired JavaScript minigame</h2>
 			<section id="canvas-section">
 				<canvas id="canvas-frame" width="1024" height="755">Su dispositivo o navegador no soporta canvas.</canvas>
 				<script>
@@ -48,24 +51,36 @@
 					var canvasW = canvas.width;
 					var canvasH = canvas.height;
 
-					var startGameBtn = new Path2D;
-					var menuControlsBtn = new Path2D;
-					var menuInstructionsBtn = new Path2D;
-					var menuLangBtn = new Path2D;
-					var menuLangLeftArrow = new Path2D;
-					var menuLangRightArrow = new Path2D;
-					var spanishLangBtn = new Path2D;
-					var englishLangBtn = new Path2D;
-					var germanLangBtn = new Path2D;
-					var japaneseLangBtn = new Path2D;
+					var startGameBtn = new Path2D();
+					var menuControlsBtn = new Path2D();
+					var menuInstructionsBtn = new Path2D();
+					var menuSettingsBtn = new Path2D();
+					var menuLangBtn = new Path2D();
+					var menuLangLeftArrow = new Path2D();
+					var menuLangRightArrow = new Path2D();
+					var spanishLangBtn = new Path2D();
+					var englishLangBtn = new Path2D();
+					var germanLangBtn = new Path2D();
+					var japaneseLangBtn = new Path2D();
 
-					var landingPlatform = new Path2D;
+					var landingPlatform = new Path2D();
 
 					var lEngineExhaust = new Path2D();
 					var rEngineExhaust = new Path2D();
 					var mainEngineExhaust = new Path2D();
 
 					var airplane = new Path2D();
+
+					var sounds = {
+						engines: new Audio('rumble.mp3'),
+						water: new Audio('water.mp3'),
+						explosion: new Audio('explosion.mp3')
+					};
+
+					function stopAudio(element){
+						element.pause();
+						element.currentTime = 0;
+					}
 
 					// animation frames per second
 					if(navigator.platform.match(/win/ig)){
@@ -124,16 +139,29 @@
 							game.status = 'started';
 							game.scenario = 'ground';
 
+							// Fix behavior of the scenario() function and avoid redundances
+
+							game.level === 1 ? game.scenario = 'ground' : undefined;
+							game.level === 2 ? game.scenario = 'ground' : undefined;
+							game.level === 3 ? game.scenario = 'ocean' : undefined;
+							game.level === 4 ? game.scenario = 'ocean' : undefined;
+
+							stopAudio(sounds.engines);
+							stopAudio(sounds.explosion);
+
+							game.scenario === 'ocean' ? sounds.water.play() : undefined;
+
 							platform.x = Math.abs(Math.random() * canvasW - platform.width);
 
 							booster.status = 're-entry';
-							booster.x = canvasW / 2;
+
+							// booster.x = canvasW / 2; ----fixed initial position for low difficulty
+							booster.x = Math.abs(Math.random() * canvasW - booster.width); // Random initial position
 							booster.y = 0;
 							booster.vx = 0;
 							booster.vy = 0;
 							booster.fuel = 245620;
 
-							//canvas.scrollIntoView({behavior: 'smooth'});
 							canvas.removeEventListener('click', game.start);
 
 							clear();
@@ -157,12 +185,17 @@
 							gravity(EARTH_GRAVITY);
 							booster.draw();
 
+							game.scenario === 'ocean' ? sounds.water.play() : undefined;
+
 							canvas.removeEventListener('click', game.resume);
 						},
 						pause: function(){
 							game.status = 'paused';
 							cronometer.pause();
 							clearInterval(gravityInterval.valueOf());
+
+							stopAudio(sounds.engines);
+							sounds.water.pause();
 
 							ctx.save();
 
@@ -188,6 +221,8 @@
 
 							this.status = 'over';
 							cronometer.stop();
+							stopAudio(sounds.engines);
+							stopAudio(sounds.water);
 
 							canvas.removeEventListener('click', game.resume);
 
@@ -213,17 +248,27 @@
 
 							ctx.font = '35px sans-serif';
 							if(booster.status === 'crashed'){
-								ctx.fillText('The rocket has crashed', canvasW/2, canvasH/5*1);
+								var crashMsg;
+								game.language === 'es' ? crashMsg = 'El cohete ha chocado': crashMsg = 'The rocket has crashed';
+								ctx.fillText(crashMsg, canvasW/2, canvasH/5*1);
 								ctx.fillStyle = 'lightgray';
 
-								var gameOverMsg = ['But cool guys don\'t look at the explosions!', 'The rocket could not keep it together, but we can', 'Rapid unscheduled disassembly', 'The landing has failed successfully', 'Hey, it\'s not my fault, there is no bottom in space', 'Per aspera ad astra', 'In space, no one can hear you explode'];
+								if(game.language === 'es'){
+									var gameOverMsg = ['¡Pero la gente cool no mira las explosiones!', 'El cohete explotó, pero nosotros no podemos', 'Desensamblaje rápido no programado', 'El aterrizaje falló exitosamente', 'Ey, no es mi culpa, no existe el abajo en el espacio', 'Per aspera ad astra', 'En el espacio, nadie puede oirte explotar'];
+								}else if (game.language === 'en'){
+									var gameOverMsg = ['But cool guys don\'t look at the explosions!', 'The rocket couldn\'t keep it together, but we can', 'Rapid unscheduled disassembly', 'The landing has failed successfully', 'Hey, it\'s not my fault, there is no bottom in space', 'Per aspera ad astra', 'In space, no one can hear you explode'];
+								}
 
 								ctx.fillText(gameOverMsg[Math.floor(Math.random()*gameOverMsg.length)], canvasW/2, canvasH/8*2.25);
 
 							}else if(booster.status === 'missed target'){
 								ctx.fillStyle = 'gray';
 
-								var gameOverMsg = ['I find your lack of aiming... disturbing', 'Target practice is not supposed to be that expensive', 'I told you we should have asked for directions!', 'the rocket has lost it\'s course, but at some point haven\'t we all?'];
+								if(game.language === 'es'){
+									var gameOverMsg = ['Encuentro tu falta de puntería... inquietante', 'Los cohetes son demasiado caros para prácticar dianas', '¡Te dije que debiamos pedir direcciones!', 'El cohete está perdido, ¿Pero no lo hemos estado todos?'];
+								}else if (game.language === 'en'){
+									var gameOverMsg = ['I find your lack of aiming... disturbing', 'Rockets are too expensive for target practice', 'I told you we should have asked for directions!', 'The rocket just lost it\'s course, but haven\'t we all at some point?'];
+								}
 
 								ctx.fillText(gameOverMsg[Math.floor(Math.random()*gameOverMsg.length)], canvasW/2, canvasH/6*3);
 							}
@@ -374,7 +419,7 @@
 						noFuel: 'OUT OF FUEL',
 						litres: 'lts',
 						proximityWarning: 'Proximity Warning',
-						imminentContact: 'Imminent Contact!',
+						imminentContact: 'Contact Imminent!',
 						contact: 'Contact',
 						impact: 'Impact',
 						land: 'Land',
@@ -744,6 +789,9 @@
 							ctx.fill();
 
 							ctx.restore();
+						},
+						settings: function(){
+
 						}
 					};
 
@@ -804,6 +852,9 @@
 								ctx.stroke();
 							}
 							if(booster.status === 'crashed'){
+
+								sounds.explosion.play();
+
 								var explosionRadius = 75;
 								var explosionInterval = setInterval(function(){
 
@@ -1216,6 +1267,8 @@
 
 					welcomeScreen();
 
+
+					var soundTimeout;
 					// Captures mouse and/or keyboard input
 					function gameInput(e){
 
@@ -1265,8 +1318,24 @@
 										booster.vy += -booster.vy / 80;
 										booster.fuel -= 250;
 									}
+
+									if(e.code && e.code.match(/Key[AWDL]+|Space/ig)){
+										e.type !== 'keyup' ? sounds.engines.play() : stopAudio(sounds.engines);
+									}
+
+									if(e.type === 'mousemove'){
+										clearTimeout(soundTimeout);
+										sounds.engines.play();
+
+										soundTimeout = setTimeout(function(){
+											sounds.engines.pause();
+										}, 300);
+
+									}
+
 								}else{
 									booster.fuel = 0;
+									stopAudio(sounds.engines);
 								}
 
 								if(e.code === 'KeyP' || e.code === 'Enter'){
@@ -1584,6 +1653,9 @@
 			</section>
 		</main>
 		<footer>
+			<address>
+				<a href="mailto:astudillojuanfrancisco@gmail.com" title="Contact the Author">Copyright 2020 © Juan Astudillo</a>
+			</address>
 		</footer>
 	</body>
 </html>
