@@ -6,7 +6,7 @@
 		<meta http-equiv="content-language" content="en">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<meta name="description" content="Booster Lander, SpaceX inspired JavaScript minigame by AstudilloJuanF">
-		<meta name="keywords" content="code, JavaScript, page, webpage, canvas, api, minigame, navigator, game, videogame, SpaceX, AstudilloJuanF">
+		<meta name="keywords" content="code, JavaScript, page, webpage, canvas, api, minigame, navigator, browser, game, videogame, SpaceX, AstudilloJuanF">
 		<meta name="distribution" content="global">
 		<meta name="robots" content="all">
 		<meta name="author" content="Juan Francisco Astudillo Palacios">
@@ -264,7 +264,7 @@
 
 								if(game.language === 'es'){
 									var gameOverMsg = ['¡Pero la gente cool no mira las explosiones!', 'El cohete explotó, pero nosotros no podemos', 'Desensamblaje rápido no programado', 'El aterrizaje falló exitosamente', 'Ey, no es mi culpa, no existe el abajo en el espacio', 'Per aspera ad astra', 'En el espacio, nadie puede oirte explotar'];
-								}else if (game.language === 'en'){
+								}else{
 									var gameOverMsg = ['But cool guys don\'t look at the explosions!', 'The rocket couldn\'t keep it together, but we can', 'Rapid unscheduled disassembly', 'The landing has failed successfully', 'Hey, it\'s not my fault, there is no bottom in space', 'Per aspera ad astra', 'In space, no one can hear you explode'];
 								}
 
@@ -275,8 +275,8 @@
 
 								if(game.language === 'es'){
 									var gameOverMsg = ['Encuentro tu falta de puntería... inquietante', 'Los cohetes son demasiado caros para prácticar dianas', '¡Te dije que debiamos pedir direcciones!', 'El cohete está perdido, ¿Pero no lo hemos estado todos?'];
-								}else if (game.language === 'en'){
-									var gameOverMsg = ['I find your lack of aiming... disturbing', 'Rockets are too expensive for target practice', 'I told you we should have asked for directions!', 'The rocket just lost it\'s course, but haven\'t we all at some point?'];
+								}else{
+									var gameOverMsg = ['I find your lack of aiming... disturbing', 'Rockets are too expensive for target practice', 'I told you we should have asked for directions!', 'The rocket lost it\'s course, but haven\'t we all at some point?'];
 								}
 
 								ctx.fillText(gameOverMsg[Math.floor(Math.random()*gameOverMsg.length)], canvasW/2, canvasH/6*3);
