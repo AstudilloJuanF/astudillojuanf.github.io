@@ -14,13 +14,13 @@
 			<meta property="og:type" content="website">
 			<meta property="og:title" content="Booster Lander">
 			<meta property="og:description" content="Booster Lander, SpaceX inspired JavaScript minigame by AstudilloJuanF">
-			<meta property="og:image" content="https://astudillojuanf.github.io/boosterlander/images/boosterlander-preview-snapshot.jpg">
+			<meta property="og:image" content="https://astudillojuanf.github.io/boosterlander/images/snapshot.jpg">
 			<meta property="og:url" content="https://astudillojuanf.github.io/boosterlander/">
 			<meta property="og:locale" content="en_US">
 		<!-- Twitter Card metadata -->
 			<meta name="twitter:card" content="summary_large_image">
 			<meta name="twitter:title" content="Booster Lander">
-			<meta name="twitter:image" content="https://astudillojuanf.github.io/boosterlander/images/snapshot.jpg">
+			<meta name="twitter:image" content="https://astudillojuanf.github.io/boosterlander/images/boosterlander-preview-snapshot.jpg">
 		<link rel="shortcut icon" type="image/svg+xml" href="./icons/favicon.svg">
 		<script type="application/javascript" src="./scripts/sharerbox.js" async></script>
 		<style>
@@ -54,13 +54,40 @@
 
 					const canvas = document.getElementById('canvas-frame');
 					const ctx = canvas.getContext('2d');
+
 					ctx.imageSmoothingEnabled = false;
+
+					const ctxInitialScaleX = 1024;
+					const ctxInitialScaleY = 755;
 
 					// Earth's Gravity
 					const EARTH_GRAVITY = 9.80665; // meters per squared seconds;
 
 					var canvasW = canvas.width;
 					var canvasH = canvas.height;
+
+				// --------- Resize Canvas Frame ----------------------- TESTING...
+
+					if(window.innerWidth < ctxInitialScaleX || window.innerHeight < ctxInitialScaleY){
+						var deviceW = document.body.offsetWidth;
+						var deviceH = window.innerHeight;
+						var scalingPercentage;
+
+						if(deviceW < deviceH){
+							scalingPercentage = deviceW / ctxInitialScaleX;
+							canvas.width = deviceW;
+							canvas.height = (ctxInitialScaleY * 100 / ctxInitialScaleX) * canvas.width / 100
+						}else if(deviceW > deviceH){
+							scalingPercentage = deviceH / ctxInitialScaleY;
+							canvas.height = deviceH;
+							canvas.width = (ctxInitialScaleX * 100 / ctxInitialScaleY) * canvas.height / 100
+						}
+
+						ctx.resetTransform();
+						ctx.scale(scalingPercentage, scalingPercentage);
+					}
+				// -------------------------------------------------------
+
 
 					var startGameBtn = new Path2D();
 					var menuControlsBtn = new Path2D();
