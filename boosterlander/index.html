@@ -72,7 +72,7 @@
 					if(window.innerWidth < ctxInitialScaleX || window.innerHeight < ctxInitialScaleY){
 						var deviceW = document.body.offsetWidth;
 						var deviceH = window.innerHeight;
-						var scalingPercentage;
+						var scalingPercentage = 0;
 
 						if(deviceW < deviceH){
 							scalingPercentage = deviceW / ctxInitialScaleX;
@@ -290,6 +290,8 @@
 							stopAudio(sounds.water);
 
 							canvas.removeEventListener('click', game.resume);
+							ctx.resetTransform();
+							scalingPercentage !== 0 ? ctx.scale(scalingPercentage, scalingPercentage) : undefined;
 
 							ctx.fillStyle = 'black';
 							ctx.fillRect(0, 0, canvasW, canvasH);
@@ -995,12 +997,14 @@
 						platform.draw();
 
 						if(booster.status === 'landed'){
+							ctx.resetTransform();
 							if(booster.vx >= -0.1 && booster.vx <= 0.1 && ctx.isPointInPath(landingPlatform, booster.x + booster.width/2, booster.y + booster.height)){
 								game.over(text.sucessfulLanding, 'limegreen');
 							}else if(ctx.isPointInPath(landingPlatform, booster.x + booster.width/2, booster.y + booster.height)){
 								game.over(text.unstableLanding, 'yellow');
 							}
 						}else if(booster.status === 'missed target'){
+							ctx.resetTransform();
 							game.over(text.missedTarget,'orange')
 						}
 
@@ -1027,11 +1031,13 @@
 						ctx.stroke(landingPlatform);
 						ctx.fill(landingPlatform);
 
+						ctx.resetTransform();
 						if(ctx.isPointInPath(landingPlatform, booster.x - booster.legsLength, platform.y) && ctx.isPointInPath(landingPlatform, booster.x + booster.width + booster.legsLength, platform.y)){
 							ctx.fillStyle = 'limegreen';
 						}else{
 							booster.y + booster.height < canvasH - 200 ? ctx.fillStyle = 'orange' : ctx.fillStyle = 'red';
 						}
+						scalingPercentage !== 0 ? ctx.scale(scalingPercentage, scalingPercentage) : undefined;
 
 						ctx.fillRect(platform.x, platform.y, 10, platform.height);
 						ctx.fillRect(platform.x + platform.width - 10, platform.y, 10, platform.height);
@@ -1148,6 +1154,7 @@
 
 							booster.y += booster.vy;
 
+							ctx.resetTransform();
 							if(booster.y + booster.height >= canvasH || ctx.isPointInPath(landingPlatform, booster.x + booster.width/2, booster.y + booster.height)){
 								if(Math.abs(booster.vy) > 0.2){
 									booster.status = 'crashed';
@@ -1167,6 +1174,8 @@
 							if(booster.x + booster.vx > canvasW - booster.width || booster.x + booster.vx < 0){
 								booster.vx = -booster.vx;
 							}
+
+							scalingPercentage !== 0 ? ctx.scale(scalingPercentage, scalingPercentage) : undefined;
 
 							if(booster.status === 'landed' || booster.status === 'missed target' || booster.status === 'crashed' || game.status === 'over' || game.status === 'reset'){
 									clearInterval(physicsInterval.valueOf());
