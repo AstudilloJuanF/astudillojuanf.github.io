@@ -14,7 +14,7 @@
 			<meta property="og:type" content="website">
 			<meta property="og:title" content="Booster Lander">
 			<meta property="og:description" content="Booster Lander, SpaceX inspired JavaScript minigame by AstudilloJuanF">
-			<meta property="og:image" content="https://astudillojuanf.github.io/boosterlander/images/boosterlander-preview-snapshot.jpg">
+			<meta property="og:image" content="https://astudillojuanf.github.io/boosterlander/images/snapshot.jpg">
 			<meta property="og:url" content="https://astudillojuanf.github.io/boosterlander/">
 			<meta property="og:locale" content="en_US">
 		<!-- Twitter Card metadata -->
@@ -42,12 +42,13 @@
 		</header>
 		<main>
 			<h2>SpaceX inspired JavaScript minigame</h2>
+			<h3>(Ongoing Development)</h3>
 			<section id="canvas-section">
 				<canvas id="canvas-frame" width="1024" height="755">Su dispositivo o navegador no soporta canvas.</canvas>
 				<script>
 
 					/*
-						Booster Lander - Moon Lander inspired JavaScript Minigame
+						Booster Lander - Moon Lander and SpaceX inspired JavaScript Minigame By AstudilloJuanF
 						Copyright 2020 © Juan Astudillo
 						<astudillojuanfrancisco@gmail.com>
 					*/
@@ -83,8 +84,9 @@
 							canvas.width = (ctxInitialScaleX * 100 / ctxInitialScaleY) * canvas.height / 100
 						}
 
-						ctx.resetTransform();
+						//ctx.resetTransform();
 						ctx.scale(scalingPercentage, scalingPercentage);
+						ctx.save();
 					}
 				// -------------------------------------------------------
 
@@ -107,7 +109,31 @@
 					var rEngineExhaust = new Path2D();
 					var mainEngineExhaust = new Path2D();
 
-					var airplane = new Path2D();
+
+					// Pending: To convert loose physical objects into class objects in order to order the code and handle physics better
+					class PhysicalObject {
+						constructor(posX = 0, posY = 0, width = 0, height = 0, radius = undefined, speedX = 0, speedY = 0, mass = undefined){
+							this.x = posX; // Meters
+							this.y = posY; // Meters
+							this.width = width; // Meters
+							this.height = height; // Meters
+							this.radius = radius; // Meters
+							this.vx = speedX; // Meters per Seconds
+							this.vy = speedY; // Meters per Seconds
+							this.mass = mass; // Kg
+						}
+					};
+
+					var meteoriteRock;
+					var meteorite = new PhysicalObject(Math.random() * canvasW, 0, undefined, undefined, 5, 60, 180, undefined);
+					meteorite.draw = function(){
+						ctx.save();
+						meteoriteRock = new Path2D();
+						meteoriteRock.arc(meteorite.x, meteorite.y, meteorite.radius, 0, Math.PI*2);
+						ctx.fillStyle = 'orange';
+						ctx.fill(meteoriteRock);
+						ctx.restore();
+					};
 
 					var sounds = {
 						engines: new Audio('sounds/rumble.mp3'),
@@ -166,7 +192,7 @@
 						langInt: 1,
 						langArray: ['es', 'en', 'de', 'ja'],
 						status: 'reset',
-						graphics: 'low',
+						graphics: 'medium',
 						difficulty: undefined,
 						level: 1,
 						scenario: 'ground',
@@ -198,6 +224,7 @@
 							booster.y = 0;
 							booster.vx = 0;
 							booster.vy = 0;
+							booster.legsRotation = 115;
 							booster.fuel = 245620;
 
 							canvas.removeEventListener('click', game.start);
@@ -206,7 +233,7 @@
 							cronometer.start();
 
 
-							gravity(EARTH_GRAVITY);
+							physics(EARTH_GRAVITY);
 							booster.draw();
 
 							document.addEventListener('keydown', gameInput);
@@ -220,7 +247,7 @@
 							game.status = 'started';
 							clear();
 							cronometer.start();
-							gravity(EARTH_GRAVITY);
+							physics(EARTH_GRAVITY);
 							booster.draw();
 
 							game.scenario === 'ocean' ? sounds.water.play() : undefined;
@@ -230,7 +257,7 @@
 						pause: function(){
 							game.status = 'paused';
 							cronometer.pause();
-							clearInterval(gravityInterval.valueOf());
+							clearInterval(physicsInterval.valueOf());
 
 							stopAudio(sounds.engines);
 							sounds.water.pause();
@@ -739,7 +766,7 @@
 							ctx.fillText(instructions.current[5], canvasW/20*10.5, canvasH/20*10);
 							ctx.fillText(instructions.current[6], canvasW/20*10.5, canvasH/20*11);
 
-							menuControlsBtn = new Path2D;
+							menuControlsBtn = new Path2D();
 							ctx.lineWidth = 2;
 							ctx.fillStyle = 'blue';
 							ctx.font = '40px sans-serif';
@@ -783,17 +810,17 @@
 							ctx.fillText(text.japanese, canvasW/8*6, canvasH/8*7);
 
 
-							langSelectorBtn = new Path2D;
+							langSelectorBtn = new Path2D();
 
 							langSelectorBtn.rect(canvasW/8*6 - 100, canvasH/8*2 - 30, 200, 50);
 
-							menuLangLeftArrow = new Path2D;
+							menuLangLeftArrow = new Path2D();
 							menuLangLeftArrow.moveTo(canvasW/8*6 - 110, canvasH/8*2 - 30);
 							menuLangLeftArrow.lineTo(canvasW/8*6 - 110, canvasH/8*2 + 10);
 							menuLangLeftArrow.lineTo(canvasW/8*6 - 130, canvasH/8*2 - 10);
 							ctx.fill(menuLangLeftArrow);
 
-							menuLangRightArrow = new Path2D;
+							menuLangRightArrow = new Path2D();
 							menuLangRightArrow.moveTo(canvasW/8*6 + 110, canvasH/8*2 - 30);
 							menuLangRightArrow.lineTo(canvasW/8*6 + 110, canvasH/8*2 + 10);
 							menuLangRightArrow.lineTo(canvasW/8*6 + 130, canvasH/8*2 - 10);
@@ -801,16 +828,16 @@
 
 							var textWidth = (text)=> ctx.measureText(text).width;
 
-							spanishLangBtn = new Path2D;
+							spanishLangBtn = new Path2D();
 							spanishLangBtn.rect(canvasW/8*6-textWidth(text.spanish)/2, canvasH/8*4 - 35, textWidth(text.spanish), 50);
 
-							englishLangBtn = new Path2D;
+							englishLangBtn = new Path2D();
 							englishLangBtn.rect(canvasW/8*6-textWidth(text.english)/2, canvasH/8*5 - 35, textWidth(text.english), 50);
 
-							germanLangBtn = new Path2D;
+							germanLangBtn = new Path2D();
 							germanLangBtn.rect(canvasW/8*6-textWidth(text.german)/2, canvasH/8*6 - 35, textWidth(text.german), 50);
 
-							japaneseLangBtn = new Path2D;
+							japaneseLangBtn = new Path2D();
 							japaneseLangBtn.rect(canvasW/8*6-textWidth(text.japanese)/2, canvasH/8*7 - 35, textWidth(text.japanese), 50);
 
 							ctx.fillStyle = 'forestgreen';
@@ -836,45 +863,41 @@
 					};
 
 					// rocket object
-					var booster = {
-						x: canvasW / 2, // Meters;
-						y: 0, // Meters;
-						vx: 0, // Meters per Second;
-						vy: 0, // Meters per Second;
-						width: 3.6576, // Meters;
-						height: 75, // 70 meters height + 5 meters of free space for landing legs deploy;
-						mass: 549054, //Kg;
-						color: 'white',
-						legsColor: 'black',
-						legsLength: 3.6576 * 3,
-						stroke: 'rgba(0,0,0, 0.25)',
-						strokeWidth: ctx.lineWidth,
-						fuelCapacity: 245620,
-						fuel: 245620,
-						status: 're-entry',
-						// projectile: [0, canvasH],
-						draw: function(){
+					var booster = new PhysicalObject(canvasW / 2, 0, 3.6576, 75, undefined, 0, 0, 549054, doge = 'doge');
+					booster.color = 'white';
+					booster.legsColor = 'black';
+					booster.legsLength = 3.6576 * 3;
+					booster.LegsRotation = 115;
+					booster.stroke = 'rgba(0,0,0, 0.25)';
+					booster.strokeWidth = ctx.lineWidth;
+					booster.fuelCapacity = 245620;
+					booster.fuel = 245620;
+					booster.status = 're-entry';
+					booster.draw = function(){
 
-							ctx.save();
+						ctx.save();
 
-							game.level === 2 || game.level === 4 ? background('night') : background('day');
+						game.level === 2 || game.level === 4 ? background('night') : background('day');
 
-							// Rocket's main body
-							ctx.beginPath();
-							ctx.fillStyle = this.color;
-							ctx.strokeStyle = this.stroke;
-							ctx.fillRect(this.x, this.y, this.width, this.height - 5);
-							ctx.strokeRect(this.x, this.y, this.width, this.height - 5);
-							ctx.fillStyle = 'black';
-							ctx.fillRect(this.x, this.y, this.width, 5);
-							ctx.fillRect(this.x - 2, this.y + 6, 2, 1);
-							ctx.fillRect(this.x + this.width/3, this.y + 6, this.width/3, 1);
-							ctx.fillRect(this.x + this.width, this.y + 6, 2, 1);
+						// Rocket's main body
+						ctx.beginPath();
+						ctx.fillStyle = this.color;
+						ctx.strokeStyle = this.stroke;
+						ctx.fillRect(this.x, this.y, this.width, this.height - 5);
+						ctx.strokeRect(this.x, this.y, this.width, this.height - 5);
+						ctx.fillStyle = 'black';
+						ctx.fillRect(this.x, this.y, this.width, 5);
+						ctx.fillRect(this.x - 2, this.y + 6, 2, 1);
+						ctx.fillRect(this.x + this.width/3, this.y + 6, this.width/3, 1);
+						ctx.fillRect(this.x + this.width, this.y + 6, 2, 1);
+						//ctx.fillRect(this.x, this.y + this.height - 5 - this.legsLength, this.width, this.legsLength);
+						ctx.closePath();
+						ctx.fill();
+
+
+						// Draws rocket legs when a given altitude is reached
+						if(game.graphics === 'low'){
 							ctx.fillRect(this.x, this.y + this.height - 5 - this.legsLength, this.width, this.legsLength);
-							ctx.closePath();
-							ctx.fill();
-
-							// Draws rocket legs when a given altitude is reached
 							if(this.y + this.height >= canvasH - 100){
 								ctx.beginPath();
 								ctx.fillStyle = this.legsColor;
@@ -891,115 +914,160 @@
 								ctx.fill();
 								ctx.stroke();
 							}
-							if(booster.status === 'crashed'){
+						}else{
 
-								sounds.explosion.play();
+							var leftLeg = new Path2D();
+							var rightLeg = new Path2D();
+							var centerLeg = new Path2D();
 
-								var explosionRadius = 75;
-								var explosionInterval = setInterval(function(){
+							var rotationChangeVal;
+							navigator.platform.match(/win/ig) ? rotationChangeVal = 2.5 : rotationChangeVal = 1;
 
-									var explosionGrad = ctx.createRadialGradient(booster.x + booster.width/2 ,booster.y + booster.height - 5,explosionRadius/10,booster.x + booster.width/2 ,booster.y + booster.height, explosionRadius);
-									explosionGrad.addColorStop(0,'white');
-									explosionGrad.addColorStop(0.5,'rgba(255,255,50, 0.25)');
-									explosionGrad.addColorStop(0.75,'rgba(255,165,0, 0.125)');
-									explosionGrad.addColorStop(1,'transparent');
-
-									ctx.fillStyle = explosionGrad;
-									ctx.arc(booster.x + booster.width/2 ,booster.y + booster.height - 5, explosionRadius, 0, Math.PI*2);
-									ctx.fill();
-
-									explosionRadius <= 160 ? explosionRadius += 10 : clearInterval(explosionInterval.valueOf());
-								}, 5);
-							}
-
-							stats();
-
-							// Draws Landing target
-							platform.draw();
-
-							if(booster.status === 'landed'){
-								if(booster.vx >= -0.1 && booster.vx <= 0.1 && ctx.isPointInPath(landingPlatform, booster.x + booster.width/2, booster.y + booster.height)){
-									game.over(text.sucessfulLanding, 'limegreen');
-								}else if(ctx.isPointInPath(landingPlatform, booster.x + booster.width/2, booster.y + booster.height)){
-									game.over(text.unstableLanding, 'yellow');
+							if(this.y + this.height >= canvasH - 100){
+								if(this.legsRotation > 0){
+									this.legsRotation -= rotationChangeVal;
+								}else{
+									this.legsRotation = rotationChangeVal;
 								}
-							}else if(booster.status === 'missed target'){
-								game.over(text.missedTarget,'orange')
+							}else{
+								if(this.legsRotation < 115){
+									this.legsRotation += rotationChangeVal;
+								}else{
+									this.legsRotation = 115;
+								}
 							}
-
-							if(booster.status === 'crashed'){
-								setTimeout(function(){
-									game.over(text.gameover);
-								}, 1000);
-							}
-
-							ctx.restore();
-						}
-					};
-
-					var platform = {
-						vx: 0.25,
-						vy: 0.25,
-						x: Math.abs(Math.random() * canvasW - 100),
-						y: canvasH - 15,
-						width: 100,
-						height: 10,
-						draw: function(){
-
-							landingPlatform = new Path2D;
 
 							ctx.save();
 
-
-							ctx.strokeStyle = 'rgba(0,0,0, 0.5)';
-							landingPlatform.rect(this.x, this.y, this.width, this.height);
-
-							ctx.fillStyle = 'darkgray';
-							ctx.stroke(landingPlatform);
-							ctx.fill(landingPlatform);
-
-							if(ctx.isPointInPath(landingPlatform, booster.x - booster.legsLength, platform.y) && ctx.isPointInPath(landingPlatform, booster.x + booster.width + booster.legsLength, platform.y)){
-								ctx.fillStyle = 'limegreen';
-							}else{
-								booster.y + booster.height < canvasH - 200 ? ctx.fillStyle = 'orange' : ctx.fillStyle = 'red';
-							}
-
-							ctx.fillRect(platform.x, platform.y, 10, platform.height);
-							ctx.fillRect(platform.x + platform.width - 10, platform.y, 10, platform.height);
-							ctx.strokeRect(platform.x, platform.y, 10, platform.height);
-							ctx.strokeRect(platform.x + platform.width - 10, platform.y, 10, platform.height);
-
 							ctx.fillStyle = 'black';
-							ctx.textAlign = 'center';
-							ctx.textBaseline = 'middle';
-							ctx.font = `${this.height}px sans-serif`;
-							ctx.font = 'bold 15px sans-serif';
-							ctx.fillText('X', this.x + this.width/2, this.y + this.height/2 + 1);
 
-							game.level === 1 ? scenario('ground') : undefined;
-							game.level === 2 ? scenario('ground') : undefined;
-							game.level === 3 ? scenario('ocean') : undefined;
-							game.level === 4 ? scenario('ocean') : undefined;
+							ctx.fillRect(this.x, this.y + this.height - 7, this.width, 3);
 
-							if(game.scenario !== 'ocean'){
-								ctx.fillRect(this.x - 25, canvasH - 70, 3, 65);
-								ctx.fillRect(this.x - 15, canvasH - 50, 3, 40);
-								ctx.fillRect(this.x + this.width + 15, canvasH - 50, 3, 40);
-								ctx.fillRect(this.x + this.width + 25, canvasH - 70, 3, 65);
-							}else if(game.scenario === 'ocean' && game.graphics === 'high'){
-								ctx.beginPath();
-								ctx.moveTo(this.x + this.width, this.y + this.height/2);
-								ctx.lineTo(this.x + this.width + 15, this.y + this.height/2);
-								ctx.lineTo(this.x + this.width, this.y + this.height + 5);
-								ctx.lineTo(this.x, this.y + this.height + 5);
-								ctx.lineTo(this.x - 15, this.y + this.height/2);
-								ctx.closePath();
-								ctx.fill();
-							}
-
+							ctx.translate(this.x, this.y + (this.height - 5));
+							leftLeg.moveTo(0, 0);
+							leftLeg.lineTo(-this.legsLength, 5);
+							leftLeg.lineTo(0, -3);
+							ctx.rotate(Math.PI/180*this.legsRotation);
+							ctx.fill(leftLeg);
+							ctx.resetTransform();
 							ctx.restore();
+
+							ctx.translate(this.x + this.width, this.y + (this.height - 5));
+							rightLeg.moveTo(0, 0);
+							rightLeg.lineTo(this.legsLength, 5);
+							rightLeg.lineTo(0, -3);
+							ctx.rotate(-Math.PI/180*this.legsRotation);
+							ctx.fill(rightLeg);
+							ctx.resetTransform();
+							ctx.restore();
+
+							// Pending: deploy center landing leg
+							//centerLeg.moveTo(this.x + this.width/3, this.y + this.height - 5);
+							//centerLeg.lineTo(this.x + this.width/2, this.y + this.height - 5 - this.legsLength);
+							//centerLeg.lineTo(this.x + this.width/3*2, this.y + this.height - 5);
+							//ctx.fill(centerLeg);
 						}
-					}
+
+						if(booster.status === 'crashed'){
+
+							sounds.explosion.play();
+
+							var explosionRadius = 75;
+							var explosionInterval = setInterval(function(){
+
+								var explosionGrad = ctx.createRadialGradient(booster.x + booster.width/2 ,booster.y + booster.height - 5,explosionRadius/10,booster.x + booster.width/2 ,booster.y + booster.height, explosionRadius);
+								explosionGrad.addColorStop(0,'white');
+								explosionGrad.addColorStop(0.5,'rgba(255,255,50, 0.25)');
+								explosionGrad.addColorStop(0.75,'rgba(255,165,0, 0.125)');
+								explosionGrad.addColorStop(1,'transparent');
+
+								ctx.fillStyle = explosionGrad;
+								ctx.arc(booster.x + booster.width/2 ,booster.y + booster.height - 5, explosionRadius, 0, Math.PI*2);
+								ctx.fill();
+
+								explosionRadius <= 160 ? explosionRadius += 10 : clearInterval(explosionInterval.valueOf());
+							}, 5);
+						}
+
+						stats();
+
+						// Draws Landing target
+						platform.draw();
+
+						if(booster.status === 'landed'){
+							if(booster.vx >= -0.1 && booster.vx <= 0.1 && ctx.isPointInPath(landingPlatform, booster.x + booster.width/2, booster.y + booster.height)){
+								game.over(text.sucessfulLanding, 'limegreen');
+							}else if(ctx.isPointInPath(landingPlatform, booster.x + booster.width/2, booster.y + booster.height)){
+								game.over(text.unstableLanding, 'yellow');
+							}
+						}else if(booster.status === 'missed target'){
+							game.over(text.missedTarget,'orange')
+						}
+
+						if(booster.status === 'crashed'){
+							setTimeout(function(){
+								game.over(text.gameover);
+							}, 1000);
+						}
+
+						ctx.restore();
+					};
+
+					var platform = new PhysicalObject(Math.abs(Math.random() * canvasW - 100), canvasH - 15, 100, 10, undefined, 0.25, 0.25);
+					platform.draw = function(){
+
+						landingPlatform = new Path2D();
+
+						ctx.save();
+
+						ctx.strokeStyle = 'rgba(0,0,0, 0.5)';
+						landingPlatform.rect(this.x, this.y, this.width, this.height);
+
+						ctx.fillStyle = 'darkgray';
+						ctx.stroke(landingPlatform);
+						ctx.fill(landingPlatform);
+
+						if(ctx.isPointInPath(landingPlatform, booster.x - booster.legsLength, platform.y) && ctx.isPointInPath(landingPlatform, booster.x + booster.width + booster.legsLength, platform.y)){
+							ctx.fillStyle = 'limegreen';
+						}else{
+							booster.y + booster.height < canvasH - 200 ? ctx.fillStyle = 'orange' : ctx.fillStyle = 'red';
+						}
+
+						ctx.fillRect(platform.x, platform.y, 10, platform.height);
+						ctx.fillRect(platform.x + platform.width - 10, platform.y, 10, platform.height);
+						ctx.strokeRect(platform.x, platform.y, 10, platform.height);
+						ctx.strokeRect(platform.x + platform.width - 10, platform.y, 10, platform.height);
+
+						ctx.fillStyle = 'black';
+						ctx.textAlign = 'center';
+						ctx.textBaseline = 'middle';
+						ctx.font = `${this.height}px sans-serif`;
+						ctx.font = 'bold 15px sans-serif';
+						ctx.fillText('X', this.x + this.width/2, this.y + this.height/2 + 1);
+
+						game.level === 1 ? scenario('ground') : undefined;
+						game.level === 2 ? scenario('ground') : undefined;
+						game.level === 3 ? scenario('ocean') : undefined;
+						game.level === 4 ? scenario('ocean') : undefined;
+
+						if(game.scenario !== 'ocean'){
+							ctx.fillRect(this.x - 25, canvasH - 70, 3, 65);
+							ctx.fillRect(this.x - 15, canvasH - 50, 3, 40);
+							ctx.fillRect(this.x + this.width + 15, canvasH - 50, 3, 40);
+							ctx.fillRect(this.x + this.width + 25, canvasH - 70, 3, 65);
+						}else if(game.scenario === 'ocean' && game.graphics === 'high'){
+							ctx.beginPath();
+							ctx.moveTo(this.x + this.width, this.y + this.height/2);
+							ctx.lineTo(this.x + this.width + 15, this.y + this.height/2);
+							ctx.lineTo(this.x + this.width, this.y + this.height + 5);
+							ctx.lineTo(this.x, this.y + this.height + 5);
+							ctx.lineTo(this.x - 15, this.y + this.height/2);
+							ctx.closePath();
+							ctx.fill();
+						}
+
+						ctx.restore();
+					};
 
 					// Engines object with methods for drawing each engine
 					var engines = {
@@ -1069,18 +1137,15 @@
 					}
 
 					// Turns gravity on
-					var gravityInterval;
-					function gravity(g = 9.80665){
-						gravityInterval = setInterval(function(){
+					var physicsInterval;
+					function physics(g = 9.80665){
+						physicsInterval = setInterval(function(){
 
 							booster.vx = (Math.sign(booster.vx) * Math.abs(booster.vx)) * 0.98;
 							Math.abs(booster.vx) > 0.001 ? booster.x += booster.vx : booster.vx = 0;
 
-							if(navigator.platform.match(/win/ig)){
-								booster.vy += g/fps;
-							}else{
-								booster.vy += g/fps/60;
-							}
+							navigator.platform.match(/win/ig) ? booster.vy += g/fps : booster.vy += g/fps/60;
+
 							booster.y += booster.vy;
 
 							if(booster.y + booster.height >= canvasH || ctx.isPointInPath(landingPlatform, booster.x + booster.width/2, booster.y + booster.height)){
@@ -1104,7 +1169,7 @@
 							}
 
 							if(booster.status === 'landed' || booster.status === 'missed target' || booster.status === 'crashed' || game.status === 'over' || game.status === 'reset'){
-									clearInterval(gravityInterval.valueOf());
+									clearInterval(physicsInterval.valueOf());
 									//clearInterval(scenarioInterval.valueOf());
 							}
 
@@ -1271,10 +1336,10 @@
 						ctx.fillText(text.language, canvasW/10*6, canvasH/6*4);
 						ctx.fillText(text.controls, canvasW/10*6, canvasH/6*5);
 
-						startGameBtn = new Path2D;
-						menuControlsBtn = new Path2D;
-						menuInstructionsBtn = new Path2D;
-						menuLangBtn = new Path2D;
+						startGameBtn = new Path2D();
+						menuControlsBtn = new Path2D();
+						menuInstructionsBtn = new Path2D();
+						menuLangBtn = new Path2D();
 
 						ctx.strokeStyle = 'red';
 						ctx.strokeRect(canvasW/20*11 - 1, canvasH/8 - 1, canvasW, 65);
@@ -1488,15 +1553,15 @@
 						sunCrown.addColorStop(0, '#FFFFCC');
 						sunCrown.addColorStop(1, 'rgba(255,255,255, 0)');
 
-						var sun = new Path2D;
+						var sun = new Path2D();
 
-						var rocketPayload = new Path2D;
-						var rocketFirstStage = new Path2D;
-						var rocketBase = new Path2D;
+						var rocketPayload = new Path2D();
+						var rocketFirstStage = new Path2D();
+						var rocketBase = new Path2D();
 
-						var thruster1 = new Path2D;
-						var thrusters2 = new Path2D;
-						var thrusters3 = new Path2D;
+						var thruster1 = new Path2D();
+						var thrusters2 = new Path2D();
+						var thrusters3 = new Path2D();
 
 						ctx.fillStyle = sky;
 						ctx.fillRect(0, 0, 800, 1200);
@@ -1683,26 +1748,6 @@
 						ctx.arc(sunMoonOrb.x, sunMoonOrb.y, sunMoonOrb.r, 1, Math.PI*2);
 						time === 'day' ? ctx.fillStyle = sunGrad : ctx.fillStyle = moonGrad;
 						ctx.fill();
-					}
-
-					function angle(){
-						var realY = Math.abs(booster.y - canvasH);
-						var x = function(){
-							if(booster.x >= 90){
-								return 90;
-							}else{
-								return booster.x;
-							}
-						};
-						var y = function(){
-							if(booster.y >= 90){
-								return 90;
-							}else{
-								return realY;
-							}
-						};
-						var angle = (y() / x()) * 90 / 2;
-						console.log(angle);
 					}
 				</script>
 			</section>
