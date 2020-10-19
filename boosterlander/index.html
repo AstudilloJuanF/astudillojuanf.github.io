@@ -24,11 +24,31 @@
 		<link rel="shortcut icon" type="image/svg+xml" href="./icons/favicon.svg">
 		<script type="application/javascript" src="./scripts/sharerbox.js" async></script>
 		<style>
-			body{font-family: calibri, arial, verdana}
-			canvas{display: block; margin: auto; outline: solid 1px black;}
-			#canvas-section{overflow: hidden;}
-			h1,h2,h3{text-align: center;}
-			a{text-decoration: none; display: block; width: fit-content; margin: auto;}
+			body{
+				font-family: calibri, arial, verdana;
+			}
+
+			canvas{
+				display: block;
+				margin: auto;
+				touch-action: none;
+			}
+
+			#canvas-section{
+				overflow: hidden;
+				outline: solid 1px black;
+			}
+
+			h1,h2,h3{
+				text-align: center;
+			}
+
+			a{
+				text-decoration: none;
+				display: block;
+				width: fit-content;
+				margin: auto;
+			}
 		</style>
 	</head>
 	<body>
@@ -57,16 +77,13 @@
 					const canvas = document.getElementById('canvas-frame');
 					const ctx = canvas.getContext('2d');
 
-					function centerGameFrame(e){
-
+					function centerGameFrame(){
 						window.scrollTo(0, canvas.offsetTop);
 					}
 
-					canvas.addEventListener('touchstart', centerGameFrame);
-					canvas.addEventListener('touchmove', centerGameFrame);
-					canvas.addEventListener('touchcancel', centerGameFrame);
-					canvas.addEventListener('touchend', centerGameFrame);
-
+					canvas.addEventListener('gotpointercapture', centerGameFrame);
+					canvas.addEventListener('lostpointercapture', centerGameFrame);
+					canvas.addEventListener('pointerrawupdate', centerGameFrame);
 					ctx.imageSmoothingEnabled = false;
 
 					const ctxInitialScaleX = 1024;
@@ -1006,12 +1023,6 @@
 							ctx.fill(rightLeg);
 							ctx.resetTransform();
 							ctx.restore();
-
-							// Pending: deploy center landing leg
-							//centerLeg.moveTo(this.x + this.width/3, this.y + this.height - 5);
-							//centerLeg.lineTo(this.x + this.width/2, this.y + this.height - 5 - this.legsLength);
-							//centerLeg.lineTo(this.x + this.width/3*2, this.y + this.height - 5);
-							//ctx.fill(centerLeg);
 						}
 
 						if(booster.status === 'crashed'){
@@ -1200,7 +1211,7 @@
 
 							booster.y += booster.vy;
 
-							
+
 							if(booster.y + booster.height >= canvasH || ctx.isPointInPath(landingPlatform, booster.x + booster.width/2, booster.y + booster.height)){
 								if(Math.abs(booster.vy) > 0.2){
 									booster.status = 'crashed';
@@ -1416,6 +1427,9 @@
 						ctx.restore();
 
 						drawRocket();
+
+						canvas.removeEventListener('click', menuInput);
+						document.removeEventListener('keydown', menuInput);
 
 						canvas.addEventListener('click', menuInput);
 						document.addEventListener('keydown', menuInput);
