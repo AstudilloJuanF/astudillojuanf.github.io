@@ -25,7 +25,8 @@
 		<script type="application/javascript" src="./scripts/sharerbox.js" async></script>
 		<style>
 			body{font-family: calibri, arial, verdana}
-			canvas{display: block; margin: auto; border: solid 1px black;}
+			canvas{display: block; margin: auto; outline: solid 1px black;}
+			#canvas-section{overflow: hidden;}
 			h1,h2,h3{text-align: center;}
 			a{text-decoration: none; display: block; width: fit-content; margin: auto;}
 		</style>
@@ -56,6 +57,16 @@
 					const canvas = document.getElementById('canvas-frame');
 					const ctx = canvas.getContext('2d');
 
+					function centerGameFrame(e){
+
+						window.scrollTo(0, canvas.offsetTop);
+					}
+
+					canvas.addEventListener('touchstart', centerGameFrame);
+					canvas.addEventListener('touchmove', centerGameFrame);
+					canvas.addEventListener('touchcancel', centerGameFrame);
+					canvas.addEventListener('touchend', centerGameFrame);
+
 					ctx.imageSmoothingEnabled = false;
 
 					const ctxInitialScaleX = 1024;
@@ -66,28 +77,61 @@
 
 					var canvasW = canvas.width;
 					var canvasH = canvas.height;
+					var scalingPercentage = 0;
 
 				// --------- Resize Canvas Frame ----------------------- TESTING...
 
-					if(window.innerWidth < ctxInitialScaleX || window.innerHeight < ctxInitialScaleY){
+					function resizeGame(){
+
 						var deviceW = document.body.offsetWidth;
 						var deviceH = window.innerHeight;
-						var scalingPercentage = 0;
 
-						if(deviceW < deviceH){
-							scalingPercentage = deviceW / ctxInitialScaleX;
-							canvas.width = deviceW;
-							canvas.height = (ctxInitialScaleY * 100 / ctxInitialScaleX) * canvas.width / 100
-						}else if(deviceW > deviceH){
-							scalingPercentage = deviceH / ctxInitialScaleY;
-							canvas.height = deviceH;
-							canvas.width = (ctxInitialScaleX * 100 / ctxInitialScaleY) * canvas.height / 100
+						if(window.innerWidth < ctxInitialScaleX || window.innerHeight < ctxInitialScaleY){
+							if(deviceW < deviceH){
+								scalingPercentage = deviceW / ctxInitialScaleX;
+								canvas.width = deviceW;
+								canvas.height = (ctxInitialScaleY * 100 / ctxInitialScaleX) * deviceW / 100;
+								canvas.margin = '0px';
+							}else if(deviceW >= deviceH){
+								scalingPercentage = deviceH / ctxInitialScaleY;
+								canvas.height = deviceH;
+								canvas.width = (ctxInitialScaleX * 100 / ctxInitialScaleY) * deviceH / 100;
+								canvas.margin = 'auto';
+							}
+
+							ctx.resetTransform();
+							ctx.scale(scalingPercentage, scalingPercentage);
+
+
+							// Self-Reminder: Replace this monstruosity and redraw a previously captured ImageData frame on each call instead
+								if(game.status === 'reset'){
+									var menuStatus = menu.current;
+									welcomeScreen();
+									switch(menuStatus){
+										case 'instructions':
+											menu.instructions();
+										break;
+										case 'language':
+											menu.language();
+										break;
+										case 'controls':
+											menu.controls();
+										break;
+									}
+								}else{
+									if(game.status === 'paused'){
+										booster.draw();
+										game.pause();
+									}
+								}
+							//------------------------------------------------------
 						}
-
-						//ctx.resetTransform();
-						ctx.scale(scalingPercentage, scalingPercentage);
-						ctx.save();
 					}
+
+					window.addEventListener('load', resizeGame);
+					window.addEventListener('change', resizeGame);
+					window.addEventListener('resize', resizeGame);
+					window.addEventListener('deviceorientation', resizeGame);
 				// -------------------------------------------------------
 
 
@@ -1147,6 +1191,8 @@
 					function physics(g = 9.80665){
 						physicsInterval = setInterval(function(){
 
+							ctx.resetTransform();
+
 							booster.vx = (Math.sign(booster.vx) * Math.abs(booster.vx)) * 0.98;
 							Math.abs(booster.vx) > 0.001 ? booster.x += booster.vx : booster.vx = 0;
 
@@ -1154,7 +1200,7 @@
 
 							booster.y += booster.vy;
 
-							ctx.resetTransform();
+							
 							if(booster.y + booster.height >= canvasH || ctx.isPointInPath(landingPlatform, booster.x + booster.width/2, booster.y + booster.height)){
 								if(Math.abs(booster.vy) > 0.2){
 									booster.status = 'crashed';
@@ -1438,13 +1484,13 @@
 										engines.drawMain();
 										engines.drawRight();
 
-										booster.vy += -booster.vy / 10;
+										navigator.platform.match(/win|linux|mac/ig) ? booster.vy += -booster.vy / 10 : booster.vy = 0;
 										booster.vx += -booster.vx / 100;
 										booster.fuel -= 1000;
 
 									}else if(e.movementY < 0){
-										booster.vy += -booster.vy / 20;
 										engines.drawMain();
+										navigator.platform.match(/win|linux|mac/ig) ? booster.vy += -booster.vy / 20 : booster.vy += -booster.vy / 4;
 										booster.fuel -= 500;
 									}
 
@@ -1486,25 +1532,27 @@
 
 						var eX = e.offsetX, eY = e.offsetY;
 
-						if(menu.current === 'welcome' || menu.current === 'instructions'){
-							if(ctx.isPointInPath(menuControlsBtn, eX, eY) && (game.status === 'started' || game.status === 'reset')){
-								menu.controls();
-							}
-						}
-
-						if(menu.current === 'welcome'){
-							if(ctx.isPointInPath(startGameBtn, eX, eY) && (game.status === 'started' || game.status === 'reset')){
-								game.start();
-								canvas.removeEventListener('click', menuInput);
-								document.removeEventListener('keydown', menuInput);
+						if(game.status === 'started' || game.status === 'reset'){
+							if(menu.current === 'welcome' || menu.current === 'instructions'){
+								if(ctx.isPointInPath(menuControlsBtn, eX, eY)){
+									menu.controls();
+								}
 							}
 
-							if(ctx.isPointInPath(menuInstructionsBtn, eX, eY) && (game.status === 'started' || game.status === 'reset')){
-								menu.instructions();
-							}
+							if(menu.current === 'welcome'){
+								if(ctx.isPointInPath(startGameBtn, eX, eY)){
+									game.start();
+									canvas.removeEventListener('click', menuInput);
+									document.removeEventListener('keydown', menuInput);
+								}
 
-							if(ctx.isPointInPath(menuLangBtn, eX, eY) && (game.status === 'started' || game.status === 'reset')){
-								menu.language();
+								if(ctx.isPointInPath(menuInstructionsBtn, eX, eY)){
+									menu.instructions();
+								}
+
+								if(ctx.isPointInPath(menuLangBtn, eX, eY)){
+									menu.language();
+								}
 							}
 						}
 
