@@ -23,9 +23,29 @@
 			<meta name="twitter:image" content="https://astudillojuanf.github.io/boosterlander/images/boosterlander-preview-snapshot.jpg">
 		<link rel="shortcut icon" type="image/svg+xml" href="./icons/favicon.svg">
 		<script type="application/javascript" src="./scripts/sharerbox.js" async></script>
+		<script type="application/javascript" src="./scripts/dev-badge.js" defer></script>
 		<style>
 			body{
 				font-family: calibri, arial, verdana;
+				box-sizing: border-box;
+				margin: 0;
+				padding: 0;
+			}
+
+			header{
+				display: block;
+				background: black;
+				color: white;
+				margin: 0;
+				padding: 0.5vw;
+				width: 100%;
+				height: fit-content;
+			}
+
+			h1{
+
+				margin: 0;
+				height: fit-content;
 			}
 
 			canvas{
@@ -35,10 +55,11 @@
 			}
 
 			#canvas-section{
-				overflow: hidden;
+				/*overflow: hidden;*/
 			}
 
-			h1,h2,h3{
+			h1,h2,h3,p{
+				display: block;
 				text-align: center;
 			}
 
@@ -47,6 +68,30 @@
 				display: block;
 				width: fit-content;
 				margin: auto;
+			}
+
+			footer{
+				display: block;
+				background: #0E3C99;
+				color: white;
+				margin-top: 4rem;
+				padding: 0.5vw;
+				width: 100%;
+				height: fit-content;
+			}
+
+			footer address{
+				color: white;
+				font-style: normal;
+			}
+
+			#author-disclaimer > p {
+				color: lightgray;
+				cursor: default;
+			}
+
+			#author-disclaimer > p:hover {
+				color: white;
 			}
 		</style>
 	</head>
@@ -68,21 +113,34 @@
 				<script>
 
 					/*
-						Booster Lander - Moon Lander and SpaceX inspired JavaScript Minigame By AstudilloJuanF
-						Copyright 2020 © Juan Astudillo
-						<astudillojuanfrancisco@gmail.com>
+								Booster Lander - Copyright © 2020 Juan Astudillo
+								A Moon Lander & SpaceX inspired JavaScript minigame made By AstudilloJuanF
+								<astudillojuanfrancisco@gmail.com>
+
+
+															Contact:
+
+								Github Page:
+								https://github.com/AstudilloJuanF
+
+								LinkedIn Profile:
+								https://wwww.linkedin.com/in/juan-astudillo/
+
+								Email:
+								astudillojuanfrancisco@gmail.com
 					*/
 
 					const canvas = document.getElementById('canvas-frame');
 					const ctx = canvas.getContext('2d');
 
 					function centerGameFrame(){
-						window.scrollTo(0, canvas.offsetTop);
+						!game.status.match(/reset|over|paused/ig) ? window.scrollTo(0, canvas.offsetTop) : undefined;
 					}
 
+					canvas.addEventListener('touchstart', centerGameFrame);
 					canvas.addEventListener('pointerover', centerGameFrame);
 					canvas.addEventListener('pointermove', centerGameFrame);
-					
+
 					ctx.imageSmoothingEnabled = false;
 
 					const ctxInitialScaleX = 1024;
@@ -93,29 +151,29 @@
 
 					var canvasW = canvas.width;
 					var canvasH = canvas.height;
-					var scalingPercentage = 0;
+					var scalingPercentage = 1;
 
-				// --------- Resize Canvas Frame ----------------------- TESTING...
-
+				// --------- Game frame resizing function ----------------------- TESTING...
 					function resizeGame(){
 
-						var deviceW = document.body.offsetWidth;
+						var deviceW = window.innerWidth;
 						var deviceH = window.innerHeight;
 
-						if(window.innerWidth < ctxInitialScaleX || window.innerHeight < ctxInitialScaleY){
+						if(window.innerWidth <= ctxInitialScaleX || window.innerHeight <= ctxInitialScaleY){
 							if(deviceW < deviceH){
 								scalingPercentage = deviceW / ctxInitialScaleX;
 								canvas.width = deviceW;
-								canvas.height = (ctxInitialScaleY * 100 / ctxInitialScaleX) * deviceW / 100;
-								canvas.margin = '0px';
+								canvas.height = (ctxInitialScaleY / ctxInitialScaleX) * deviceW;
+								canvas.margin = '0';
 							}else if(deviceW >= deviceH){
 								scalingPercentage = deviceH / ctxInitialScaleY;
 								canvas.height = deviceH;
-								canvas.width = (ctxInitialScaleX * 100 / ctxInitialScaleY) * deviceH / 100;
+								canvas.width = (ctxInitialScaleX / ctxInitialScaleY) * deviceH;
 								canvas.margin = 'auto';
 							}
 
 							ctx.resetTransform();
+							scalingPercentage > 1 ? scalingPercentage = 1 : undefined;
 							ctx.scale(scalingPercentage, scalingPercentage);
 
 
@@ -148,6 +206,7 @@
 					window.addEventListener('change', resizeGame);
 					window.addEventListener('resize', resizeGame);
 					window.addEventListener('deviceorientation', resizeGame);
+
 				// -------------------------------------------------------
 
 
@@ -170,7 +229,7 @@
 					var mainEngineExhaust = new Path2D();
 
 
-					// Pending: To convert loose physical objects into class objects in order to order the code and handle physics better
+					// Pending: To convert loose physical objects into class objects in order to organize the code and handle physics better
 					class PhysicalObject {
 						constructor(posX = 0, posY = 0, width = 0, height = 0, radius = undefined, speedX = 0, speedY = 0, mass = undefined){
 							this.x = posX; // Meters
@@ -344,6 +403,7 @@
 						},
 						over: function(message, color = 'red'){
 
+							!message ? message = text.gameover : undefined;
 							this.status = 'over';
 							cronometer.stop();
 							stopAudio(sounds.engines);
@@ -379,9 +439,9 @@
 								ctx.fillStyle = 'lightgray';
 
 								if(game.language === 'es'){
-									var gameOverMsg = ['¡Pero la gente cool no mira las explosiones!', 'El cohete explotó, pero nosotros no podemos', 'Desensamblaje rápido no programado', 'El aterrizaje falló exitosamente', 'Ey, no es mi culpa, no existe el abajo en el espacio', 'Per aspera ad astra', 'En el espacio, nadie puede oirte explotar'];
+									var gameOverMsg = ['¡Pero la gente cool no observa las explosiones!', 'El cohete explotó, pero nosotros no podemos', 'Desensamblaje rápido no programado', 'El aterrizaje falló exitosamente', 'Ey, no es mi culpa, no existe el abajo en el espacio', 'En el espacio, nadie puede oirte explotar'];
 								}else{
-									var gameOverMsg = ['But cool guys don\'t look at the explosions!', 'The rocket couldn\'t keep it together, but we can', 'Rapid unscheduled disassembly', 'The landing has failed successfully', 'Hey, it\'s not my fault, there is no bottom in space', 'Per aspera ad astra', 'In space, no one can hear you explode'];
+									var gameOverMsg = ['But cool guys don\'t look at the explosions!', 'The rocket couldn\'t keep it together, but we can', 'Rapid unscheduled disassembly', 'The landing has failed successfully', 'Hey, it\'s not my fault, there is no bottom in space', 'In space, no one can hear you explode'];
 								}
 
 								ctx.fillText(gameOverMsg[Math.floor(Math.random()*gameOverMsg.length)], canvasW/2, canvasH/8*2.25);
@@ -396,6 +456,8 @@
 								}
 
 								ctx.fillText(gameOverMsg[Math.floor(Math.random()*gameOverMsg.length)], canvasW/2, canvasH/6*3);
+							}else if(message === text.unstableLanding){
+								ctx.fillText('Per aspera ad astra', canvasW/2, canvasH/8*2.25);
 							}
 
 							if(game.level !== 4){
@@ -720,7 +782,7 @@
 					var menu = {
 						active: undefined,
 						current: 'welcome',
-						background: function(){
+						drawBackground: function(){
 							drawRocket();
 							ctx.fillStyle = 'black';
 							ctx.fillRect(canvasW/2, 0, canvasW, canvasH - canvasW/20);
@@ -740,7 +802,7 @@
 
 							ctx.save();
 
-							this.background();
+							this.drawBackground();
 
 							ctx.fillStyle = 'white';
 							ctx.font = '40px sans-serif';
@@ -807,7 +869,7 @@
 
 							ctx.save();
 
-							this.background();
+							this.drawBackground();
 
 							ctx.fillStyle = 'white';
 							ctx.font = '40px sans-serif';
@@ -846,7 +908,7 @@
 							this.current === 'language' ? setLanguage() : undefined;
 
 							ctx.save();
-							this.background();
+							this.drawBackground();
 
 							ctx.fillStyle = 'white';
 							ctx.font = '40px sans-serif';
@@ -935,11 +997,12 @@
 					booster.fuelCapacity = 245620;
 					booster.fuel = 245620;
 					booster.status = 're-entry';
+					booster.engineStatus = 'off';
 					booster.draw = function(){
 
 						ctx.save();
 
-						game.level === 2 || game.level === 4 ? background('night') : background('day');
+						game.level === 2 || game.level === 4 ? setLevelBackground('night') : setLevelBackground('day');
 
 						// Rocket's main body
 						ctx.beginPath();
@@ -1078,9 +1141,57 @@
 
 						ctx.save();
 
-						ctx.strokeStyle = 'rgba(0,0,0, 0.5)';
+						if(game.graphics !== 'low' && game.scenario === 'ocean'){
+							var bwy = wy - 2;
+							ctx.fillStyle = 'rgb(115,115,206)';
+							ctx.beginPath();
+							ctx.moveTo(0,bwy);
+
+							for(var i = 0; i <= 10; i++){
+								ctx.bezierCurveTo(i*canvasW/10-canvasW/40, bwy+my, i*canvasW/10-canvasW/40*2 , bwy-my, i*canvasW/10, bwy);
+							}
+
+							ctx.lineTo(canvasW, canvasH);
+							ctx.lineTo(0, canvasH);
+							ctx.closePath();
+							ctx.fill();
+						}
+
 						landingPlatform.rect(this.x, this.y, this.width, this.height);
 
+						// Ground FX from propellant
+						if(game.graphics !== 'low'){
+
+							if(engines.status === 'on' && (booster.y + booster.height + 25) >= platform.y - 40){
+
+								var groundFXCenter, groundFXColor;
+
+								ctx.beginPath();
+								if(ctx.isPointInPath(landingPlatform, booster.x + booster.width/2, platform.y)){
+									ctx.arc(booster.x + booster.width/2, platform.y, 25, 0, Math.PI*2);
+									groundFXCenter = platform.y;
+									groundFXColor = 'rgba(255,255,128, 0.5)';
+								}else{
+									ctx.arc(booster.x + booster.width/2, platform.y + platform.height, 25, 0, Math.PI*2);
+									groundFXCenter = platform.y + platform.height;
+									groundFXColor = 'rgba(255,255,255, 0.5)';
+								}
+								ctx.closePath();
+
+
+								var groundFXGradient = ctx.createRadialGradient(booster.x + booster.width/2, platform.y, 1, booster.x + booster.width/2, groundFXCenter, 25);
+								groundFXGradient.addColorStop(0, 'rgba(255,255,255, 0.75)');
+								groundFXGradient.addColorStop(0.5, groundFXColor);
+								groundFXGradient.addColorStop(1, 'rgba(255,255,0, 0.0)');
+
+								ctx.fillStyle = groundFXGradient;
+								ctx.fill();
+
+								engines.status = 'off';
+							}
+						}
+
+						ctx.strokeStyle = 'rgba(0,0,0, 0.5)';
 						ctx.fillStyle = 'darkgray';
 						ctx.stroke(landingPlatform);
 						ctx.fill(landingPlatform);
@@ -1131,6 +1242,7 @@
 
 					// Engines object with methods for drawing each engine
 					var engines = {
+						status: 'off',
 						sideEnginesWidth: 20,
 						sideEnginesHeight: 5,
 						mainEngineWidth: booster.width/5*3,
@@ -1172,6 +1284,8 @@
 						},
 
 						drawMain: function(){
+
+							this.status = 'on';
 
 							var mainEngineGrad = ctx.createLinearGradient(booster.x + booster.width/2, booster.y + booster.height, booster.x + booster.width/2, booster.y + booster.height + 45);
 
@@ -1420,8 +1534,8 @@
 
 						ctx.font = '15px sans-serif';
 						ctx.fillStyle = 'gray';
-						ctx.textAlign = 'center';
-						ctx.fillText('Copyright 2020 © Juan Astudillo', canvasW/10*8.8, canvasH/20*19.25);
+						ctx.textAlign = 'end';
+						ctx.fillText('Booster Lander - Copyright © 2020 Juan Astudillo', canvasW - 15, canvasH/20*19.25);
 
 						ctx.restore();
 
@@ -1742,7 +1856,8 @@
 
 								platform.x += platform.vx;
 
-								ctx.fillStyle = 'rgba(0,0,206, 0.75)';
+								// Waves
+								ctx.fillStyle = 'rgba(0,0,206, 0.5)';
 								ctx.beginPath();
 								ctx.moveTo(0,wy);
 
@@ -1754,12 +1869,13 @@
 								ctx.lineTo(0, canvasH);
 								ctx.closePath();
 								ctx.fill();
+
 							break;
 						}
 						ctx.restore();
 					}
 
-					function background(time = 'day'){
+					function setLevelBackground(time = 'day'){
 
 						// Sky background gradient
 						var skyGrad = ctx.createLinearGradient(canvasW/2, 0, canvasW/2, canvasH);
@@ -1824,7 +1940,10 @@
 		</main>
 		<footer>
 			<address>
-				<a href="mailto:astudillojuanfrancisco@gmail.com" title="Contact the Author">Booster Lander Copyright © 2020 Juan Astudillo</a>
+				<div id="author-disclaimer">
+					<h3 title="Contact Author">&bull; &bull; &bull; &nbsp; Author &nbsp; &bull; &bull; &bull;</h3>
+					<p title="Booster Lander - Copyright © 2020 Juan Astudillo">Booster Lander - Copyright © 2020 Juan Astudillo</p>
+				</div>
 			</address>
 		</footer>
 	</body>
