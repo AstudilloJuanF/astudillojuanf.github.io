@@ -80,9 +80,9 @@
 						window.scrollTo(0, canvas.offsetTop);
 					}
 
-					canvas.addEventListener('gotpointercapture', centerGameFrame);
-					canvas.addEventListener('lostpointercapture', centerGameFrame);
-					canvas.addEventListener('pointerrawupdate', centerGameFrame);
+					canvas.addEventListener('pointerover', centerGameFrame);
+					canvas.addEventListener('pointermove', centerGameFrame);
+					
 					ctx.imageSmoothingEnabled = false;
 
 					const ctxInitialScaleX = 1024;
