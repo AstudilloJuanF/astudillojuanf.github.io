@@ -14,7 +14,7 @@
 			<meta property="og:type" content="website">
 			<meta property="og:title" content="AstudilloJuanF">
 			<meta property="og:description" content="Juan F Astudillo - Programmer & Web Developer">
-			<meta property="og:image" content="https://astudillojuanf.github.io/boosterlander/images/boosterlander-preview-snapshot.jpg">
+			<meta property="og:image" content="">
 			<meta property="og:url" content="https://astudillojuanf.github.io">
 			<meta property="og:locale" content="en_US">
 		<!-- Twitter Card metadata -->
@@ -22,185 +22,27 @@
 			<meta name="twitter:title" content="AstudilloJuanF">
 			<meta name="twitter:image" content="https://astudillojuanf.github.io/boosterlander/images/boosterlander-preview-snapshot.jpg">
 		<link rel="shortcut icon" type="image/svg+xml" href="./icons/favicon.svg">
-		<script type="application/javascript" src="./scripts/sharerbox.js" async></script>
-		<script type="application/javascript" src="./scripts/dev-badge.js" defer></script>
-		<style>
-			body{
-				font-family: calibri, arial, verdana;
-				box-sizing: border-box;
-				margin: 0;
-				padding: 0;
-			}
-
-			header{
-				display: block;
-				margin: 0;
-				padding: 1rem 0;
-				width: 100%;
-				height: fit-content;
-			}
-
-			h1{
-				margin: 0;
-			}
-
-			canvas{
-				display: block;
-				margin: auto;
-				padding: 0;
-				touch-action: none;
-			}
-
-			#canvas-section{
-				display: block;
-				overflow: hidden;
-			}
-
-			h1,h2,h3,p{
-				display: block;
-				text-align: center;
-			}
-
-			a{
-				text-decoration: none;
-				display: block;
-				width: fit-content;
-				margin: auto;
-			}
-
-			footer{
-				display: block;
-				background: #0E3C99;
-				color: white;
-				margin: 0;
-				margin-top: 4rem;
-				padding: 1rem 0;
-				width: 100%;
-				height: 100%;
-			}
-
-			footer address{
-				color: white;
-				font-style: normal;
-			}
-
-			#author-disclaimer > p {
-				color: lightgray;
-				cursor: default;
-			}
-
-			#author-disclaimer > p:hover {
-				color: white;
-			}
-
-			#projects-section{
-				display: flex;
-				flex-flow: row wrap;
-				justify-content: space-evenly;
-				align-content: space-evenly;
-				width: 90%;
-				height: fit-content;
-				margin: auto;
-			}
-
-			.project-card{
-				display: block;
-				width: 450px;
-				height: 250px;
-				margin: 0;
-				margin-bottom: 2rem;
-				padding: 1rem 0;
-				border-radius: 10px;
-				box-shadow: 0 0 2.5px rgba(0,0,0, 0.5);
-				transition: 0.5s;
-			}
-
-			.project-card:hover{
-				transform: scale(1.025);
-				box-shadow: 0 0 2.5px rgba(0,0,0, 0.75);
-			}
-
-			.project-card-img{
-				display: block;
-				margin: 0;
-				padding: 0;
-			}
-
-			.project-card-title{
-				font-size: 1.2rem;
-				text-align: center;
-				margin: auto;
-			}
-
-			.project-card-img-wrap{
-				display: block;
-				width: 450px;
-				height: 200px;
-				margin: 0;
-				padding: 0;
-			}
-
-			.project-card-img{
-				display: block;
-				background: white;
-				width: 100%;
-				height: 100%;
-				margin: 0;
-				padding: 0;
-			}
-		</style>
+		<link rel="stylesheet" type="text/css" href="styles/styles.css">
+		<script type="application/javascript" src="scripts/AJAXCards.js" defer></script>
 	</head>
 	<body>
-		<script>
-			window.onload = function(){
-				sharerboxIcons('twitter facebook whatsapp linkedin reddit tumblr pinterest telegram');
-				sharerSetup('popup', 'right', 'dimgray', 'hidden', 'Check out Booster Lander! SpaceX inspired JavaScript minigame by AstudilloJuanF');
-			};
-		</script>
 		<header>
 			<h1>Juan F Astudillo</h1>
 		</header>
 		<main>
-			<h2>Full STack Dev - Game Dev</h2>
+			<h2>Web Development - Rookie Game Dev</h2>
 			<h3>Projects</h3>
 			<section id="projects-section">
-				<div class="project-card">
-					<h4 class="project-card-title">Booster Lander</h4>
-					<figure class="project-card-img-wrap">
-						<img class="project-card-img" src="https://astudillojuanf.github.io/boosterlander/images/boosterlander-preview-snapshot.jpg" alt="Booster Lander">
-					</figure>
-					<div class="pj-card-description-box">
-						<p class="pj-card-description"></p>
-					</div>
-					<p class="project-type">2D Game</p>
-				</div>
-				<div class="project-card">
-					<h4 class="project-card-title">SharerBox</h4>
-					<figure class="project-card-img-wrap">
-						<img class="project-card-img" src="" alt="SharerBox">
-					</figure>
-					<div class="pj-card-description-box">
-						<p class="pj-card-description"></p>
-					</div>
-					<p class="project-type">Frontend Dev</p>
-				</div>
+				<!-- Project cards here -->
 			</section>
 		</main>
 		<footer>
 			<address>
 				<div id="author-disclaimer">
 					<h3 title="Contact Author">&bull; &bull; &bull; &nbsp; Author &nbsp; &bull; &bull; &bull;</h3>
-					<p title="Booster Lander - Copyright © 2020 Juan Astudillo">Booster Lander - Copyright © 2020 Juan Astudillo</p>
+					<p title="Booster Lander - Copyright © 2020 Juan Astudillo">Copyright © 2020 Juan Astudillo</p>
 				</div>
 			</address>
 		</footer>
 	</body>
-	<script>
-		function requestProyectCardInfo(url){
-			var xhr = new XMLHttpRequest();
-			xhr.open('GET', url);
-			xhr.send();
-			xhr.onReadyStateChange = (()=> xhr.state = 200 ? var doc = new DOMParse(xhr.response)();
-		}
-	</script>
 </html>
