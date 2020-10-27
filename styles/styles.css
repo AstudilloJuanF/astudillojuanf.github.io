@@ -54,6 +54,7 @@ a{
 .project-card{
 	position: relative;
 	display: block;
+	background-color: white;
 	width: 450px;
 	height: auto;
 	margin: 0;
