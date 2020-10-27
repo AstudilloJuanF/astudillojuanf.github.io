@@ -66,6 +66,7 @@ a{
 }
 
 .project-card:hover{
+	z-index: 2;
 	transform: scale(1.025);
 	box-shadow: 0 0 2.5px rgba(0,0,0, 0.75);
 }
