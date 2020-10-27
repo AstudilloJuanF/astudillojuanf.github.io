@@ -5,24 +5,26 @@
 		<meta http-equiv="content-type" content="text/html" charset="utf-8">
 		<meta http-equiv="content-language" content="en-US">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="description" content="SharerBox: Lightweight website social-media sharer integration by AstudilloJuanF">
+		<meta name="description" content="SharerBox project - Preview">
 		<meta name="distribution" content="global">
 		<meta name="robots" content="all">
 		<meta name="author" content="Juan Francisco Astudillo Palacios">
 		<!-- Open Graph metadata -->
 			<meta property="og:type" content="website">
 			<meta property="og:title" content="SharerBox">
-			<meta property="og:description" content="SharerBox: Lightweight website social-media sharer integration by AstudilloJuanF">
-			<meta property="og:image" content="https://astudillojuanf.github.io/sharerbox/images/cover/sharerbox-preview-snapshot.jpg">
+			<meta property="og:description" content="SharerBox Project (live preview)">
+			<meta property="og:image" content="https://pbs.twimg.com/media/EZzW_qxWsAAJnZJ.jpg">
 			<meta property="og:url" content="https://astudillojuanf.github.io/sharerbox/">
 			<meta property="og:locale" content="en_US">
 		<!-- Twitter Card metadata -->
 			<meta name="twitter:card" content="summary_large_image">
 			<meta name="twitter:title" content="SharerBox">
-			<meta name="twitter:image" content="https://astudillojuanf.github.io/sharerbox/images/cover/sharerbox-preview-snapshot.jpg">
+			<meta name="twitter:image" content="https://pbs.twimg.com/media/EZzW_qxWsAAJnZJ.jpg">
 		<link rel="shortcut icon" type="image/svg+xml" href="./icons/favicon.svg">
 		<link rel="stylesheet" type="text/css" href="./css/fonts.css">
 		<link rel="stylesheet" type="text/css" href="./css/styles.css">
+		<link rel="preload" as="font" type="font/woff2" href="./fonts/carlito/carlito-regular-webfont.woff2" crossorigin="anonymous">
+		<link rel="preload" as="font" type="font/ttf" href="./fonts/inconsolata/inconsolata-variable.ttf" crossorigin="anonymous">
 		<script type="application/javascript" src="./scripts/sharerbox.js" async></script>
 		<script type="application/javascript" src="./scripts/scrolltop.js" async></script>
 		<script type="application/javascript" src="./scripts/dev-badge.js" defer></script>
@@ -30,7 +32,7 @@
 	<body>
 		<script type="application/javascript">
 			window.onload = function(){
-				sharerboxIcons('twitter facebook whatsapp linkedin pinterest reddit tumblr telegram');
+				sharerboxIcons('twitter facebook whatsapp linkedin reddit tumblr pinterest telegram');
 				sharerSetup('popup', 'right', 'black', 'visible', 'Check out SharerBox! website social-media integration by AstudilloJuanF');
 			};
 		</script>
@@ -50,12 +52,12 @@
 					</a>
 				</section>
 				<section class="sections">
-					<h2>Overview:</h2>
+					<h2><img class="h2-title-img" src="./icons/info-icon-circle.svg"> SharerBox Overview:</h2>
 					<figure>
 						<img id="main-cover-image" src="./images/cover/sharerbox.svg" alt="SharerBox - Screenshot" title="Cover">
 					</figure>
 					<p> &nbsp; <strong>SharerBox</strong> is a free, minimalistic and lightweight <i>JavaScript-Based</i> social-media sharebar feature developed to provide fast and easy-to-use social-media sharing integration for small websites by eliminating the need of loading heavy/bulky third-party social APIs, which generally have a negative impact on loading speeds and unauthorizedly recolect private user information.</p>
-					<p> &nbsp; Integrating SharerBox directly on your website for social-media sharing instead of external social APIs should significantly reduce loading speeds for visitors connected with slow networks, which will result on improved SEO indexation for your website and enhanced performance, user experience and device portability for your visitors, specially for users connected from old computers or low-end devices. Plus, since there is no need for integrating obscure social third-party code there is no unauthorized recolection of private user information derived from using SharerBox.</p>
+					<p> &nbsp; Integrating SharerBox directly on your website for sharing social-media instead of external social APIs should significantly reduce loading speeds for visitors connected on slow networks, which will result on improved SEO indexation for your website and enhanced performance, user experience and device portability for your visitors, this specially for users connected from old computers or low-end devices. Plus, since there is no need for implementing obscure social third-party code there is no unauthorized recolection of private user information directly derived from SharerBox use.</p>
 					<p> &nbsp; SharerBox is currently a personal development project, but it's implementation is intended to be simple for unexperienced users as well as very easy to customize for developers</p>
 					<h3 style="text-align: center;">Support:</h3>
 					<div id="supported-icons-wrapper">
@@ -120,9 +122,9 @@
 								<p><input class="social-network-check" type="checkbox" value="facebook" checked> - <img class="h3-title-img" src="./icons/facebook-logo.svg"> Facebook</p>
 								<p><input class="social-network-check" type="checkbox" value="whatsapp" checked> - <img class="h3-title-img" src="./icons/whatsapp-icon-soft-square.svg"> WhatsApp</p>
 								<p><input class="social-network-check" type="checkbox" value="linkedin" checked> - <img class="h3-title-img" src="./icons/linkedin-logo.svg"> LinkedIn</p>
-								<p><input class="social-network-check" type="checkbox" value="reddit"> - <img class="h3-title-img" src="./icons/reddit-icon-soft-square.svg"> Reddit</p>
-								<p><input class="social-network-check" type="checkbox" value="pinterest"> - <img class="h3-title-img" src="./icons/pinterest-icon-soft-square.svg"> Pinterest</p>
+								<p><input class="social-network-check" type="checkbox" value="reddit" checked> - <img class="h3-title-img" src="./icons/reddit-icon-soft-square.svg"> Reddit</p>
 								<p><input class="social-network-check" type="checkbox" value="tumblr"> - <img class="h3-title-img" src="./icons/tumblr-icon-soft-square.svg"> Tumblr</p>
+								<p><input class="social-network-check" type="checkbox" value="pinterest"> - <img class="h3-title-img" src="./icons/pinterest-icon-soft-square.svg"> Pinterest</p>
 								<p><input class="social-network-check" type="checkbox" value="telegram"> - <img class="h3-title-img" src="./icons/telegram-icon-soft-square.svg"> Telegram</p>
 							</div>
 							<div>
@@ -216,14 +218,17 @@
 						var formButtonsIcons = document.getElementsByClassName('form-buttons-icon');
 						var formButtonsWrap = document.getElementById('form-buttons-wrap');
 
-
-
 						function displayButtonIcon(number){
 							formButtonsIcons[number].removeAttribute('style');
 							if(number === 0){
+								formButtonsWrap.children[1].value = 'Default';
 								formButtonsIcons[number].style.cssText = 'transition: linear 0.35s; opacity: 1; transform: rotate(360deg)';
+								setTimeout(function(){formButtonsIcons[number].style.transitionDuration = '0.1s';}, 1000);
+								setTimeout(function(){formButtonsWrap.children[1].value = 'Reset'}, 2000);
 							}else if(number === 1){
+								formButtonsWrap.children[2].value = 'Applied';
 								formButtonsIcons[number].style.cssText = 'transition: linear 0.1s; opacity: 1;';
+								setTimeout(function(){formButtonsWrap.children[2].value = 'Apply'}, 2000);
 							}
 							setTimeout(function(){formButtonsIcons[number].style.opacity = '0';}, 2000);
 							setTimeout(function(){formButtonsIcons[number].removeAttribute('style')}, 2500);
@@ -234,7 +239,7 @@
 					</script>
 				</section>
 				<section class="sections">
-					<h2><img class="h2-title-img" src="./icons/package-icon.svg"> Installation</h2>
+					<h2><img class="h2-title-img" src="./icons/package-icon.svg"> Integration</h2>
 					<ol>
 						<li>Download and store Sharerbox's <b>JavaScript File</b> on your server.</li><br>
 						<li>Asynchronously load the script within your webpage's <b>HTML</b> <code><span class="identifyer">&lt;head&gt;</span></code> tag using the <code><span class="html-attribute">async</span></code> attribute.<br>
@@ -254,13 +259,13 @@
 		<span class="function-call">sharerSetup</span>( <span class="code-comment">/* Behavior options go here, else options are set to default */</span> );
 	};
 &lt;/<span class="html-tag">script</span>&gt;
-						</kbd></li><br>
+</pre></li><br>
 						<li>Save changes and load your site.</li><br>
 						<li>All done, SharerBox will be now enabled on your site.</li><br>
 					</ol>
 				</section>
 				<section class="sections">
-					<h2><img class="h2-title-img" src="./icons/gear.svg"> Options:</h2>
+					<h2><img class="h2-title-img" src="./icons/gear.svg"> Customization:</h2>
 					<h3>Icons <img class="h3-title-img" src="./icons/share-slateblue.svg"></h3>
 					<ul>
 						<li><strong> Social-Networks:</strong> A list of supported social-network platforms separated by spaces or commas.</li><br>
@@ -298,20 +303,20 @@
 &lt;<span class="html-tag">script</span>&gt;
 	<span class="method">window</span>.<span class="old-listener">onload</span> <span class="operator">=</span> <span class="function">function</span>(){
 
-		<span class="code-comment">// Buttons list: 'site1, site2, site3'</span>
-		<span class="function-call">sharerboxIcons</span>(<span class="code-quotes">'facebook twitter whatsapp reddit'</span>);
+		<span class="code-comment">// Buttons list: 'site1, site2, site3...'</span>
+		<span class="function-call">sharerboxIcons</span>(<span class="code-quotes">'facebook twitter whatsapp linkedin reddit'</span>);
 
 		<span class="code-comment">// Setup arguments: Behavior, Position, Color, Visibility, Description</span>
 		<span class="function-call">sharerSetup</span>(<span class="code-quotes">'pop-up'</span>, <span class="code-quotes">'left'</span>, <span class="code-quotes">'black'</span>, <span class="boolean">true</span>, <span class="code-quotes">'custom message or description goes here (optional)'</span>);
 	};
 &lt;/<span class="html-tag">script</span>&gt;
-					</pre>
+</pre>
 				</section>
 			</article>
 		</main>
 		<footer>
-			<a href="https://github.com/AstudilloJuanF/sharerbox/issues" target="_blank">Issues & Requests</a>
-			<div id="author-disclaimer" >
+			<a href="https://github.com/AstudilloJuanF/sharerbox/issues" target="_blank">Issues &amp; Requests</a>
+			<div id="author-disclaimer">
 				<h3>&bull; &bull; &bull; &nbsp; Author &nbsp; &bull; &bull; &bull;</h3>
 				<p title="Copyright © 2020 Juan Astudillo"> Copyright © 2020 Juan Astudillo</p>
 			</div>
