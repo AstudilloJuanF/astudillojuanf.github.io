@@ -1594,13 +1594,13 @@
 									}
 									if(Math.sign(e.movementX) === -1){
 										engines.drawRight();
-										booster.vx -= 0.5;
+										booster.vx -= 0.25;
 										booster.vy += -booster.vy / 80;
 										booster.fuel -= 250;
 									}
 									if(Math.sign(e.movementX) === 1){
 										engines.drawLeft();
-										booster.vx += 0.5;
+										booster.vx += 0.25;
 										booster.vy += -booster.vy / 80;
 										booster.fuel -= 250;
 									}
