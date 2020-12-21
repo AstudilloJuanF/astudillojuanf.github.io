@@ -53,8 +53,8 @@
 				</section>
 				<section class="sections">
 					<h2><img class="h2-title-img" src="./icons/info-icon-circle.svg"> SharerBox Overview:</h2>
-					<figure>
-						<img id="main-cover-image" src="./images/cover/sharerbox.svg" alt="SharerBox - Screenshot" title="Cover">
+					<figure id="cover-image-wrap">
+						<img id="cover-image" src="./images/cover/sharerbox.svg" alt="SharerBox - Screenshot" title="Cover">
 					</figure>
 					<div id="overview-text-box">
 						<p> &nbsp; <strong>SharerBox</strong> is a free, minimalistic and lightweight <i>JavaScript-Based</i> social-media sharebar feature developed to provide fast and easy-to-use social-media sharing integration for small websites by eliminating the need of loading heavy/bulky third-party social APIs, which generally have a negative impact on loading speeds and unauthorizedly recolect private user information.</p>
@@ -251,9 +251,9 @@
 						<li>Asynchronously load the script within your webpage's <b>HTML</b> <code><span class="identifyer">&lt;head&gt;</span></code> tag using the <code><span class="html-attribute">async</span></code> attribute.<br>
 						<br>
 						<p><i class="example-subtitle">Example:</i> <b>&lt;/&gt;</b></p>
-						<code class="code-snippet" title="paste within <head> section">
-							&lt;<span class="html-tag">script</span> <span class="html-attribute">type</span>=<span class="code-quotes">"application/javascript"</span> <span class="html-attribute">src</span>=<span class="code-quotes">"path/to/sharerbox.js"</span> <span class="html-attribute">async</span>&gt;&lt;/<span class="html-tag">script</span>&gt;
-						</code>
+						<pre class="code-snippet" title="paste within <head> section">
+&lt;<span class="html-tag">script</span> <span class="html-attribute">type</span>=<span class="code-quotes">"application/javascript"</span> <span class="html-attribute">src</span>=<span class="code-quotes">"path/to/sharerbox.js"</span> <span class="html-attribute">async</span>&gt;&lt;/<span class="html-tag">script</span>&gt;
+						</pre>
 						</li><br>
 						<li>Copy and paste this code snippet as it is (or configure it as listed bellow) anywhere within or after your <b>HTML</b> page's <code><span class="identifyer">&lt;body&gt;</span></code> tag to execute SharerBox.<br>
 						<br>
@@ -280,9 +280,9 @@
 						<h4>Setting Icons:</h4>
 						<p> &nbsp; You can specify which social-network icons will be displayed by SharerBox by going to the <code><span class="function-call">sharerboxIcons</span>()</code> function inside the <code><span class="identifyer">&lt;body&gt;</span></code> tag code snippet and typing a list of supported social-network items separated by spaces or commas, the full list must be wrapped around quotation marks.</p>
 						<p><i class="example-subtitle">Example:</i> <b>&lt;/&gt;</b></p>
-							<code class="code-snippet">
-								<span class="function-call">sharerboxIcons</span>(<span class="code-quotes">'site1, site2, site3, site...'</span>);
-							</code>
+							<pre class="code-snippet">
+<span class="function-call">sharerboxIcons</span>(<span class="code-quotes">'site1, site2, site3, site...'</span>);
+							</pre>
 						<p><i> &nbsp; (if this function is leaved blank SharerBox will display it's default social icons)</i></p>
 					</div>
 					<h3>Behavior <img class="h3-title-img" src="./icons/browser-window.svg"></h3>
