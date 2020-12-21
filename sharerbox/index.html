@@ -5,21 +5,21 @@
 		<meta http-equiv="content-type" content="text/html" charset="utf-8">
 		<meta http-equiv="content-language" content="en-US">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="description" content="SharerBox: Lightweight website social-media sharer by AstudilloJuanF">
+		<meta name="description" content="SharerBox project - Preview">
 		<meta name="distribution" content="global">
 		<meta name="robots" content="all">
 		<meta name="author" content="Juan Francisco Astudillo Palacios">
 		<!-- Open Graph metadata -->
 			<meta property="og:type" content="website">
 			<meta property="og:title" content="SharerBox">
-			<meta property="og:description" content="SharerBox: Lightweight website social-media sharer by AstudilloJuanF">
-			<meta property="og:image" content="https://astudillojuanf.github.io/sharerbox/images/cover/sharerbox-preview-snapshot.jpg">
+			<meta property="og:description" content="SharerBox Project (live preview)">
+			<meta property="og:image" content="https://pbs.twimg.com/media/EZzW_qxWsAAJnZJ.jpg">
 			<meta property="og:url" content="https://astudillojuanf.github.io/sharerbox/">
 			<meta property="og:locale" content="en_US">
 		<!-- Twitter Card metadata -->
 			<meta name="twitter:card" content="summary_large_image">
 			<meta name="twitter:title" content="SharerBox">
-			<meta name="twitter:image" content="https://astudillojuanf.github.io/sharerbox/images/cover/sharerbox-preview-snapshot.jpg">
+			<meta name="twitter:image" content="https://pbs.twimg.com/media/EZzW_qxWsAAJnZJ.jpg">
 		<link rel="shortcut icon" type="image/svg+xml" href="./icons/favicon.svg">
 		<link rel="stylesheet" type="text/css" href="./css/fonts.css">
 		<link rel="stylesheet" type="text/css" href="./css/styles.css">
@@ -56,9 +56,11 @@
 					<figure>
 						<img id="main-cover-image" src="./images/cover/sharerbox.svg" alt="SharerBox - Screenshot" title="Cover">
 					</figure>
-					<p> &nbsp; <strong>SharerBox</strong> is a free, minimalistic and lightweight <i>JavaScript-Based</i> social-media sharebar feature developed to provide fast and easy-to-use social-media sharing integration for small websites by eliminating the need of loading heavy/bulky third-party social APIs, which generally have a negative impact on loading speeds and unauthorizedly recolect private user information.</p>
-					<p> &nbsp; Integrating SharerBox directly on your website for sharing social-media instead of external social APIs should significantly reduce loading speeds for visitors connected on slow networks, which will result on improved SEO indexation for your website and enhanced performance, user experience and device portability for your visitors, this specially for users connected from old computers or low-end devices. Plus, since there is no need for implementing obscure social third-party code there is no unauthorized recolection of private user information directly derived from SharerBox use.</p>
-					<p> &nbsp; SharerBox is currently a personal development project, but it's implementation is intended to be simple for unexperienced users as well as very easy to customize for developers</p>
+					<div id="overview-text-box">
+						<p> &nbsp; <strong>SharerBox</strong> is a free, minimalistic and lightweight <i>JavaScript-Based</i> social-media sharebar feature developed to provide fast and easy-to-use social-media sharing integration for small websites by eliminating the need of loading heavy/bulky third-party social APIs, which generally have a negative impact on loading speeds and unauthorizedly recolect private user information.</p>
+						<p> &nbsp; Integrating SharerBox directly on your website for sharing social-media instead of external social APIs should significantly reduce loading speeds for visitors connected on slow networks, which will result on improved SEO indexation for your website and enhanced performance, user experience and device portability for your visitors, this specially for users connected from old computers or low-end devices. Plus, since there is no need for implementing obscure social third-party code there is no unauthorized recolection of private user information directly derived from SharerBox use.</p>
+						<p> &nbsp; SharerBox is currently a personal development project, but it's implementation is intended to be intuitive for unexperienced users as well as very easy to customize for developers</p>
+					</div>
 					<h3 style="text-align: center;">Support:</h3>
 					<div id="supported-icons-wrapper">
 						<div class="supported-icon-fig-wrapper">
@@ -116,7 +118,8 @@
 					<form>
 						<div id="input-options-wrap">
 							<div>
-								<h3>Social Networks <img class="h3-title-img" src="./icons/worldwide-icon-color.svg"></h3>
+								<h3>Social Networks</h3>
+								<img class="input-options-img" src="./icons/worldwide-icon-color.svg">
 								<p style="background: red; color: white">&nbsp; <b>Mark All</b> <input id="check-all" type="checkbox"></p>
 								<p><input class="social-network-check" type="checkbox" value="twitter" checked> - <img class="h3-title-img" src="./icons/twitter-icon-soft-square.svg"> Twitter</p>
 								<p><input class="social-network-check" type="checkbox" value="facebook" checked> - <img class="h3-title-img" src="./icons/facebook-logo.svg"> Facebook</p>
@@ -128,17 +131,20 @@
 								<p><input class="social-network-check" type="checkbox" value="telegram"> - <img class="h3-title-img" src="./icons/telegram-icon-soft-square.svg"> Telegram</p>
 							</div>
 							<div>
-								<h3>Behavior <img class="h3-title-img" src="./icons/browser-window.svg"></h3>
+								<h3>Behavior</h3>
+								<img class="input-options-img" src="./icons/browser-window.svg">
 								<p><input class="behavior-radio-check" type="radio" name="behavior" value="pop-up" checked> Pop-up Window</p>
 								<p><input class="behavior-radio-check" type="radio" name="behavior" value="new tab"> New Tab</p>
 							</div>
 							<div>
-								<h3>Position <img class="h3-title-img" src="./icons/left-right.svg"></h3>
+								<h3>Position</h3>
+								<img class="input-options-img" src="./icons/left-right.svg">
 								<p><input class="position-radio-check" type="radio" name="position" value="left"> Left</p>
 								<p><input class="position-radio-check" type="radio" name="position" value="right" checked> Right</p>
 							</div>
 							<div>
-								<h3>Visibility <img class="h3-title-img" src="./icons/eye.svg"></h3>
+								<h3>Visibility</h3>
+								<img class="input-options-img" src="./icons/eye.svg">
 								<p><input class="visibility-radio-check" type="radio" name="visibility" value="hidden" checked> Hidden</p>
 								<p><input class="visibility-radio-check" type="radio" name="visibility" value="visible"> Visible</p>
 							</div>
