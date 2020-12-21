@@ -22,12 +22,12 @@ header{
 	margin: 0;
 	padding: 8px;
 	margin-bottom: 3rem;
-	box-shadow: 0 0 3px rgb(0,0,0, 0.5);
+	box-shadow: 0 0 3px rgba(0,0,0, 0.5);
 }
 
 header h1{
 	margin: 0;
-	text-shadow: 0 0 5px rgb(0,0,0, 0.25);
+	text-shadow: 0 0 5px rgba(0,0,0, 0.25);
 }
 
 h1, h2, h3, h4{
@@ -64,7 +64,7 @@ figure{
 	margin: 3rem auto;
 	padding: 2rem;
 	border-radius: 4px;
-	box-shadow: 0 0 2px rgb(0,0,0, 0.5);
+	box-shadow: 0 0 2px mediumblue;
 }
 
 .setting-option-wrap{
@@ -79,7 +79,7 @@ a{
 }
 
 li{
-	background: #e6e6e6;
+	background: #CAD3E6;
 	padding: 8px;
 	border-radius: 4px;
 }
@@ -124,6 +124,18 @@ a{
 	width: 40px;
 	height: 40px;
 	border-radius: 100%;
+}
+
+#overview-text-box{
+	margin: 1rem auto;
+	padding: 1rem;
+	border-radius: 5px;
+	box-shadow: 0 0 5px rgba(0,0,0, 0.37);
+	transition: 0.25s;
+}
+
+#overview-text-box:hover{
+	box-shadow: 0 0 5px rgba(0,0,0, 0.5);
 }
 
 #supported-icons-wrapper{
@@ -175,7 +187,15 @@ a{
 	padding: 4px;
 	margin:auto;
 	border-radius: 4px;
-	box-shadow: 0 0 4px rgb(0,0,0, 0.5)
+	box-shadow: 0 0 4px rgba(0,0,0, 0.5)
+}
+
+.input-options-img{
+	display: block;
+	width: 25px;
+	height: 25px;
+	margin: auto;
+	margin-bottom: 2rem;
 }
 
 .h3-title-img{
@@ -189,8 +209,9 @@ a{
 }
 
 #input-options-wrap{
-	border: 1px solid lightgray;
-	padding: 2rem;
+	border: 1px dashed blue;
+	border-radius: 4px;
+	padding: 0 2rem;
 	margin: auto;
 	margin-bottom: 1rem;
 	display: flex;
@@ -202,6 +223,11 @@ a{
 	width: fit-content;
 }
 
+#input-options-wrap div h3{
+	text-align: center;
+	margin: 2.5rem auto 0.5rem auto;
+}
+
 #form-buttons-wrap{
 	display: flex;
 	flex-flow: row wrap;
@@ -211,7 +237,7 @@ a{
 }
 
 #form-buttons-wrap input{
-	font-family: carlitos;
+	font-family: carlito, carlitos;
 	padding: 2px 6px;
 }
 
@@ -227,7 +253,7 @@ a{
 }
 
 code, pre{
-	font-family: Consolas, Monospace;
+	font-family: Consolas, "Ubuntu Mono", Inconsolata, Monospace;
 	font-size: small;
 }
 
@@ -313,6 +339,11 @@ footer a:hover, #author-disclaimer:hover{
 
 footer img{
 	display: block;
+}
+
+footer h3{
+	margin-top: 2rem;
+	color: white;
 }
 
 #author-disclaimer{
