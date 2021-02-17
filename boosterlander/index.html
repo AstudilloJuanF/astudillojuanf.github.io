@@ -22,78 +22,9 @@
 			<meta name="twitter:title" content="Booster Lander">
 			<meta name="twitter:image" content="https://astudillojuanf.github.io/boosterlander/images/boosterlander-preview-snapshot.jpg">
 		<link rel="shortcut icon" type="image/svg+xml" href="./icons/favicon.svg">
+		<link rel="stylesheet" type="text/css" href="./styles/styles.css">
 		<script type="application/javascript" src="./scripts/sharerbox.js" async></script>
 		<script type="application/javascript" src="./scripts/dev-badge.js" defer></script>
-		<style>
-			body{
-				font-family: calibri, arial, verdana;
-				box-sizing: border-box;
-				margin: 0;
-				padding: 0;
-			}
-
-			header{
-				display: block;
-				background: black;
-				color: white;
-				margin: 0;
-				padding: 0.5vw;
-				width: 100%;
-				height: fit-content;
-			}
-
-			h1{
-
-				margin: 0;
-				height: fit-content;
-			}
-
-			canvas{
-				display: block;
-				margin: auto;
-				touch-action: none;
-			}
-
-			#canvas-section{
-				overflow: hidden;
-			}
-
-			h1,h2,h3,p{
-				display: block;
-				text-align: center;
-			}
-
-			a{
-				text-decoration: none;
-				display: block;
-				width: fit-content;
-				margin: auto;
-			}
-
-			footer{
-				display: block;
-				background: #0E3C99;
-				color: white;
-				margin-top: 4rem;
-				padding: 0.5vw;
-				width: 100%;
-				height: fit-content;
-			}
-
-			footer address{
-				color: white;
-				font-style: normal;
-			}
-
-			#author-disclaimer > p {
-				color: lightgray;
-				cursor: default;
-			}
-
-			#author-disclaimer > p:hover {
-				color: white;
-			}
-		</style>
 	</head>
 	<body>
 		<script>
@@ -109,7 +40,7 @@
 			<h2>SpaceX inspired JavaScript minigame</h2>
 			<h3>(Ongoing Development)</h3>
 			<section id="canvas-section">
-				<canvas id="canvas-frame" width="1024" height="755">Su dispositivo o navegador no soporta canvas.</canvas>
+				<canvas id="canvas-frame" width="1024" height="755">Si está viendo esto, su dispositivo o navegador no soporta Canvas o JavaScript está desactivado</canvas>
 				<script>
 
 					/*
@@ -130,18 +61,23 @@
 								astudillojuanfrancisco@gmail.com
 					*/
 
+
 					const canvas = document.getElementById('canvas-frame');
+
 					const ctx = canvas.getContext('2d');
 
-					function centerGameFrame(){
-						!game.status.match(/reset|over|paused/ig) ? window.scrollTo(0, canvas.offsetTop) : undefined;
+					function focusGameFrame(){
+						 game.status !== 'reset' ? window.scrollTo(0, canvas.offsetTop) : undefined;
 					}
 
-					canvas.addEventListener('touchstart', centerGameFrame);
-					canvas.addEventListener('pointerover', centerGameFrame);
-					canvas.addEventListener('pointermove', centerGameFrame);
+					canvas.addEventListener('touchstart', focusGameFrame);
+					canvas.addEventListener('pointerover', focusGameFrame);
+					canvas.addEventListener('pointermove', focusGameFrame);
+					window.addEventListener('deviceorientation', focusGameFrame);
 
 					ctx.imageSmoothingEnabled = false;
+
+					// Pixels equals meters
 
 					const ctxInitialScaleX = 1024;
 					const ctxInitialScaleY = 755;
@@ -156,26 +92,34 @@
 				// --------- Game frame resizing function ----------------------- TESTING...
 					function resizeGame(){
 
-						var deviceW = window.innerWidth;
+						var canvasImg = ctx.getImageData(0, 0, canvasW, canvasH);
+
+						var deviceW = document.body.offsetWidth;
 						var deviceH = window.innerHeight;
 
-						if(window.innerWidth <= ctxInitialScaleX || window.innerHeight <= ctxInitialScaleY){
-							if(deviceW < deviceH){
+						ctx.resetTransform();
+
+						if(deviceW < ctxInitialScaleX || deviceH < ctxInitialScaleY){
+
+							if(deviceW <= deviceH){
 								scalingPercentage = deviceW / ctxInitialScaleX;
 								canvas.width = deviceW;
-								canvas.height = (ctxInitialScaleY / ctxInitialScaleX) * deviceW;
-								canvas.margin = '0';
-							}else if(deviceW >= deviceH){
+								canvas.height = Math.floor((ctxInitialScaleY / ctxInitialScaleX) * deviceW);
+								canvas.style.margin = '0';
+							}else{
 								scalingPercentage = deviceH / ctxInitialScaleY;
 								canvas.height = deviceH;
-								canvas.width = (ctxInitialScaleX / ctxInitialScaleY) * deviceH;
-								canvas.margin = 'auto';
+								canvas.width = Math.floor((ctxInitialScaleX / ctxInitialScaleY) * deviceH);
+								canvas.style.margin = 'auto';
 							}
 
-							ctx.resetTransform();
 							scalingPercentage > 1 ? scalingPercentage = 1 : undefined;
 							ctx.scale(scalingPercentage, scalingPercentage);
-
+						}else{
+							canvas.width = ctxInitialScaleX;
+							canvas.height = ctxInitialScaleY;
+							canvas.style.margin = 'auto';
+						}
 
 							// Self-Reminder: Replace this monstruosity and redraw a previously captured ImageData frame on each call instead
 								if(game.status === 'reset'){
@@ -199,7 +143,6 @@
 									}
 								}
 							//------------------------------------------------------
-						}
 					}
 
 					window.addEventListener('load', resizeGame);
@@ -541,6 +484,8 @@
 						litres: 'lts',
 						proximityWarning: 'Alerta de Proximidad',
 						imminentContact: '¡Contacto Inminente!',
+						deployLegs: 'Desplegando piernas...',
+						legsDeployed: 'Piernas Desplegadas',
 						contact: 'Contacto',
 						impact: 'Impacto',
 						land: 'Aterrizar',
@@ -607,6 +552,8 @@
 						litres: 'lts',
 						proximityWarning: 'Proximity Warning',
 						imminentContact: 'Contact Imminent!',
+						deployLegs: 'Deploying Legs...',
+						legsDeployed: 'Legs Deployed',
 						contact: 'Contact',
 						impact: 'Impact',
 						land: 'Land',
@@ -674,6 +621,8 @@
 						litres: 'lts',
 						proximityWarning: 'Grund Warnung',
 						imminentContact: 'Bevorstehender Kontakt!',
+						deployLegs: 'Entfaltung Beine...',
+						legsDeployed: 'Beine entfaltet',
 						contact: 'Kontakt',
 						impact: 'Auswirkung',
 						land: 'Landen',
@@ -740,6 +689,8 @@
 						litres: 'lts', // リットル
 						proximityWarning: '警告',
 						imminentContact: '差し迫った接触',
+						deployLegs: '脚の展開・・・',
+						legsDeployed: '脚は展開しました',
 						contact: '接触',
 						impact: '衝撃',
 						land: '着地させる',
@@ -1190,6 +1141,11 @@
 							}
 						}
 
+						if(game.scenario === 'ground'){
+							ctx.fillStyle = 'darkgreen';
+							ctx.fillRect(0, canvasH - 5, canvasW, 5);
+						}
+
 						ctx.strokeStyle = 'rgba(0,0,0, 0.5)';
 						ctx.fillStyle = 'darkgray';
 						ctx.stroke(landingPlatform);
@@ -1294,10 +1250,23 @@
 
 							ctx.fillStyle = mainEngineGrad;
 
+							var boosterBase = booster.y + booster.height;
+							var fireTail = function(val){
+
+								var boosterExhaust = boosterBase + val;
+								var tail = boosterExhaust;
+
+								if(booster.x >= platform.x && booster.x + booster.width <= platform.x + platform.width && boosterExhaust >= platform.y){
+									tail = platform.y;
+								}
+
+								return tail;
+							};
+
 							mainEngineExhaust = new Path2D();
 							mainEngineExhaust.moveTo(booster.x + booster.width/5, booster.y + booster.height - 5)
-							mainEngineExhaust.quadraticCurveTo(booster.x, booster.y + booster.height + 25, booster.x + booster.width/2, booster.y + booster.height + 50);
-							mainEngineExhaust.quadraticCurveTo(booster.x + booster.width, booster.y + booster.height + 25, booster.x + booster.width/5*4, booster.y + booster.height);
+							mainEngineExhaust.quadraticCurveTo(booster.x, fireTail(25), booster.x + booster.width/2, fireTail(50));
+							mainEngineExhaust.quadraticCurveTo(booster.x + booster.width, fireTail(25), booster.x + booster.width/5*4, booster.y + booster.height);
 							mainEngineExhaust.lineTo(booster.x + booster.width/5*4, booster.y + booster.height - 5);
 							mainEngineExhaust.closePath();
 							ctx.fill(mainEngineExhaust);
@@ -1327,9 +1296,15 @@
 							if(booster.y + booster.height >= canvasH || ctx.isPointInPath(landingPlatform, booster.x + booster.width/2, booster.y + booster.height)){
 								if(Math.abs(booster.vy) > 0.2){
 									booster.status = 'crashed';
-								}else{
+								}/*else{
 									if(ctx.isPointInPath(landingPlatform, booster.x - booster.legsLength, booster.y + booster.height) && ctx.isPointInPath(landingPlatform, booster.x + booster.width + booster.legsLength, booster.y + booster.height)){
-										booster.status = 'landed';
+										booster.legsRotation === 1 ? booster.status = 'landed' : booster.status = 'crashed';
+									}else{
+										booster.status = 'missed target';
+									}
+								}*/else{
+									if(booster.x - booster.legsLength >= platform.x && booster.x + booster.width + booster.legsLength <= platform.x + platform.width && booster.y + booster.height >= platform.y){
+										booster.legsRotation === 1 ? booster.status = 'landed' : booster.status = 'crashed';
 									}else{
 										booster.status = 'missed target';
 									}
@@ -1377,10 +1352,10 @@
 
 						ctx.fillText(`${text.altitude} = ${Math.round(Math.abs(canvasH - booster.y - booster.height))} ${text.meters}`, 5, 25);
 						ctx.fillText(`${text.gravity} = ${EARTH_GRAVITY} m/s²`, canvasW/5, 25, 175);
-						ctx.fillText(`Vx = ${(booster.vx*60).toPrecision(6)} m/s`, canvasW/5*2 + 5, 25);
-						ctx.fillText(`Vy = ${(booster.vy * 60).toPrecision(6)} m/s`, canvasW/5*3 + 5, 25);
+						ctx.fillText(`Vx = ${(booster.vx*60).toFixed(3)} m/s`, canvasW/5*2 + 5, 25);
+						ctx.fillText(`Vy = ${(booster.vy * 60).toFixed(3)} m/s`, canvasW/5*3 + 5, 25);
 						ctx.fillText(`${text.time} = ${cronometer.elapsed}`, canvasW/5*4 + 5, 25);
-						//ctx.fillText(`Momentum Y = ${(booster.mass * booster.vy).toPrecision(7)} Kg*m/s`, 5, 55);
+						//ctx.fillText(`Momentum Y = ${(booster.mass * booster.vy).toFixed(3)} Kg*m/s`, 5, 55);
 						game.sky === 'day' ? ctx.fillStyle = 'black' : ctx.fillStyle = 'white';
 						ctx.fillText(`${text.level} ${game.level}`, 5, 60);
 						ctx.textAlign = 'end';
@@ -1446,6 +1421,12 @@
 								ctx.fillText(text.imminentContact, 825, 175, 135);
 							}else{
 								ctx.fillText(text.proximityWarning, 825, 175, 135);
+							}
+
+							if(booster.y + booster.height >= canvasH - 100){
+								var legsState;
+								booster.legsRotation > 1 ? legsState = text.deployLegs : legsState = text.legsDeployed;
+								ctx.fillText(legsState, 825, 225, 135);
 							}
 						}
 
@@ -1594,13 +1575,13 @@
 									}
 									if(Math.sign(e.movementX) === -1){
 										engines.drawRight();
-										booster.vx -= 0.25;
+										booster.vx -= 0.5;
 										booster.vy += -booster.vy / 80;
 										booster.fuel -= 250;
 									}
 									if(Math.sign(e.movementX) === 1){
 										engines.drawLeft();
-										booster.vx += 0.25;
+										booster.vx += 0.5;
 										booster.vy += -booster.vy / 80;
 										booster.fuel -= 250;
 									}
