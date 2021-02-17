@@ -41,6 +41,10 @@
 			<h3>(Ongoing Development)</h3>
 			<section id="canvas-section">
 				<canvas id="canvas-frame" width="1024" height="755">Si está viendo esto, su dispositivo o navegador no soporta Canvas o JavaScript está desactivado</canvas>
+				<div style="margin: auto; width: fit-content">
+					<button id="exit">Exit</button>
+					<button id="pause">Pause</button>
+				</div>
 				<script>
 
 					/*
@@ -67,7 +71,7 @@
 					const ctx = canvas.getContext('2d');
 
 					function focusGameFrame(){
-						 game.status !== 'reset' ? window.scrollTo(0, canvas.offsetTop) : undefined;
+						!game.status.match(/reset|paused/) ? window.scrollTo(0, canvas.offsetTop) : undefined;
 					}
 
 					canvas.addEventListener('touchstart', focusGameFrame);
@@ -79,8 +83,8 @@
 
 					// Pixels equals meters
 
-					const ctxInitialScaleX = 1024;
-					const ctxInitialScaleY = 755;
+					const CTX_INITIAL_X_SCALE = 1024;
+					const CTX_INITIAL_Y_SCALE = 755;
 
 					// Earth's Gravity
 					const EARTH_GRAVITY = 9.80665; // meters per squared seconds;
@@ -99,25 +103,25 @@
 
 						ctx.resetTransform();
 
-						if(deviceW < ctxInitialScaleX || deviceH < ctxInitialScaleY){
+						if(deviceW < CTX_INITIAL_X_SCALE || deviceH < CTX_INITIAL_Y_SCALE){
 
 							if(deviceW <= deviceH){
-								scalingPercentage = deviceW / ctxInitialScaleX;
+								scalingPercentage = deviceW / CTX_INITIAL_X_SCALE;
 								canvas.width = deviceW;
-								canvas.height = Math.floor((ctxInitialScaleY / ctxInitialScaleX) * deviceW);
+								canvas.height = Math.floor((CTX_INITIAL_Y_SCALE / CTX_INITIAL_X_SCALE) * deviceW);
 								canvas.style.margin = '0';
 							}else{
-								scalingPercentage = deviceH / ctxInitialScaleY;
+								scalingPercentage = deviceH / CTX_INITIAL_Y_SCALE;
 								canvas.height = deviceH;
-								canvas.width = Math.floor((ctxInitialScaleX / ctxInitialScaleY) * deviceH);
+								canvas.width = Math.floor((CTX_INITIAL_X_SCALE / CTX_INITIAL_Y_SCALE) * deviceH);
 								canvas.style.margin = 'auto';
 							}
 
 							scalingPercentage > 1 ? scalingPercentage = 1 : undefined;
 							ctx.scale(scalingPercentage, scalingPercentage);
 						}else{
-							canvas.width = ctxInitialScaleX;
-							canvas.height = ctxInitialScaleY;
+							canvas.width = CTX_INITIAL_X_SCALE;
+							canvas.height = CTX_INITIAL_Y_SCALE;
 							canvas.style.margin = 'auto';
 						}
 
@@ -350,6 +354,8 @@
 							cronometer.stop();
 							stopAudio(sounds.engines);
 							stopAudio(sounds.water);
+
+							pauseButton.innerText = `${text.retry}`;
 
 							canvas.removeEventListener('click', game.resume);
 							ctx.resetTransform();
@@ -632,7 +638,7 @@
 						missedTarget: 'Verpasstes Ziel',
 						rocketCrashed: 'Die Rakete ist abgestürzt',
 						spanish: 'Spanisch',
-						english: 'English',
+						english: 'Englisch',
 						german: 'Deutsch',
 						japanese: 'Japanisch'
 					};
@@ -856,6 +862,9 @@
 
 							this.current = 'language';
 							this.current === 'language' ? setLanguage() : undefined;
+
+							exitButton.innerText = text.back;
+							pauseButton.innerText = `${text.pause}/${text.resume}`;
 
 							ctx.save();
 							this.drawBackground();
@@ -1915,6 +1924,35 @@
 						time === 'day' ? ctx.fillStyle = sunGrad : ctx.fillStyle = moonGrad;
 						ctx.fill();
 					}
+
+					const pauseButton = document.getElementById('pause');
+					pauseButton.innerText = `${text.pause}/${text.resume}`;
+
+					const exitButton =  document.getElementById('exit');
+					exitButton.innerText = text.back;
+
+					pauseButton.onclick = function(){
+						switch(game.status){
+							case 'reset':
+								game.start();
+								pauseButton.innerText = text.pause;
+							break;
+							case 'started':
+								game.pause();
+								pauseButton.innerText = text.resume;
+							break;
+							case 'paused':
+								game.resume();
+								pauseButton.innerText = text.pause;
+							break;
+							case 'over':
+								game.start();
+								pauseButton.innerText = text.pause;
+							break;
+						}
+					};
+
+					exitButton.onclick = () => game.reset();
 				</script>
 			</section>
 		</main>
