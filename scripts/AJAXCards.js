@@ -42,7 +42,9 @@ function requestProjectCard(url, projecType){
 					currentCard.removeAttribute('style');
 				}, 1000);
 			}
-
+			
+			resizeCards();
+			
 		}else{
 			//handle error
 		}
@@ -53,8 +55,8 @@ function requestProjectCard(url, projecType){
 	xhr.send();
 }
 
-requestProjectCard('https://astudillojuanf.github.io/boosterlander/', '2D Minigame');
-requestProjectCard('https://astudillojuanf.github.io/sharerbox/', 'Frontent Development');
+requestProjectCard('boosterlander/', '2D Minigame');
+requestProjectCard('sharerbox/', 'Frontent Development');
 
 function resizeCards(){
 	var cardImgs = document.getElementsByClassName('project-card-img-wrap');
