@@ -1,4 +1,29 @@
-var projectSection = document.getElementById('projects-section');
+// responsive footer section
+
+const doc = document.body;
+const footer = document.getElementsByTagName('footer')[0];
+
+function responsivePageFooter(){
+    doc.style.minHeight = `${window.innerHeight}px`;
+
+    if (footer.offsetTop < doc.offsetHeight - footer.offsetHeight){
+        footer.setAttribute('style', 'position: absolute; left: 0; right: 0; bottom: 0;');
+    } else {
+        footer.removeAttribute('style');
+    }
+}
+
+window.addEventListener('load', responsivePageFooter);
+window.addEventListener('resize', responsivePageFooter);
+window.addEventListener('deviceorientation', responsivePageFooter);
+
+//--------------------------------------------------------------------------------
+
+
+
+// AJAX project snippet cards
+
+const projectSection = document.getElementById('projects-section');
 
 function requestProjectCard(url, projecType){
 
@@ -6,19 +31,19 @@ function requestProjectCard(url, projecType){
 
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function(){
-		if(xhr.status === 200){
+		if (xhr.status === 200){
 			doc = xhr.response; // doc = new DOMParser().parseFromString(xhr.response, 'text/html');
 			meta = doc.head.getElementsByTagName('meta');
 
-			for(var i = 0; i < meta.length; i++){
-				if(meta[i].hasAttribute('property')){
+			for (var i = 0; i < meta.length; i++){
+				if (meta[i].hasAttribute('property')){
 					meta[i].attributes.property.value === 'og:title' && !cardTitle ? cardTitle = meta[i].content : undefined;
 					meta[i].attributes.property.value === 'og:description' && !cardDescription ? cardDescription = meta[i].content : undefined;
 					meta[i].attributes.property.value === 'og:image' && !cardImgSrc ? cardImgSrc = meta[i].content : undefined;
 				}
 			}
 
-			if(!(!cardTitle && !cardDescription && !cardImgSrc)){
+			if (!(!cardTitle && !cardDescription && !cardImgSrc)){
 
 
 				var cardHTMLTemplate = `<div class="project-card" style="opacity: 0; transform: translateY(-20px);">
@@ -42,8 +67,11 @@ function requestProjectCard(url, projecType){
 					currentCard.removeAttribute('style');
 				}, 1000);
 			}
-
-		}else{
+			
+			resizeCards();
+			responsivePageFooter();
+			
+		} else {
 			//handle error
 		}
 	};
@@ -53,18 +81,18 @@ function requestProjectCard(url, projecType){
 	xhr.send();
 }
 
-requestProjectCard('https://astudillojuanf.github.io/boosterlander/', '2D Minigame');
-requestProjectCard('https://astudillojuanf.github.io/sharerbox/', 'Frontent Development');
+requestProjectCard('boosterlander/', '2D Minigame');
+requestProjectCard('sharerbox/', 'Frontent Development');
 
 function resizeCards(){
 	var cardImgs = document.getElementsByClassName('project-card-img-wrap');
 
-	for(var i = 0; i < cardImgs.length; i++){
+	for (var i = 0; i < cardImgs.length; i++){
 
-		if(document.body.offsetWidth <= 450){
+		if (document.body.offsetWidth <= 450){
 			cardImgs[i].style.width = `${document.body.offsetWidth * 0.95}px`;
 			cardImgs[i].style.height = `${cardImgs[i].offsetWidth * (52.25 / 100)}px`;
-		}else{
+		} else {
 			cardImgs[i].removeAttribute('style');
 		}
 	}
@@ -73,5 +101,3 @@ function resizeCards(){
 window.addEventListener('load', resizeCards);
 window.addEventListener('resize', resizeCards);
 window.addEventListener('deviceorientation', resizeCards);
-
-

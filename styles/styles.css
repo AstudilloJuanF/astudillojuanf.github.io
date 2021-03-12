@@ -1,6 +1,7 @@
 body{
-	font-family: calibri, arial, verdana;
+	position: relative;
 	box-sizing: border-box;
+	font-family: calibri, arial, verdana;
 	margin: 0;
 	padding: 0;
 }
@@ -129,16 +130,46 @@ footer{
 	margin: 0;
 	margin-top: 4rem;
 	padding: 0;
-	width: 100%;
+	width: auto;
 	height: fit-content;
 	border: solid 1px black;
 }
+
+#footer-grid-container{
+	display: grid;
+	grid-template-columns: 30% 40% 30%;
+	width: 90%;
+	padding: 0;
+	margin: auto;
+}
+
+.footer-grid-item{
+	margin: 2rem 0;	
+}
+
+.footer-grid-item a{
+	color: rgb(155, 155, 155);
+}
+
+.footer-grid-item a:hover{
+	color: white;
+}
+
+
 
 footer address{
 	font-style: normal;
 }
 
-#author-disclaimer > p {
+#author-disclaimer > p, #footer-grid-container h2{
 	color: lightgray;
 	cursor: default;
 }
+
+@media (max-width: 650px){
+	#footer-grid-container{
+		display: block;
+	}
+}
+
+
