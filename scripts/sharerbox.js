@@ -600,4 +600,11 @@ function sharerSetup(behavior = 'popup', position = 'right', color = 'black', vi
 
 	shareIcon.addEventListener('click', flipIcon);
 
+	window.addEventListener('scroll', function(){
+		var footer = document.getElementsByTagName('footer')[0];
+	
+		if (footer){
+			footer.scrollHeight + footer.clientHeight <= scrollY ? shareIcon.style.fill = 'white' : shareIcon.style.fill = color;
+		}
+	});
 }
