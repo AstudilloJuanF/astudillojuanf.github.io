@@ -1,6 +1,7 @@
 body{
-	font-family: calibri, arial, verdana;
+	position: relative;
 	box-sizing: border-box;
+	font-family: calibri, arial, verdana;
 	margin: 0;
 	padding: 0;
 }
@@ -129,7 +130,7 @@ footer{
 	margin: 0;
 	margin-top: 4rem;
 	padding: 0;
-	width: 100%;
+	width: auto;
 	height: fit-content;
 	border: solid 1px black;
 }
