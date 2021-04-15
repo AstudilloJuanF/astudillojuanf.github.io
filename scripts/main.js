@@ -31,7 +31,8 @@ function requestProjectCard(url, projecType){
 
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function(){
-		if (xhr.status === 200){
+		if (xhr.status === 200 && xhr.readyState === 4) {
+
 			doc = xhr.response; // doc = new DOMParser().parseFromString(xhr.response, 'text/html');
 			meta = doc.head.getElementsByTagName('meta');
 
@@ -67,10 +68,10 @@ function requestProjectCard(url, projecType){
 					currentCard.removeAttribute('style');
 				}, 1000);
 			}
-			
+
 			resizeCards();
 			responsivePageFooter();
-			
+
 		} else {
 			//handle error
 		}
