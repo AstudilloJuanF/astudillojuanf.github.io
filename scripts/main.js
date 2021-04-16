@@ -169,6 +169,8 @@ xhrLanguage.onreadystatechange = function(){
 
 		languageSelectLabel.innerText = docLanguage.selectLanguage;
 
+		flagImg.src = docLanguage.flagURL;
+
 		professionTitle.innerText = docLanguage.webDeveloper + ' - ' + docLanguage.gameDeveloper;
 		projectsTitle.innerText = docLanguage.projects;
 
