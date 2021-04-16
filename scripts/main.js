@@ -102,3 +102,114 @@ function resizeCards(){
 window.addEventListener('load', resizeCards);
 window.addEventListener('resize', resizeCards);
 window.addEventListener('deviceorientation', resizeCards);
+
+// -----------------------------------------------------------------------------------
+
+
+			/* Languages */
+
+
+navigator.language.match(/^es$|es-/) ? clientLanguage = 'es' : undefined;
+navigator.language.match(/^en$|en-/) ? clientLanguage = 'en' : undefined;
+navigator.language.match(/^ge$|ge-/) ? clientLanguage = 'ge' : undefined;
+navigator.language.match(/^ja$|ja-/) ? clientLanguage = 'ja' : undefined;
+
+var htmlTag = document.getElementsByTagName('html')[0];
+htmlTag.lang = clientLanguage;
+
+var languageSelect = document.getElementById('language-select');
+var languageSelectLabel = document.getElementById('language-select-label');
+
+var flagImg = document.getElementById('language-flag');
+
+var projectsTitle = document.getElementById('projects-title');
+var professionTitle = document.getElementById('profession-title');
+var footerColumnsTitles = document.getElementsByClassName('footer-column-title');
+
+for(var i = 0; i < languageSelect.childElementCount; i++){
+	languageSelect.children[i].value === clientLanguage ? languageSelect.children[i].selected = true : languageSelect.children[i].selected = false;	
+}
+
+function test(e){
+	console.log(e);
+};
+
+var xhrLanguage = new XMLHttpRequest();
+
+var jsonResponse, languages, docLanguage;
+
+xhrLanguage.onreadystatechange = function(){
+	if(xhrLanguage.status === 200 && xhrLanguage.readyState === 4){
+		jsonResponse = JSON.parse(xhrLanguage.response);
+		languages = jsonResponse;
+
+		switch(clientLanguage){
+			case '':
+				undefined;
+			break;
+			case 'es':
+				docLanguage = jsonResponse['es'];
+			break;
+			case 'en':
+				docLanguage = jsonResponse['en'];
+			break;
+			case 'ge':
+				docLanguage = jsonResponse['ge'];
+			break;
+			case 'ja':
+				docLanguage = jsonResponse['ja'];
+			break;
+		}
+
+		docLanguage = languages[languageSelect.value];
+		languageSelect.children[0].innerText = docLanguage.spanish;
+		languageSelect.children[1].innerText = docLanguage.english;
+		languageSelect.children[2].innerText = docLanguage.german;
+		languageSelect.children[3].innerText = docLanguage.japanese;
+
+		languageSelectLabel.innerText = docLanguage.selectLanguage;
+
+		professionTitle.innerText = docLanguage.webDeveloper + ' - ' + docLanguage.gameDeveloper;
+		projectsTitle.innerText = docLanguage.projects;
+
+		footerColumnsTitles[0].innerText = docLanguage.pages;
+		footerColumnsTitles[1].innerText = docLanguage.projects;
+		footerColumnsTitles[2].innerText = docLanguage.contact;
+
+	}
+
+};
+xhrLanguage.open('GET', 'languages/supported-languages.json');
+xhrLanguage.send();
+
+function updateLanguage(){
+
+	docLanguage = languages[languageSelect.value];
+
+	htmlTag.lang != languageSelect.value ? htmlTag.lang = languageSelect.value : undefined;
+
+	languageSelect.children[0].innerText = docLanguage.spanish;
+	languageSelect.children[1].innerText = docLanguage.english;
+	languageSelect.children[2].innerText = docLanguage.german;
+	languageSelect.children[3].innerText = docLanguage.japanese;
+
+	for(var i = 0; i < languageSelect.childElementCount; i++){
+		languageSelect.children[i].value === languageSelect.value ? languageSelect.children[i].selected = true : languageSelect.children[i].selected = false;
+	}
+
+	if(languageSelect.value != (''||null||undefined)){
+
+		languageSelectLabel.innerText = docLanguage.selectLanguage;
+
+		flagImg.src = docLanguage.flagURL;
+
+		professionTitle.innerText = `${docLanguage.webDeveloper} ${docLanguage.hyphen} ${docLanguage.gameDeveloper}`;
+		projectsTitle.innerText = docLanguage.projects;
+
+		footerColumnsTitles[0].innerText = docLanguage.pages;
+		footerColumnsTitles[1].innerText = docLanguage.projects;
+		footerColumnsTitles[2].innerText = docLanguage.contact;
+	}
+}
+
+languageSelect.addEventListener('click', updateLanguage);
