@@ -54,7 +54,7 @@ footer{
     height: 100%;
 }
 
-footer address{
+footer address, footer a{
     color: white;
     font-style: normal;
 }
