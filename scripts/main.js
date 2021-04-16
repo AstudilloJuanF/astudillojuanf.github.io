@@ -111,7 +111,7 @@ window.addEventListener('deviceorientation', resizeCards);
 
 navigator.language.match(/^es$|es-/) ? clientLanguage = 'es' : undefined;
 navigator.language.match(/^en$|en-/) ? clientLanguage = 'en' : undefined;
-navigator.language.match(/^ge$|ge-/) ? clientLanguage = 'de' : undefined;
+navigator.language.match(/^de$|de-/) ? clientLanguage = 'de' : undefined;
 navigator.language.match(/^ja$|ja-/) ? clientLanguage = 'ja' : undefined;
 
 var htmlTag = document.getElementsByTagName('html')[0];
@@ -148,16 +148,16 @@ xhrLanguage.onreadystatechange = function(){
 				undefined;
 			break;
 			case 'es':
-				docLanguage = jsonResponse['es'];
+				docLanguage = languages['es'];
 			break;
 			case 'en':
-				docLanguage = jsonResponse['en'];
+				docLanguage = languages['en'];
 			break;
 			case 'de':
-				docLanguage = jsonResponse['de'];
+				docLanguage = languages['de'];
 			break;
 			case 'ja':
-				docLanguage = jsonResponse['ja'];
+				docLanguage = languages['ja'];
 			break;
 		}
 
