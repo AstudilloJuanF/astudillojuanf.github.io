@@ -212,4 +212,4 @@ function updateLanguage(){
 	}
 }
 
-languageSelect.addEventListener('click', updateLanguage);
+languageSelect.addEventListener('change', updateLanguage);
