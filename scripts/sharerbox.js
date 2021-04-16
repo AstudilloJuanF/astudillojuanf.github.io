@@ -195,6 +195,7 @@ function sharerboxIcons(socialNetworksList = 'facebook, twitter, whatsapp, reddi
 		top: 0;
 		bottom: 0;
 		left: 0;
+		visibility: hidden;
 		right: unset;
 		width: fit-content;
 		height: fit-content;
@@ -208,6 +209,7 @@ function sharerboxIcons(socialNetworksList = 'facebook, twitter, whatsapp, reddi
 		display: flex;
 		flex-flow: column nowrap;
 		align-items: flex-start;
+		visibility: visible;
 	}
 
 	#sharerbox-social-icons-box{
@@ -333,6 +335,7 @@ function sharerboxIcons(socialNetworksList = 'facebook, twitter, whatsapp, reddi
 	}
 
 	#sharerbox-share-icon-wrap{
+		visibility: visible;
 		transition: 0.25s linear;
 	}
 
