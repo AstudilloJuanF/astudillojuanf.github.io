@@ -16,6 +16,10 @@ nav {
 	padding-right: 1rem;
 }
 
+nav label {
+	font-size: 0.8rem;
+}
+
 #language-flag {
 	display: inline;
 	width: 1rem;
@@ -184,6 +188,11 @@ footer address{
 }
 
 @media (max-width: 650px){
+
+	nav {
+		padding-bottom: 2rem;
+	}
+
 	#footer-grid-container{
 		display: block;
 	}
