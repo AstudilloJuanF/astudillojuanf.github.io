@@ -15,7 +15,7 @@
 			<meta property="og:title" content="Juan F. Astudillo">
 			<meta property="og:description" content="AstudilloJuanF - Programmer & Web Developer">
 			<!-- Main OpenGraph image -->
-				<meta property="og:image" content="https://astudillojuanf.github.io/images/opengraph-preview-image-1.jpg">
+				<meta property="og:image" content="https://astudillojuanf.github.io/images/opengraph-image-1.jpg">
 				<meta property="og:image:width" content="8000">
 				<meta property="og:image:height" content="5320">
 			<!-- Fallback OpenGraph image -->
@@ -28,9 +28,9 @@
 			<meta name="twitter:card" content="summary_large_image">
 			<meta name="twitter:title" content="Juan F. Astudillo">
 			<meta name="twitter:description" content="AstudilloJuanF - Programmer & Web Developer">
-			<meta name="twitter:image" content="https://astudillojuanf.github.io/images/opengraph-preview-image-1.jpg">
-		<link rel="shortcut icon" type="image/svg+xml" href="./icons/devicon.svg">
-		<link rel="shortcut icon" type="image/x-icon" href="./icons/favicon-devicon.ico">
+			<meta name="twitter:image" content="https://astudillojuanf.github.io/images/opengraph-image-1.jpg">
+		<link rel="shortcut icon" type="image/svg+xml" href="icon/devicon.svg">
+		<link rel="shortcut icon" type="image/x-icon" href="icon/favicon-devicon.ico">
 		<link rel="stylesheet" type="text/css" href="styles/styles.css">
 		<script type="application/javascript" src="scripts/sharerbox.js" async></script>
 		<script type="application/javascript" src="scripts/main.js" defer></script>
@@ -42,12 +42,22 @@
 		</script>
 	</head>
 	<body>
+		<nav>
+			<label for="language-select" id="language-select-label">Select language</label>
+			<img src="icon/flags/united-states-flag-circle.svg" id="language-flag">
+			<select id="language-select">
+				<option value="es">Spanish</option>
+				<option value="en">English</option>
+				<option value="ge">German</option>
+				<option value="ja">Japanese</option>
+			</select>
+		</nav>
 		<header>
 			<h1>Juan F. Astudillo</h1>
 		</header>
 		<main>
-			<h2>Web Developer - Rookie Game Dev</h2>
-			<h3>Projects</h3>
+			<h2 id="profession-title">Web Developer - Rookie Game Dev</h2>
+			<h3 id="projects-title">Projects</h3>
 			<section id="projects-section">
 				<!-- Project cards here -->
 			</section>
@@ -55,19 +65,19 @@
 		<footer>
 			<div id="footer-grid-container">
 				<div class="footer-grid-item">
-					<h2>Pages</h2>
+					<h2 class="footer-column-title">Pages</h2>
 					<p><a target="_blank" href="https://github.com/AstudilloJuanF">GitHub</a></p>
 					<p><a target="_blank" href="https://www.linkedin.com/in/juan-astudillo">LinkedIn</a></p>
 					<p><a target="_blank" href="https://www.fiverr.com/users/astudillo_juan">Fiverr</a></p>
 				</div>
 				<div class="footer-grid-item">
-					<h2>Projects</h2>
+					<h2 class="footer-column-title">Projects</h2>
 					<p><a target="_blank" href="sharerbox/">SharerBox</a></p>
 					<p><a target="_blank" href="boosterlander/">BoosterLander</a></p>
 				</div>
 				<div class="footer-grid-item">
-					<h2>Contact</h2>
-					<p><a href="mailto:astudillojuanfrancisco@gmail.com">astudillojuanfrancisco@gmail.com</a></p>
+					<h2 class="footer-column-title">Contact</h2>
+					<p><a href="mailto:astudillojuanfrancisco@gmail.com" title="Email">astudillojuanfrancisco@gmail.com</a></p>
 				</div>
 			</div>
 			<address>
