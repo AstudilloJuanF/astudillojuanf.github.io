@@ -237,13 +237,15 @@ a{
 	display: flex;
 	flex-flow: row wrap;
 	justify-content: space-evenly;
-	width: 25%;
+	align-items: center;
+	width: fit-content;
 	margin: auto;
 }
 
 #form-buttons-wrap input{
 	font-family: carlito, carlitos;
 	padding: 2px 6px;
+	margin: 0.25rem;
 }
 
 #submit-button:active{
@@ -361,6 +363,20 @@ footer h3{
 
 
 @media only screen and (max-width: 750px){
+
+	main {
+		width: 85%;
+	}
+	
+	.sections{
+		padding: 1rem;
+		padding-bottom: 2rem;
+	}
+
+	.setting-option-wrap{
+		margin: 1rem auto;
+	}
+
 	#input-options-wrap{
 		display: block;
 	}
