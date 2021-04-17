@@ -215,3 +215,14 @@ function updateLanguage(){
 }
 
 languageSelect.addEventListener('change', updateLanguage);
+projectsTitle.addEventListener('click', function(e){
+	window.scrollTo(0, e.target.offsetHeight);
+});
+
+window.addEventListener('scroll', function(e){
+
+	var boxShadowValue;
+
+	window.scrollY < projectsTitle.parentElement.offsetTop ? boxShadowValue = 'none' : boxShadowValue = '0 2.5px 2.5px rgba(0,0,0, 0.125)';
+	projectsTitle.style.boxShadow = boxShadowValue;
+});
