@@ -120,7 +120,7 @@ htmlTag.lang = clientLanguage;
 var languageSelect = document.getElementById('language-select');
 var languageSelectLabel = document.getElementById('language-select-label');
 
-var flagImg = document.getElementById('language-flag');
+var flagImg = document.getElementsByClassName('language-flag');
 
 var projectsTitle = document.getElementById('projects-title');
 var professionTitle = document.getElementById('profession-title');
@@ -169,7 +169,9 @@ xhrLanguage.onreadystatechange = function(){
 
 		languageSelectLabel.innerText = docLanguage.selectLanguage;
 
-		flagImg.src = docLanguage.flagURL;
+		for(var i = 0; i < flagImg.length; i++){
+			languageSelect.children[i].selected ? flagImg[i].style.display = 'block' : flagImg[i].removeAttribute('style');
+		}
 
 		professionTitle.innerText = docLanguage.webDeveloper + ' - ' + docLanguage.gameDeveloper;
 		projectsTitle.innerText = docLanguage.projects;
@@ -177,6 +179,7 @@ xhrLanguage.onreadystatechange = function(){
 		footerColumnsTitles[0].innerText = docLanguage.pages;
 		footerColumnsTitles[1].innerText = docLanguage.projects;
 		footerColumnsTitles[2].innerText = docLanguage.contact;
+		footerColumnsTitles[2].nextElementSibling.firstElementChild.title = docLanguage.email;
 
 	}
 
@@ -203,7 +206,9 @@ function updateLanguage(){
 
 		languageSelectLabel.innerText = docLanguage.selectLanguage;
 
-		flagImg.src = docLanguage.flagURL;
+		for(var i = 0; i < flagImg.length; i++){
+			languageSelect.children[i].selected ? flagImg[i].style.display = 'block' : flagImg[i].removeAttribute('style');
+		}
 
 		professionTitle.innerText = `${docLanguage.webDeveloper} ${docLanguage.hyphen} ${docLanguage.gameDeveloper}`;
 		projectsTitle.innerText = docLanguage.projects;
@@ -211,12 +216,13 @@ function updateLanguage(){
 		footerColumnsTitles[0].innerText = docLanguage.pages;
 		footerColumnsTitles[1].innerText = docLanguage.projects;
 		footerColumnsTitles[2].innerText = docLanguage.contact;
+		footerColumnsTitles[2].nextElementSibling.firstElementChild.title = docLanguage.email;
 	}
 }
 
 languageSelect.addEventListener('change', updateLanguage);
 projectsTitle.addEventListener('click', function(e){
-	window.scrollTo(0, e.target.offsetHeight);
+	window.scrollTo({top: e.target.offsetHeight, behavior: 'smooth'});
 });
 
 window.addEventListener('scroll', function(e){

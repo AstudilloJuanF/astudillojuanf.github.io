@@ -10,11 +10,11 @@
 		"projects": "Proyectos",
 		"pages": "Páginas",
 		"contact": "Contacto",
+		"email": "Correo electrónico",
 		"webDeveloper": "Desarrollador Web",
 		"gameDeveloper": "Desarrollador de Videojuegos (Novato)",
 		"hyphen": "-",
-		"copyright": "Derechos de Autór",
-		"flagURL": "icon/flags/spain-flag-circle.svg"
+		"copyright": "Derechos de Autor"
 	},
 	"en": {
 		"language": "Language",
@@ -27,11 +27,11 @@
 		"projects": "Projects",
 		"pages": "Pages",
 		"contact": "Contact",
+		"email": "Email",
 		"webDeveloper": "Web Developer",
 		"gameDeveloper": "Rookie Game Dev",
 		"hyphen": "-",
-		"copyright": "Copyright",
-		"flagURL": "icon/flags/united-states-flag-circle.svg"
+		"copyright": "Copyright"
 	},
 	"de": {
 		"language": "Sprache",
@@ -44,11 +44,11 @@
 		"projects": "Projekte",
 		"pages": "Seiten",
 		"contact": "Kontakt",
+		"email": "E-mail",
 		"webDeveloper": "Web-Entwickler",
 		"gameDeveloper": "Anfänger Spielentwickler",
 		"hyphen": "-",
-		"copyright": "Urheberrechte ©",
-		"flagURL": "icon/flags/germany-flag-circle.svg"
+		"copyright": "Urheberrechte ©"
 	},
 	"ja": {
 		"language": "言語",
@@ -61,10 +61,10 @@
 		"projects": "プロジェクト",
 		"pages": "ページ",
 		"contact": "お問い合わせ",
+		"email": "電子メイル",
 		"webDeveloper": "ウェブ開発者",
 		"gameDeveloper": "初心者のゲーム開発者",
 		"hyphen": "゠",
-		"copyright": "著作権",
-		"flagURL": "icon/flags/japan-flag-circle.svg"
+		"copyright": "著作権"
 	}
 }

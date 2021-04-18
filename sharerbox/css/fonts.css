@@ -7,3 +7,14 @@
 
 	font-display: swap;
 }
+
+@font-face{
+	font-family: inconsolata;
+	src: local("inconsolata"),
+		url(fonts/inconsolata-variable-width.ttf) format('truetype'),
+		url(fonts/inconsolata-regular.woff2) format('woff2'),
+		url(fonts/inconsolata-regular.woff) format('woff'),
+		url(fonts/inconsolata-regular.ttf) format('truetype');
+
+	font-display: swap;
+}

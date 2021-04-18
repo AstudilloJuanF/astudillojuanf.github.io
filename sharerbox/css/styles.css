@@ -384,4 +384,9 @@ footer h3{
 	#input-options-wrap div{
 		width: unset;
 	}
+
+	.code-snippet{
+		margin: 1rem 0.5rem;
+		margin-right: 0;
+	}
 }

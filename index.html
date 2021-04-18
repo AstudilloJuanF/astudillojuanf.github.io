@@ -32,6 +32,13 @@
 		<link rel="shortcut icon" type="image/svg+xml" href="icon/favicon-devicon.svg">
 		<link rel="shortcut icon" type="image/x-icon" href="icon/favicon.ico">
 		<link rel="stylesheet" type="text/css" href="styles/styles.css">
+		<!-- Preloads -->
+		<link rel="preload" href="languages/supported-languages.json" as="fetch" type="application/json" crossorigin="same">
+		<link rel="preload" href="icon/flags/spain-flag-circle.svg" as="image" type="image/svg+xml">
+		<link rel="preload" href="icon/flags/united-states-flag-circle.svg" as="image" type="image/svg+xml">
+		<link rel="preload" href="icon/flags/germany-flag-circle.svg" as="image" type="image/svg+xml">
+		<link rel="preload" href="icon/flags/japan-flag-circle.svg" as="image" type="image/svg+xml">
+		<!-- Scripts -->
 		<script type="application/javascript" src="scripts/sharerbox.js" async></script>
 		<script type="application/javascript" src="scripts/main.js" defer></script>
 		<script>
@@ -44,7 +51,12 @@
 	<body>
 		<nav>
 			<label for="language-select" id="language-select-label">Select language</label>
-			<label for="language-select"><img for="language-select" src="icon/flags/united-states-flag-circle.svg" id="language-flag" alt="language's country flag"></label>
+			<label for="language-select">
+				<img class="language-flag" src="icon/flags/spain-flag-circle.svg" alt="Spanish language's country flag">
+				<img class="language-flag" src="icon/flags/united-states-flag-circle.svg" alt="English language's country flag">
+				<img class="language-flag" src="icon/flags/germany-flag-circle.svg" alt="German language's country flag">
+				<img class="language-flag" src="icon/flags/japan-flag-circle.svg" alt="Japanese language's country flag">
+			</label>
 			<select id="language-select">
 				<option value="es">Spanish</option>
 				<option value="en">English</option>
@@ -66,9 +78,9 @@
 			<div id="footer-grid-container">
 				<div class="footer-grid-item">
 					<h2 class="footer-column-title">Pages</h2>
-					<p><a target="_blank" href="https://github.com/AstudilloJuanF">GitHub</a></p>
-					<p><a target="_blank" href="https://www.linkedin.com/in/juan-astudillo">LinkedIn</a></p>
-					<p><a target="_blank" href="https://www.fiverr.com/users/astudillo_juan">Fiverr</a></p>
+					<p><a target="_blank" href="https://github.com/AstudilloJuanF/">GitHub</a></p>
+					<p><a target="_blank" href="https://www.linkedin.com/in/juan-astudillo/">LinkedIn</a></p>
+					<p><a target="_blank" href="https://www.fiverr.com/users/astudillo_juan/">Fiverr</a></p>
 				</div>
 				<div class="footer-grid-item">
 					<h2 class="footer-column-title">Projects</h2>
