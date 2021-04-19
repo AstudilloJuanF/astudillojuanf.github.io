@@ -108,14 +108,25 @@ window.addEventListener('deviceorientation', resizeCards);
 
 			/* Languages */
 
+const languagesArray = ['es','en','de','ja'];
+const defaultLanguage = 'en';
 
-navigator.language.match(/^es$|es-/) ? clientLanguage = 'es' : undefined;
-navigator.language.match(/^en$|en-/) ? clientLanguage = 'en' : undefined;
-navigator.language.match(/^de$|de-/) ? clientLanguage = 'de' : undefined;
-navigator.language.match(/^ja$|ja-/) ? clientLanguage = 'ja' : undefined;
+var currentLanguage = defaultLanguage;
+var clientLanguage = navigator.language.substr(0,2);
 
-var htmlTag = document.getElementsByTagName('html')[0];
-htmlTag.lang = clientLanguage;
+for(var i = 0; i < languagesArray.length; i++){
+	if (languagesArray[i] === clientLanguage){
+
+		currentLanguage = clientLanguage;
+		break;
+
+	} else {
+		currentLanguage = defaultLanguage;
+	}
+}
+
+var htmlTag = document.firstElementChild;
+htmlTag.lang = currentLanguage;
 
 var languageSelect = document.getElementById('language-select');
 var languageSelectLabel = document.getElementById('language-select-label');
@@ -127,59 +138,20 @@ var professionTitle = document.getElementById('profession-title');
 var footerColumnsTitles = document.getElementsByClassName('footer-column-title');
 
 for(var i = 0; i < languageSelect.childElementCount; i++){
-	languageSelect.children[i].value === clientLanguage ? languageSelect.children[i].selected = true : languageSelect.children[i].selected = false;	
+	languageSelect.children[i].value === currentLanguage ? languageSelect.children[i].selected = true : languageSelect.children[i].selected = false;	
 }
-
-function test(e){
-	console.log(e);
-};
 
 var xhrLanguage = new XMLHttpRequest();
 
-var jsonResponse, languages, docLanguage;
+var languages, languageJSON;
 
 xhrLanguage.onreadystatechange = function(){
 	if(xhrLanguage.status === 200 && xhrLanguage.readyState === 4){
-		jsonResponse = JSON.parse(xhrLanguage.response);
-		languages = jsonResponse;
+		languages = JSON.parse(xhrLanguage.response);
 
-		switch(clientLanguage){
-			case '':
-				undefined;
-			break;
-			case 'es':
-				docLanguage = languages['es'];
-			break;
-			case 'en':
-				docLanguage = languages['en'];
-			break;
-			case 'de':
-				docLanguage = languages['de'];
-			break;
-			case 'ja':
-				docLanguage = languages['ja'];
-			break;
-		}
+		languageJSON = languages[currentLanguage];
 
-		docLanguage = languages[languageSelect.value];
-		languageSelect.children[0].innerText = docLanguage.spanish;
-		languageSelect.children[1].innerText = docLanguage.english;
-		languageSelect.children[2].innerText = docLanguage.german;
-		languageSelect.children[3].innerText = docLanguage.japanese;
-
-		languageSelectLabel.innerText = docLanguage.selectLanguage;
-
-		for(var i = 0; i < flagImg.length; i++){
-			languageSelect.children[i].selected ? flagImg[i].style.display = 'block' : flagImg[i].removeAttribute('style');
-		}
-
-		professionTitle.innerText = docLanguage.webDeveloper + ' - ' + docLanguage.gameDeveloper;
-		projectsTitle.innerText = docLanguage.projects;
-
-		footerColumnsTitles[0].innerText = docLanguage.pages;
-		footerColumnsTitles[1].innerText = docLanguage.projects;
-		footerColumnsTitles[2].innerText = docLanguage.contact;
-		footerColumnsTitles[2].nextElementSibling.firstElementChild.title = docLanguage.email;
+		updateLanguage();
 
 	}
 
@@ -189,14 +161,14 @@ xhrLanguage.send();
 
 function updateLanguage(){
 
-	docLanguage = languages[languageSelect.value];
+	languageJSON = languages[languageSelect.value];
 
 	htmlTag.lang != languageSelect.value ? htmlTag.lang = languageSelect.value : undefined;
 
-	languageSelect.children[0].innerText = docLanguage.spanish;
-	languageSelect.children[1].innerText = docLanguage.english;
-	languageSelect.children[2].innerText = docLanguage.german;
-	languageSelect.children[3].innerText = docLanguage.japanese;
+	languageSelect.children[0].innerText = languageJSON.spanish;
+	languageSelect.children[1].innerText = languageJSON.english;
+	languageSelect.children[2].innerText = languageJSON.german;
+	languageSelect.children[3].innerText = languageJSON.japanese;
 
 	for(var i = 0; i < languageSelect.childElementCount; i++){
 		languageSelect.children[i].value === languageSelect.value ? languageSelect.children[i].selected = true : languageSelect.children[i].selected = false;
@@ -204,31 +176,32 @@ function updateLanguage(){
 
 	if(languageSelect.value != (''||null||undefined)){
 
-		languageSelectLabel.innerText = docLanguage.selectLanguage;
+		languageSelectLabel.innerText = languageJSON.selectLanguage;
 
 		for(var i = 0; i < flagImg.length; i++){
 			languageSelect.children[i].selected ? flagImg[i].style.display = 'block' : flagImg[i].removeAttribute('style');
 		}
 
-		professionTitle.innerText = `${docLanguage.webDeveloper} ${docLanguage.hyphen} ${docLanguage.gameDeveloper}`;
-		projectsTitle.innerText = docLanguage.projects;
+		professionTitle.innerText = `${languageJSON.webDeveloper} ${languageJSON.hyphen} ${languageJSON.gameDeveloper}`;
+		projectsTitle.innerText = languageJSON.projects;
 
-		footerColumnsTitles[0].innerText = docLanguage.pages;
-		footerColumnsTitles[1].innerText = docLanguage.projects;
-		footerColumnsTitles[2].innerText = docLanguage.contact;
-		footerColumnsTitles[2].nextElementSibling.firstElementChild.title = docLanguage.email;
+		footerColumnsTitles[0].innerText = languageJSON.pages;
+		footerColumnsTitles[1].innerText = languageJSON.projects;
+		footerColumnsTitles[2].innerText = languageJSON.contact;
+		footerColumnsTitles[2].nextElementSibling.firstElementChild.title = languageJSON.email;
 	}
 }
 
 languageSelect.addEventListener('change', updateLanguage);
+
 projectsTitle.addEventListener('click', function(e){
 	window.scrollTo({top: e.target.offsetHeight, behavior: 'smooth'});
 });
 
-window.addEventListener('scroll', function(e){
+window.addEventListener('scroll', function(){
 
-	var boxShadowValue;
+	var shadowVal;
 
-	window.scrollY < projectsTitle.parentElement.offsetTop ? boxShadowValue = 'none' : boxShadowValue = '0 2.5px 2.5px rgba(0,0,0, 0.125)';
-	projectsTitle.style.boxShadow = boxShadowValue;
+	window.scrollY < projectsTitle.parentElement.offsetTop ? shadowVal = 'none' : shadowVal = '0 2.5px 2.5px rgba(0,0,0, 0.125)';
+	projectsTitle.style.boxShadow = shadowVal;
 });
