@@ -120,27 +120,24 @@ a{
 	box-shadow: 0 0 2.5px rgba(0,0,0, 0.75);
 }
 
-.project-card-img{
-	display: block;
-	margin: 0;
-	padding: 0;
-}
-
 .project-card-title{
 	font-size: 1.2rem;
 	text-align: center;
 	margin: 0.5rem auto;
 }
 
-.project-card-img-wrap{
+.project-card-media-wrap{
+	position: relative;
 	display: block;
 	width: 450px;
 	height: 235.125px;
 	margin: 0;
 	padding: 0;
+	overflow: hidden;
 }
 
 .project-card-img{
+	position: absolute;
 	object-fit: cover;
 	display: block;
 	background: white;
@@ -148,6 +145,21 @@ a{
 	height: 100%;
 	margin: 0;
 	padding: 0;
+	transition: 0.5s ease;
+}
+
+video {
+	display: none;
+	object-fit: contain;
+	background: black;
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+video[poster]{
+	object-fit: cover;
 }
 
 .pj-card-description-box{

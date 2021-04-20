@@ -27,7 +27,7 @@ const projectSection = document.getElementById('projects-section');
 
 function requestProjectCard(url, projecType){
 
-	var doc, meta, cardImgSrc, cardTitle, cardDescription, cardProjectType = projecType;
+	var doc, meta, cardImgSrc, cardVideoSrc, cardTitle, cardDescription, cardProjectType = projecType;
 
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function(){
@@ -41,17 +41,25 @@ function requestProjectCard(url, projecType){
 					meta[i].attributes.property.value === 'og:title' && !cardTitle ? cardTitle = meta[i].content : undefined;
 					meta[i].attributes.property.value === 'og:description' && !cardDescription ? cardDescription = meta[i].content : undefined;
 					meta[i].attributes.property.value === 'og:image' && !cardImgSrc ? cardImgSrc = meta[i].content : undefined;
+					meta[i].attributes.property.value === 'og:video' && !cardVideoSrc ? cardVideoSrc = meta[i].content : undefined;
 				}
 			}
 
 			if (!(!cardTitle && !cardDescription && !cardImgSrc)){
 
+				if (typeof cardVideoSrc != 'undefined')  {
+					var cardvideoHTMLTemplate = `<video class="project-card-video" src="${cardVideoSrc}" type="video/mp4" muted loop></video>`;
+				} else {
+					var cardvideoHTMLTemplate = '';
+				}
+
 
 				var cardHTMLTemplate = `<div class="project-card" style="opacity: 0; transform: translateY(-20px);">
 	<a class="project-link" href="${url}" target="_blank">
 		<h4 class="project-card-title">${cardTitle}</h4>
-		<figure class="project-card-img-wrap">
+		<figure class="project-card-media-wrap">
 			<img class="project-card-img" src="${cardImgSrc}" alt="${cardTitle}">
+			${cardvideoHTMLTemplate}
 		</figure>
 		<div class="pj-card-description-box">
 			<p class="pj-card-description">${cardDescription}</p>
@@ -72,6 +80,16 @@ function requestProjectCard(url, projecType){
 			resizeCards();
 			responsivePageFooter();
 
+			var projectCards = projectSection.getElementsByClassName('project-card');
+
+			for(var i = 0; i < projectCards.length; i++){
+
+				projectCards[i].setAttribute('data-id', i);
+				projectCards[i].removeEventListener('pointerenter', toggleCardVideo);
+				projectCards[i].addEventListener('pointerenter', toggleCardVideo);
+				
+			}
+
 		} else {
 			//handle error
 		}
@@ -86,7 +104,7 @@ requestProjectCard('boosterlander/', '2D Minigame');
 requestProjectCard('sharerbox/', 'Frontent Development');
 
 function resizeCards(){
-	var cardImgs = document.getElementsByClassName('project-card-img-wrap');
+	var cardImgs = document.getElementsByClassName('project-card-media-wrap');
 
 	for (var i = 0; i < cardImgs.length; i++){
 
@@ -205,3 +223,45 @@ window.addEventListener('scroll', function(){
 	window.scrollY < projectsTitle.parentElement.offsetTop ? shadowVal = 'none' : shadowVal = '0 2.5px 2.5px rgba(0,0,0, 0.125)';
 	projectsTitle.style.boxShadow = shadowVal;
 });
+
+function toggleCardVideo(e){
+	var projectCardVideo = e.target.getElementsByTagName('video')[0];
+	var projectCardImage = e.target.getElementsByTagName('img')[0];
+	var currentCardId = e.target.getAttribute('data-id');
+	
+	if (typeof projectCardVideo != 'undefined'){
+
+		projectCardImage.style.opacity = '0';
+		projectCardVideo.style.display = 'block';
+		projectSection.style.background = 'white';
+		projectCardVideo.play();
+
+		function stopCardVideo(){
+			projectCardVideo.pause();
+
+			projectCardImage.removeAttribute('style');
+			projectCardVideo.removeAttribute('style');
+			
+			projectCardVideo.currentTime = 0;
+		}
+
+		if (!navigator.platform.toLowerCase().match(/^win*|^mac|^linux[ ]{1}x86/)){
+			document.ontouchstart = function(event){
+				var isProjectCard;
+				for (var i = 0; i < event.path.length; i++){
+					if (event.path[i].className === 'project-card' && event.path[i].getAttribute('data-id') === currentCardId){
+						isProjectCard = true;
+						break;
+					}else{
+						isProjectCard = false;
+					}
+				}
+				isProjectCard === false ? stopCardVideo() : undefined;
+			};
+		} else {
+			e.target.onpointerleave = ()=> stopCardVideo();
+		}
+
+	}
+
+}
