@@ -224,6 +224,11 @@ window.addEventListener('scroll', function(){
 	projectsTitle.style.boxShadow = shadowVal;
 });
 
+
+// ----------------------------------------------------------------------------------
+
+					/* Video playback */
+
 function toggleCardVideo(e){
 	var projectCardVideo = e.target.getElementsByTagName('video')[0];
 	var projectCardImage = e.target.getElementsByTagName('img')[0];
