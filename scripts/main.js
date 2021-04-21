@@ -69,8 +69,10 @@ function requestProjectCard(url, projecType){
 </div>`;
 
 				projectSection.insertAdjacentHTML('beforeend', cardHTMLTemplate);
+				
 				var currentCard = document.getElementsByClassName('project-card');
 				currentCard = currentCard[currentCard.length-1];
+
 				setTimeout(function(){
 					currentCard.setAttribute('style', 'opacity: 1; transform: none;');
 					currentCard.removeAttribute('style');
@@ -242,12 +244,19 @@ function toggleCardVideo(e){
 		projectCardVideo.play();
 
 		function stopCardVideo(){
+
+			var transitionDuration = Number(window.getComputedStyle(projectCardImage).getPropertyValue('transition-duration').replace(/s/, ''));
+
 			projectCardVideo.pause();
 
 			projectCardImage.removeAttribute('style');
-			projectCardVideo.removeAttribute('style');
-			
-			projectCardVideo.currentTime = 0;
+
+			setTimeout(	function(){
+
+				projectCardVideo.currentTime = 0;
+				projectCardVideo.removeAttribute('style');
+				
+			}, transitionDuration * 1000);
 		}
 
 		if (!navigator.platform.toLowerCase().match(/^win*|^mac|^linux[ ]{1}x86/)){
