@@ -573,8 +573,15 @@ function sharerSetup(behavior = 'popup', position = 'right', color = 'black', vi
 	copyLink.addEventListener('click', copyURL);
 
 	if(navigator.share){
+
+		const shareData = {
+			title: document.head.getElementsByTagName('title')[0].innerText,
+			description: shareDescription,
+			url: currentUrl
+		};
+
 		otherSocialMedia.style.display = 'block';
-		otherSocialMedia.onclick = ()=> navigator.share(currentUrl, shareDescription);
+		otherSocialMedia.onclick = ()=> navigator.share(shareData);
 	}
 
 	// Sets the share icon color
