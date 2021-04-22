@@ -47,7 +47,7 @@
 					<a id="repository-link" href="https://www.github.com/AstudilloJuanF/sharerbox/" target="_blank">
 						<figure id="github-repository-banner">
 							<img id="github-logo" src="./icons/github-logo.svg" alt="GitHub logo">
-							<p style="margin: 4px; text-align: center;"><b>GitHub Repository</b><br><i>SharerBox v0.7.1</i></p>
+							<p style="margin: 4px; text-align: center;"><b>GitHub Repository</b><br><i>SharerBox v0.8.0</i></p>
 						</figure>
 					</a>
 				</section>
@@ -289,6 +289,11 @@
 <span class="function-call">sharerboxIcons</span>(<span class="code-quotes">'site1, site2, site3, site...'</span>);
 							</pre>
 						<p><i> &nbsp; (if this function is leaved blank SharerBox will display it's default social icons)</i></p>
+						<p>Additionally, you can customize the size of the buttons by adding an additional numeric parameter representing a given number of pixels (accepted size ranges: 25-100 pixels):</p>
+						<p><i class="example-subtitle">Example:</i> <b>&lt;/&gt;</b></p>
+							<pre class="code-snippet">
+<span class="function-call">sharerboxIcons</span>(<span class="code-quotes">'site1, site2, site3, site...'</span>, <span class="boolean">45</span> );
+							</pre>
 					</div>
 					<h3>Behavior <img class="h3-title-img" src="./icons/browser-window.svg"></h3>
 					<ul>
@@ -315,7 +320,8 @@
 	<span class="method">window</span>.<span class="old-listener">onload</span> <span class="operator">=</span> <span class="function">function</span>(){
 
 		<span class="code-comment">// Buttons list: 'site1, site2, site3...'</span>
-		<span class="function-call">sharerboxIcons</span>(<span class="code-quotes">'facebook twitter whatsapp linkedin reddit'</span>);
+		<span class="code-comment">// Buttons size: number</span>
+		<span class="function-call">sharerboxIcons</span>(<span class="code-quotes">'facebook twitter whatsapp linkedin reddit'</span>, <span class="boolean">45</span> );
 
 		<span class="code-comment">// Setup arguments: Behavior, Position, Color, Visibility, Description</span>
 		<span class="function-call">sharerSetup</span>(<span class="code-quotes">'pop-up'</span>, <span class="code-quotes">'left'</span>, <span class="code-quotes">'black'</span>, <span class="boolean">true</span>, <span class="code-quotes">'custom message or description goes here (optional)'</span>);
