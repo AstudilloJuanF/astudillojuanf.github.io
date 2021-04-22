@@ -577,7 +577,7 @@ function sharerSetup(behavior = 'popup', position = 'right', color = 'black', vi
 		const shareData = {
 			title: document.head.getElementsByTagName('title')[0].innerText,
 			text: shareDescription,
-			url: currentUrl
+			url: document.URL
 		};
 
 		otherSocialMedia.style.display = 'block';
