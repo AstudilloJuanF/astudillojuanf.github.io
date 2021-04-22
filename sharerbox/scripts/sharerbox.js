@@ -357,6 +357,8 @@ function sharerboxIcons(socialNetworksList = 'facebook, twitter, whatsapp, reddi
 
 	#sharerbox-share-icon{
 		opacity: 0.5;
+		stroke: white;
+		stroke-width: 0.5;
 		width: 40px;
 		height: 40px;
 		transition: 0.25s linear;
