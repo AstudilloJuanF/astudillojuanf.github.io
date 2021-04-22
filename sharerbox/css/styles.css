@@ -266,6 +266,11 @@ a{
 	opacity: 0;
 }
 
+#toggable-code-wrapper, #toggle-code-button{
+	display: none;
+	margin: auto;
+}
+
 code, pre{
 	font-family: Consolas, "Ubuntu Mono", Inconsolata, Monospace;
 	font-size: small;

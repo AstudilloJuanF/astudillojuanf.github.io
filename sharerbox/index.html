@@ -162,6 +162,10 @@
 							<img class="form-buttons-icon" src="./icons/approve-sign-green.svg">
 						</div>
 					</form>
+					<input id="toggle-code-button" type="button" value="View Code">
+					<div id="toggable-code-wrapper">
+						<!-- Load code Snippet here -->
+					</div>
 					<script>
 						var checkArray = document.getElementsByClassName('social-network-check');
 						var checkAll = document.getElementById('check-all');
@@ -173,7 +177,26 @@
 
 						var submit = document.getElementById('submit-button');
 
-						checkAll.addEventListener('click', toggleAll);
+						var toggableCodeWrapper = document.getElementById('toggable-code-wrapper');
+						var toggleCodeButton = document.getElementById('toggle-code-button');
+
+						function toggleCodeSnippet(e){
+							if (toggableCodeWrapper.hasAttribute('style')) {
+								
+								toggableCodeWrapper.removeAttribute('style');
+								e.target.value = 'View Code';
+							} else {
+								
+								toggableCodeWrapper.setAttribute('style', 'display: block;');
+								e.target.value = 'Hide Code';
+							}
+						}
+
+						toggleCodeButton.addEventListener('click', toggleCodeSnippet);
+
+						function copyCodeSnippet(){
+							navigator.clipboard.writeText(toggableCodeWrapper.firstElementChild.innerText);
+						}
 
 						function toggleAll(){
 
@@ -189,6 +212,8 @@
 								};
 							}
 						}
+
+						checkAll.addEventListener('click', toggleAll);
 
 						for(var i = 0; i < checkArray.length; i++){
 								checkArray[i].addEventListener('click', syncCheckbox);
@@ -229,7 +254,24 @@
 							}
 							sharerboxIcons(sNetworksList, buttonsIconsize);
 							sharerSetup(behavior, position, color, visibility);
+
+							toggableCodeWrapper.innerHTML = `<pre class="code-snippet" style="border-radius: 3px;">
+&lt;<span class="html-tag">script</span>&gt;
+	<span class="method">window</span>.<span class="old-listener">onload</span> <span class="operator">=</span> <span class="function">function</span>(){
+
+		<span class="code-comment">// Buttons list: 'site1, site2, site3...'</span>
+		<span class="code-comment">// Buttons size: number</span>
+		<span class="function-call">sharerboxIcons</span>( <span class="code-quotes">'${sNetworksList.trim()}'</span>, <span class="boolean">${buttonsIconsize}</span> );
+
+		<span class="code-comment">// Setup arguments: Behavior, Position, Color, Visibility, Description</span>
+		<span class="function-call">sharerSetup</span>( <span class="code-quotes">'${behavior}'</span>, <span class="code-quotes">'${position}'</span>, <span class="code-quotes">'${color}'</span>, <span class="code-quotes">${visibility}</span>, <span class="code-quotes">'custom message or description goes here (optional)'</span> );
+	};
+&lt;/<span class="html-tag">script</span>&gt;
+</pre>
+<button style="display: block; margin: auto; margin-right: 1rem;" onclick="copyCodeSnippet()">Copy code <b>&lt;/&gt;</b></button>`;
+
 						}
+						/* end of function */
 
 						var formButtonsIcons = document.getElementsByClassName('form-buttons-icon');
 						var formButtonsWrap = document.getElementById('form-buttons-wrap');
@@ -248,6 +290,8 @@
 							}
 							setTimeout(function(){formButtonsIcons[number].style.opacity = '0';}, 2000);
 							setTimeout(function(){formButtonsIcons[number].removeAttribute('style')}, 2500);
+
+							number === 1 ? toggleCodeButton.style.display = 'block' : undefined;
 						}
 
 						formButtonsWrap.children[1].onclick = function(){displayButtonIcon(0)};
