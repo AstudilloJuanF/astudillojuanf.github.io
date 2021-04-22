@@ -147,6 +147,9 @@
 								<img class="input-options-img" src="./icons/eye.svg">
 								<p><input class="visibility-radio-check" type="radio" name="visibility" value="hidden" checked> Hidden</p>
 								<p><input class="visibility-radio-check" type="radio" name="visibility" value="visible"> Visible</p>
+								<h3><label for="color-picker-input">Color:</label></h3>
+								<label id="color-picker-input-label" for="color-picker-input">Choose color: <input type="color" id="color-picker-input"></label>
+								
 							</div>
 						</div>
 						<div id="form-buttons-wrap">
@@ -162,6 +165,7 @@
 						var behaviorRadioInput = document.getElementsByClassName('behavior-radio-check');
 						var positionRadioInput = document.getElementsByClassName('position-radio-check');
 						var visibilityRadioInput = document.getElementsByClassName('visibility-radio-check');
+						var colorInput = document.getElementById('color-picker-input');
 
 						var submit = document.getElementById('submit-button');
 
@@ -207,6 +211,7 @@
 							var behavior;
 							var position;
 							var visibility;
+							var color = colorInput.value;
 
 							for(var i = 0; i < checkArray.length; i++){
 								checkArray[i].checked ? sNetworksList = sNetworksList.concat(`${checkArray[i].value} `) : undefined;
@@ -218,7 +223,7 @@
 								visibilityRadioInput[i].checked ? visibility = visibilityRadioInput[i].value : undefined;
 							}
 							sharerboxIcons(sNetworksList);
-							sharerSetup(behavior, position, 'black', visibility);
+							sharerSetup(behavior, position, color, visibility);
 						}
 
 						var formButtonsIcons = document.getElementsByClassName('form-buttons-icon');

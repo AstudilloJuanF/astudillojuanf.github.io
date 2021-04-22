@@ -233,6 +233,12 @@ a{
 	margin: 2.5rem auto 0.5rem auto;
 }
 
+#color-picker-input-label{
+	display: block;
+	padding: 2px;
+	border: solid 1px lightgray;
+}
+
 #form-buttons-wrap{
 	display: flex;
 	flex-flow: row wrap;
