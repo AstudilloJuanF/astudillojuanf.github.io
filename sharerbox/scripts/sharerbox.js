@@ -576,7 +576,7 @@ function sharerSetup(behavior = 'popup', position = 'right', color = 'black', vi
 
 		const shareData = {
 			title: document.head.getElementsByTagName('title')[0].innerText,
-			description: shareDescription,
+			text: shareDescription,
 			url: currentUrl
 		};
 
