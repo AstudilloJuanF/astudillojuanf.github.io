@@ -148,8 +148,11 @@
 								<p><input class="visibility-radio-check" type="radio" name="visibility" value="hidden" checked> Hidden</p>
 								<p><input class="visibility-radio-check" type="radio" name="visibility" value="visible"> Visible</p>
 								<h3><label for="color-picker-input">Color:</label></h3>
-								<label id="color-picker-input-label" for="color-picker-input">Choose color: <input type="color" id="color-picker-input"></label>
-								
+								<img class="input-options-img" src="./icons/color-wheel.svg">
+								<label class="input-wrapping-label" for="color-picker-input">Choose color: <input type="color" id="color-picker-input"></label>
+								<h3><label for="buttons-size-input">Size:</label></h3>
+								<img class="input-options-img" src="./icons/triangle-ruler.svg">
+								<label class="input-wrapping-label" for="buttons-size-input">Icons size: <input id="buttons-size-input" type="number" min="25" max="100" value="45" placeholder="number of pixels"></label>
 							</div>
 						</div>
 						<div id="form-buttons-wrap">
@@ -166,6 +169,7 @@
 						var positionRadioInput = document.getElementsByClassName('position-radio-check');
 						var visibilityRadioInput = document.getElementsByClassName('visibility-radio-check');
 						var colorInput = document.getElementById('color-picker-input');
+						var buttonsSizeInput = document.getElementById('buttons-size-input');
 
 						var submit = document.getElementById('submit-button');
 
@@ -212,6 +216,7 @@
 							var position;
 							var visibility;
 							var color = colorInput.value;
+							var buttonsIconsize = buttonsSizeInput.value;
 
 							for(var i = 0; i < checkArray.length; i++){
 								checkArray[i].checked ? sNetworksList = sNetworksList.concat(`${checkArray[i].value} `) : undefined;
@@ -222,7 +227,7 @@
 								positionRadioInput[i].checked ? position = positionRadioInput[i].value : undefined;
 								visibilityRadioInput[i].checked ? visibility = visibilityRadioInput[i].value : undefined;
 							}
-							sharerboxIcons(sNetworksList);
+							sharerboxIcons(sNetworksList, buttonsIconsize);
 							sharerSetup(behavior, position, color, visibility);
 						}
 

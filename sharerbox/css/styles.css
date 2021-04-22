@@ -217,6 +217,7 @@ a{
 	border: 1px dashed blue;
 	border-radius: 4px;
 	padding: 0 2rem;
+	padding-bottom: 2rem;
 	margin: auto;
 	margin-bottom: 1rem;
 	display: flex;
@@ -233,10 +234,10 @@ a{
 	margin: 2.5rem auto 0.5rem auto;
 }
 
-#color-picker-input-label{
+.input-wrapping-label{
 	display: block;
 	padding: 2px;
-	border: solid 1px lightgray;
+	border: solid 1px skyblue;
 }
 
 #form-buttons-wrap{

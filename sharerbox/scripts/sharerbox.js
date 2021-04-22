@@ -2,7 +2,7 @@
 							  Sharerbox
 						(preview page adaptation)
 
-							Version: 0.7.0;
+							Base Version: 0.8.0;
 						Author: Juan Astudillo
 
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -25,7 +25,34 @@
 
 // Inserting HTML markup and CSS Styles into the document
 
-function sharerboxIcons(socialNetworksList = 'facebook, twitter, whatsapp, reddit'){
+let sharerboxIconSize;
+
+function sharerboxIcons(socialNetworksList = 'facebook, twitter, whatsapp, reddit', iconSize = 45){
+
+	// Setting sharerbox icons size in pixels;
+
+	var maxSize = 100, minSize = 25, defaultSize = 45;
+	let maxMin = ['maximum', 'minimum'];
+
+	if (typeof iconSize === 'number'){
+		sharerboxIconSize = iconSize;
+	} else if (typeof iconSize === 'string' && Number(iconSize.replaceAll(/[a-z]*/ig, '')) != 0){
+		sharerboxIconSize = Number(iconSize.replaceAll(/[a-z]*/ig, ''));
+	}
+	
+	if (typeof sharerboxIconSize === 'number' && (sharerboxIconSize < minSize || sharerboxIconSize > maxSize)){
+		sharerboxIconSize < minSize ? (sharerboxIconSize = minSize, maxMin = maxMin[1]) : undefined;
+		sharerboxIconSize > maxSize ? (sharerboxIconSize = maxSize, maxMin = maxMin[0]) : undefined;
+
+		console.warn(`Currently the ${maxMin} accepted size value for SharerBox's icons is ${sharerboxIconSize}px, icon size set to ${maxMin} by default.\n\nAccepted Sharerbox icon size ranges are ${minSize}px-${maxSize}px`);
+	} else if(typeof sharerboxIconSize != 'number'){
+		sharerboxIconSize = defaultSize;
+		
+		console.warn(`The value introduced to set SharerBox icon size is not a number, icon size set to default (${sharerboxIconSize}px).\n\nAccepted Sharerbox icon size ranges are ${minSize}px-${maxSize}px`);
+	}
+
+	var sharerboExtraIconSize = Math.floor(sharerboxIconSize * 88.889 / 100);
+
 
 	// variables for HTML social icons
 
@@ -186,7 +213,7 @@ function sharerboxIcons(socialNetworksList = 'facebook, twitter, whatsapp, reddi
 	}
 
 	// SharerBox's HTML markup
-	var content = `<style id="sharerbox-styles" type="text/css">
+	var content = `<style type="text/css" id="sharerbox-styles">
 	#sharerbox-section{
 		box-sizing: border-box;
 		z-index: 9999;
@@ -203,7 +230,7 @@ function sharerboxIcons(socialNetworksList = 'facebook, twitter, whatsapp, reddi
 		height: fit-content;
 		margin: auto 0;
 		padding: 0;
-		transform: translateX(-45px);
+		transform: translateX(-${sharerboxIconSize}px);
 		transition: 0.25s linear;
 	}
 
@@ -218,21 +245,20 @@ function sharerboxIcons(socialNetworksList = 'facebook, twitter, whatsapp, reddi
 		display: flex;
 		flex-flow: column nowrap;
 		align-items: flex-start;
-		width: 45px;
+		width: ${sharerboxIconSize}px;
 		height: fit-content;
 		transition: 0.25s linear;
 	}
 
 	#sharerbox-social-icons-box:hover{
-		width: 90px;
+		width: ${sharerboxIconSize * 2}px;
 	}
 
 	.sharerbox-socialmedia-link{
 		display: block;
 		margin: 0;
 		padding: 0;
-		height: 45px;
-		width: 100%;
+		height: ${sharerboxIconSize}px;
 	}
 
 	.sharerbox-icon-fig, #sharerbox-share-icon-fig{
@@ -241,13 +267,13 @@ function sharerboxIcons(socialNetworksList = 'facebook, twitter, whatsapp, reddi
 		cursor: pointer;
 		padding: 0;
 		margin: 0;
-		width: 45px;
-		height: 45px;
+		width: ${sharerboxIconSize}px;
+		height: ${sharerboxIconSize}px;
 		transition: 0.25s linear;
 	}
 
 	.sharerbox-icon-fig:hover{
-		width: 90px;
+		width: ${sharerboxIconSize * 2}px;
 	}
 
 	.sharerbox-icon{
@@ -256,14 +282,13 @@ function sharerboxIcons(socialNetworksList = 'facebook, twitter, whatsapp, reddi
 		object-position: right;
 		padding: 0;
 		margin: 0;
-		width: 45px;
-		height: 45px;
+		width: ${sharerboxIconSize}px;
+		height: ${sharerboxIconSize}px;
 
 	}
 
 	#fb-fig{
-		/*background: #4267b2;*/
-		background: #0062E0;
+		background: #4267b2;
 	}
 
 	#tw-fig{
@@ -300,8 +325,8 @@ function sharerboxIcons(socialNetworksList = 'facebook, twitter, whatsapp, reddi
 	}
 
 	.extra-buttons{
-		width: 40px;
-		height: 40px;
+		width: ${sharerboExtraIconSize}px;
+		height: ${sharerboExtraIconSize}px;
 		border-radius: 100%;
 		border: solid 1px gray;
 		transition: 0.1s linear;
@@ -359,8 +384,8 @@ function sharerboxIcons(socialNetworksList = 'facebook, twitter, whatsapp, reddi
 		opacity: 0.5;
 		stroke: white;
 		stroke-width: 0.5;
-		width: 40px;
-		height: 40px;
+		width: ${sharerboExtraIconSize}px;
+		height: ${sharerboExtraIconSize}px;
 		transition: 0.25s linear;
 	}
 
@@ -608,7 +633,7 @@ function sharerSetup(behavior = 'popup', position = 'right', color = 'black', vi
 		shareIconWrap.remove();
 		sharerboxContainer.insertAdjacentElement('afterbegin', shareIconWrap);
 
-		sharerboxContainer.style.cssText = 'left: unset; right: 0px; transform: translateX(45px)';
+		sharerboxContainer.style.cssText = `left: unset; right: 0px; transform: translateX(${sharerboxIconSize}px)`;
 		socialIconsWrap.style.alignItems = 'flex-end';
 		hiddenIconsContainer.style.alignItems = 'flex-end';
 		shareIcon.style.transform = 'rotateY(180deg)';
@@ -625,7 +650,7 @@ function sharerSetup(behavior = 'popup', position = 'right', color = 'black', vi
 		shareIconWrap.remove();
 		sharerboxContainer.appendChild(shareIconWrap);
 
-		sharerboxContainer.style.cssText = 'left: 0px; right: unset; transform: translateX(-45px)';
+		sharerboxContainer.style.cssText = `left: 0px; right: unset; transform: translateX(-${sharerboxIconSize}px)`;
 		socialIconsWrap.style.alignItems = 'flex-start';
 		hiddenIconsContainer.style.alignItems = 'flex-start';
 
@@ -646,7 +671,7 @@ function sharerSetup(behavior = 'popup', position = 'right', color = 'black', vi
 
 			if(shareIcon.style.transform === 'none'){
 				shareIcon.style.transform = 'rotateY(180deg)';
-				sharerboxContainer.style.transform = 'translateX(45px)';
+				sharerboxContainer.style.transform = `translateX(${sharerboxIconSize}px)`;
 			}else{
 				shareIcon.style.transform = 'none';
 				sharerboxContainer.style.transform = 'none';
@@ -656,7 +681,7 @@ function sharerSetup(behavior = 'popup', position = 'right', color = 'black', vi
 
 			if(shareIcon.style.transform === 'rotateY(180deg)'){
 				shareIcon.style.transform = 'none';
-				sharerboxContainer.style.transform = 'translateX(-45px)';
+				sharerboxContainer.style.transform = `translateX(-${sharerboxIconSize}px)`;
 			}else{
 				shareIcon.style.transform = 'rotateY(180deg)';
 				sharerboxContainer.style.transform = 'none';
