@@ -317,6 +317,15 @@ function sharerboxIcons(socialNetworksList = 'facebook, twitter, whatsapp, reddi
 		display: none;
 	}
 
+	#other-social-media-fig:hover svg{
+		fill: dodgerblue;
+		border-color: dodgerblue;
+	}
+
+	#other-social-media-fig:active svg{
+		filter: brightness(85%);
+	}
+
 	#send-email-button, #copy-link-icon, #other-social-media-button{
 		background: white;
 	}

@@ -310,7 +310,20 @@ function sharerboxIcons(socialNetworksList = 'facebook, twitter, whatsapp, reddi
 		transform: scale(1.07);
 	}
 
-	#send-email-button, #copy-link-icon{
+	#other-social-media-fig{
+		display: none;
+	}
+
+	#other-social-media-fig:hover svg{
+		fill: dodgerblue;
+		border-color: dodgerblue;
+	}
+
+	#other-social-media-fig:active svg{
+		filter: brightness(85%);
+	}
+
+	#send-email-button, #copy-link-icon, #other-social-media-button{
 		background: white;
 	}
 
@@ -341,6 +354,8 @@ function sharerboxIcons(socialNetworksList = 'facebook, twitter, whatsapp, reddi
 
 	#sharerbox-share-icon{
 		opacity: 0.5;
+		stroke: white;
+		stroke-width: 0.5;
 		width: 40px;
 		height: 40px;
 		transition: 0.25s linear;
@@ -360,6 +375,12 @@ function sharerboxIcons(socialNetworksList = 'facebook, twitter, whatsapp, reddi
 		<div id="sharerbox-social-icons-box">
 			${socialHTMLIcons}
 		</div>
+		<!-- Additional social-media Button -->
+		<object class="extra-buttons-fig" id="other-social-media-fig">
+			<svg id="other-social-media-button" class="extra-buttons" enable-background="new 0 0 493.497 493.497" version="1.1" viewBox="0 0 493.5 493.5" xmlns="http://www.w3.org/2000/svg">
+				<path d="m218.25 89.25v129h-129c-19 0-19 57 0 57h129v129c0 19 57 19 57 0v-129h129c19 0 19-57 0-57h-129v-129c0-19-57-19-57 0z" style="paint-order:markers fill stroke"/>
+			</svg>
+		</object>
 		<!--Send Email Button-->
 			<object class="extra-buttons-fig" id="send-email-button-fig">
 				<a class="sharerbox-socialmedia-link" id="send-email-link" title="Email">
@@ -421,6 +442,8 @@ function sharerSetup(behavior = 'popup', position = 'right', color = 'black', vi
 
 	var emailButtonLink = document.getElementById('send-email-link');
 	var copyLink = document.getElementById('copy-link-icon');
+
+	var otherSocialMedia = document.getElementById('other-social-media-fig');
 
 	var currentUrl = encodeURIComponent(document.URL);
 
@@ -533,6 +556,18 @@ function sharerSetup(behavior = 'popup', position = 'right', color = 'black', vi
 	}
 
 	copyLink.addEventListener('click', copyURL);
+
+	if(navigator.share){
+
+		const shareData = {
+			title: document.head.getElementsByTagName('title')[0].innerText,
+			text: shareDescription,
+			url: document.URL
+		};
+
+		otherSocialMedia.style.display = 'block';
+		otherSocialMedia.onclick = ()=> navigator.share(shareData);
+	}
 
 	// Sets the share icon color
 	color ? shareIcon.style.fill = color : undefined;
