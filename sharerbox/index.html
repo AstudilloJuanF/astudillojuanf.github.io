@@ -51,7 +51,7 @@
 						</figure>
 					</a>
 				</section>
-				<section class="sections">
+				<section class="sections gradient-background">
 					<h2><img class="h2-title-img" src="./icons/info-icon-circle.svg"> SharerBox Overview:</h2>
 					<figure id="cover-image-wrap">
 						<img id="cover-image" src="./images/cover/sharerbox.svg" alt="SharerBox - Screenshot" title="Cover">
@@ -59,7 +59,7 @@
 					<div id="overview-text-box">
 						<p> &nbsp; <strong>SharerBox</strong> is a free, minimalistic and lightweight <i>JavaScript-Based</i> social-media sharebar feature developed to provide fast and easy-to-use social-media sharing integration for small websites by eliminating the need of loading heavy/bulky third-party social APIs, which generally have a negative impact on loading speeds and unauthorizedly recolect private user information.</p>
 						<p> &nbsp; Integrating SharerBox directly on your website for sharing social-media instead of external social APIs should significantly reduce loading speeds for visitors connected on slow networks, which will result on improved SEO indexation for your website and enhanced performance, user experience and device portability for your visitors, this specially for users connected from old computers or low-end devices. Plus, since there is no need for implementing obscure social third-party code there is no unauthorized recolection of private user information directly derived from SharerBox use.</p>
-						<p> &nbsp; SharerBox is currently a personal development project, but it's implementation is intended to be intuitive for unexperienced users as well as very easy to customize for developers</p>
+						<p> &nbsp; SharerBox is currently a personal development project, but it's implementation is intended to be intuitive for unexperienced users as well as very easy to customize for developers.</p>
 					</div>
 					<h3 style="text-align: center;">Support:</h3>
 					<div id="supported-icons-wrapper">
@@ -113,14 +113,17 @@
 						</div>
 					</div>
 				</section>
-				<section class="sections">
+				<section class="sections gradient-background">
 					<h2>Preview</h2>
 					<form>
 						<div id="input-options-wrap">
 							<div>
 								<h3>Social Networks</h3>
 								<img class="input-options-img" src="./icons/worldwide-icon-color.svg">
-								<p style="background: red; color: white">&nbsp; <b>Mark All</b> <input id="check-all" type="checkbox"></p>
+								<div>
+									<p class="toggle-socialmedia-checkbox">&nbsp; Mark All <input id="check-all" type="checkbox"></p>
+									<p class="toggle-socialmedia-checkbox">&nbsp; Unmark All <input id="uncheck-all" type="checkbox"></p>
+								</div>
 								<p><input class="social-network-check" type="checkbox" value="twitter" checked> - <img class="h3-title-img" src="./icons/twitter-icon-soft-square.svg"> Twitter</p>
 								<p><input class="social-network-check" type="checkbox" value="facebook" checked> - <img class="h3-title-img" src="./icons/facebook-logo.svg"> Facebook</p>
 								<p><input class="social-network-check" type="checkbox" value="whatsapp" checked> - <img class="h3-title-img" src="./icons/whatsapp-icon-soft-square.svg"> WhatsApp</p>
@@ -147,10 +150,14 @@
 								<img class="input-options-img" src="./icons/eye.svg">
 								<p><input class="visibility-radio-check" type="radio" name="visibility" value="hidden" checked> Hidden</p>
 								<p><input class="visibility-radio-check" type="radio" name="visibility" value="visible"> Visible</p>
-								<h3><label for="color-picker-input">Color:</label></h3>
+							</div>
+							<div>
+								<h3>Color:</h3>
 								<img class="input-options-img" src="./icons/color-wheel.svg">
 								<label class="input-wrapping-label" for="color-picker-input">Choose color: <input type="color" id="color-picker-input"></label>
-								<h3><label for="buttons-size-input">Size:</label></h3>
+							</div>
+							<div>
+								<h3>Size:</h3>
 								<img class="input-options-img" src="./icons/triangle-ruler.svg">
 								<label class="input-wrapping-label" for="buttons-size-input">Icons size: <input id="buttons-size-input" type="number" min="25" max="100" value="45" placeholder="number of pixels"></label>
 							</div>
@@ -169,6 +176,7 @@
 					<script>
 						var checkArray = document.getElementsByClassName('social-network-check');
 						var checkAll = document.getElementById('check-all');
+						var uncheckAll = document.getElementById('uncheck-all');
 						var behaviorRadioInput = document.getElementsByClassName('behavior-radio-check');
 						var positionRadioInput = document.getElementsByClassName('position-radio-check');
 						var visibilityRadioInput = document.getElementsByClassName('visibility-radio-check');
@@ -181,14 +189,16 @@
 						var toggleCodeButton = document.getElementById('toggle-code-button');
 
 						function toggleCodeSnippet(e){
-							if (toggableCodeWrapper.hasAttribute('style')) {
-								
-								toggableCodeWrapper.removeAttribute('style');
-								e.target.value = 'View Code';
-							} else {
-								
-								toggableCodeWrapper.setAttribute('style', 'display: block;');
+							if (toggableCodeWrapper.style.height != '250px') {
+
+								toggableCodeWrapper.style.height = '250px';
+								toggableCodeWrapper.firstElementChild.style.height = '190px';
 								e.target.value = 'Hide Code';
+							} else {
+
+								toggableCodeWrapper.removeAttribute('style');
+								toggableCodeWrapper.firstElementChild.style.height = '0';
+								e.target.value = 'View Code';
 							}
 						}
 
@@ -198,36 +208,50 @@
 							navigator.clipboard.writeText(toggableCodeWrapper.firstElementChild.innerText);
 						}
 
-						function toggleAll(){
+						function toggleAll(e){
 
-							if(checkAll.checked){
+							if(e.target === checkAll && checkAll.checked){
 								for(var i = 0; i < checkArray.length; i++){
 									checkArray[i].checked = true;
-									checkAll.previousElementSibling.innerText = 'Unmark All';
 								};
-							}else{
+								checkAll.checked = true;
+								uncheckAll.checked = false;
+							}else if(e.target === checkAll && !checkAll.checked && !uncheckAll.cheked){
+								checkAll.checked = true;
+							}
+							
+							if(e.target === uncheckAll && uncheckAll.checked){
 								for(var i = 0; i < checkArray.length; i++){
-									checkArray[i].checked = false
-									checkAll.previousElementSibling.innerText = 'Mark All';
+									checkArray[i].checked = false;
 								};
+								uncheckAll.checked = true;
+								checkAll.checked = false;
+							}else if(e.target === uncheckAll && !uncheckAll.checked && !checkAll.checked){
+								uncheckAll.checked = true;
 							}
 						}
 
 						checkAll.addEventListener('click', toggleAll);
+						uncheckAll.addEventListener('click', toggleAll);
 
 						for(var i = 0; i < checkArray.length; i++){
-								checkArray[i].addEventListener('click', syncCheckbox);
+								checkArray[i].addEventListener('input', syncCheckbox);
 						}
 
 						function syncCheckbox(){
+
+							var checkedBoxesCount = 0;
+
 							for(var i = 0; i < checkArray.length; i++){
+
 								if(checkArray[i].checked === false){
 									checkAll.checked = false;
-									checkAll.previousElementSibling.innerText = 'Mark All';
-									break;
+									checkedBoxesCount === 0 ? uncheckAll.checked = true : undefined;
+
 								}else{
-									checkAll.checked = true;
-									checkAll.previousElementSibling.innerText = 'Unmark All';
+									checkedBoxesCount++;
+									checkedBoxesCount === checkArray.length ? checkAll.checked = true : undefined;
+									uncheckAll.checked = false;
 								}
 							}
 						}
@@ -255,7 +279,7 @@
 							sharerboxIcons(sNetworksList, buttonsIconsize);
 							sharerSetup(behavior, position, color, visibility);
 
-							toggableCodeWrapper.innerHTML = `<pre class="code-snippet" style="border-radius: 3px;">
+							toggableCodeWrapper.innerHTML = `<pre class="code-snippet">
 &lt;<span class="html-tag">script</span>&gt;
 	<span class="method">window</span>.<span class="old-listener">onload</span> <span class="operator">=</span> <span class="function">function</span>(){
 
@@ -298,7 +322,7 @@
 						formButtonsWrap.children[2].onclick = function(){displayButtonIcon(1)};
 					</script>
 				</section>
-				<section class="sections">
+				<section class="sections gradient-background">
 					<h2><img class="h2-title-img" src="./icons/package-icon.svg"> Integration</h2>
 					<ol>
 						<li>Download and store Sharerbox's <b>JavaScript File</b> on your server.</li><br>
@@ -324,7 +348,7 @@
 						<li>All done, SharerBox will be now enabled on your site.</li><br>
 					</ol>
 				</section>
-				<section class="sections">
+				<section class="sections gradient-background">
 					<h2><img class="h2-title-img" src="./icons/gear.svg"> Customization:</h2>
 					<h3>Icons <img class="h3-title-img" src="./icons/share-slateblue.svg"></h3>
 					<ul>
@@ -362,7 +386,7 @@
 						<p><i> &nbsp; (if these options are leaved blank SharerBox will display it's default behavior)</i></p>
 					</div>
 				</section>
-				<section class="sections">
+				<section class="sections gradient-background">
 					<h4><i class="example-subtitle">Full Example:</i> <b>&lt;/&gt;</b></h4>
 					<pre class="code-snippet">
 &lt;<span class="html-tag">script</span>&gt;

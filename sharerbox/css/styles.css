@@ -33,6 +33,7 @@ header h1{
 h1, h2, h3, h4{
 	cursor: default;
 }
+
 h2{
 	text-align: center;
 	margin-top: 2rem;
@@ -41,6 +42,10 @@ h2{
 
 h3{
 	margin-top: 3rem;
+}
+
+h2, h3, li::marker{
+	color: white;
 }
 
 main{
@@ -67,7 +72,12 @@ figure{
 	box-shadow: 0 0 2px mediumblue;
 }
 
+.gradient-background{
+	background: linear-gradient(90deg, limegreen, deepskyblue);
+}
+
 .setting-option-wrap{
+	background-color: white;
 	padding: 1rem;
 	margin: 2rem;
 	border: dashed 2.5px palevioletred;
@@ -79,7 +89,8 @@ a{
 }
 
 li{
-	background: #CAD3E6;
+	background: #dde7fc;
+	max-width: fit-content;
 	padding: 8px;
 	border-radius: 4px;
 }
@@ -132,7 +143,9 @@ a{
 }
 
 #overview-text-box{
+	background-color: white;
 	margin: 1rem auto;
+	margin-top: 2rem;
 	padding: 1rem;
 	border-radius: 5px;
 	box-shadow: 0 0 5px rgba(0,0,0, 0.37);
@@ -214,15 +227,26 @@ a{
 }
 
 #input-options-wrap{
-	border: 1px dashed blue;
-	border-radius: 4px;
+	display: flex;
+	flex-flow: row wrap;
+	justify-content: space-evenly;
+	background-color: white;
 	padding: 0 2rem;
 	padding-bottom: 2rem;
 	margin: auto;
 	margin-bottom: 1rem;
-	display: flex;
-	flex-flow: row wrap;
-	justify-content: space-between;
+	border: 1px dashed blue;
+	border-radius: 4px;
+}
+
+.toggle-socialmedia-checkbox{
+	background-color: green;
+	color: white;
+	font-weight: bold;
+}
+
+.toggle-socialmedia-checkbox:last-child{
+	background-color: red;
 }
 
 #input-options-wrap div p{
@@ -266,7 +290,21 @@ a{
 	opacity: 0;
 }
 
-#toggable-code-wrapper, #toggle-code-button{
+#toggable-code-wrapper{
+	height: 0;
+	overflow: hidden;
+	transition: 0.25s ease;
+}
+
+#toggable-code-wrapper pre{
+	height: 190px;
+	padding: 8px;
+	border-radius: 10px;
+	overflow-y: hidden;
+	transition: 0.25s ease;
+}
+
+#toggle-code-button{
 	display: none;
 	margin: auto;
 }
@@ -379,10 +417,18 @@ footer h3{
 	main {
 		width: 85%;
 	}
+
+	#main-section{
+		text-align: initial;
+	}
 	
 	.sections{
 		padding: 1rem;
 		padding-bottom: 2rem;
+	}
+
+	#overview-text-box{
+		margin-top: 1.5rem;
 	}
 
 	.setting-option-wrap{
@@ -394,7 +440,8 @@ footer h3{
 	}
 
 	#input-options-wrap div{
-		width: unset;
+		width: fit-content;
+		margin: auto;
 	}
 
 	.code-snippet{
