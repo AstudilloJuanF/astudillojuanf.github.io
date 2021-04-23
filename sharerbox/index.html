@@ -328,7 +328,7 @@
 				<section class="sections gradient-background">
 					<h2><img class="h2-title-img" src="./icons/package-icon.svg"> Integration</h2>
 					<ol>
-						<li>Download and store Sharerbox's <b>JavaScript File</b> on your server.</li><br>
+						<li>Download Sharerbox's script file and store it on your server.</li><br>
 						<li>Load the script asynchronously within your webpage's <b>HTML</b> <code><span class="identifyer">&lt;head&gt;</span></code> tag using the <code><span class="html-attribute">async</span></code> attribute.<br>
 						<br>
 						<p><i class="example-subtitle">Example:</i> <b>&lt;/&gt;</b></p>
@@ -348,7 +348,7 @@
 &lt;/<span class="html-tag">script</span>&gt;
 </pre></li><br>
 						<li>Save changes and load your site.</li><br>
-						<li>All done, SharerBox will be now enabled on your site.</li><br>
+						<li>All done, SharerBox will now be enabled on your site.</li><br>
 					</ol>
 				</section>
 				<section class="sections gradient-background">
@@ -359,7 +359,7 @@
 					</ul>
 					<div class="setting-option-wrap">
 						<h4>Setting Icons:</h4>
-						<p> &nbsp; You can specify which social-network icons will be displayed by SharerBox by going to the <code><span class="function-call">sharerboxIcons</span>()</code> function inside the <code><span class="identifyer">&lt;body&gt;</span></code> tag code snippet and typing a list of supported social-network items separated by spaces or commas, the full list must be wrapped around quotation marks.</p>
+						<p> &nbsp; You can specify which social-network icons will be displayed by SharerBox by going to the <code><span class="function-call">sharerboxIcons</span>()</code> function inside the <code><span class="identifyer">&lt;body&gt;</span></code> tag code snippet and typing a list of supported social-network items separated by spaces or commas, the full list must be a single text string (wrapped around quotation marks).</p>
 						<p><i class="example-subtitle">Example:</i> <b>&lt;/&gt;</b></p>
 							<pre class="code-snippet">
 <span class="function-call">sharerboxIcons</span>(<span class="code-quotes">'site1, site2, site3, site...'</span>);
@@ -381,7 +381,7 @@
 					</ul>
 					<div class="setting-option-wrap">
 						<h4>Setting Behavior:</h4>
-						<p> &nbsp; To customize SharerBox overall behavior enter these options into the <code><span class="function-call">sharerSetup</span>()</code> function located inside the code snippet pasted within your page's <code><span class="identifyer">&lt;body&gt;</span></code> tag, each argument must be written as a quoted word <code><span class="code-quotes">'word'</span></code>, each quoted word separated from each other by commas.</p>
+						<p> &nbsp; To customize SharerBox overall behavior enter these options into the <code><span class="function-call">sharerSetup</span>()</code> function located inside the code snippet pasted within your page's <code><span class="identifyer">&lt;body&gt;</span></code> tag, each argument must be on a separate text string (written as a quoted word <code><span class="code-quotes">'word'</span></code>), being each string separated from each other by commas.</p>
 						<p><i class="example-subtitle">Example:</i> <b>&lt;/&gt;</b></p>
 							<code class="code-snippet">
 								<span class="function-call">sharerSetup</span>(<span class="code-quotes">'tab'</span>, <span class="code-quotes">'right'</span>, <span class="code-quotes">'black'</span>, <span class="code-quotes">'visible'</span>);
