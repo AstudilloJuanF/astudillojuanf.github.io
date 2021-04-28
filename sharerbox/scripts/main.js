@@ -1,3 +1,4 @@
+// Dynamic download button
 
 var githubBtnText = document.getElementById('github-btn-sharerbox-version-text');
 
@@ -22,6 +23,7 @@ window.addEventListener('load', function(){
 });
 
 
+// Variables & functions for SharerBox's online preview options
 
 var checkArray = document.getElementsByClassName('social-network-check');
 var checkAll = document.getElementById('check-all');
