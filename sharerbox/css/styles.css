@@ -248,7 +248,7 @@ a{
 	padding-bottom: 2rem;
 	margin: auto;
 	margin-bottom: 1rem;
-	border: 1px dashed blue;
+	border: 1px solid lightgray;
 	border-radius: 4px;
 }
 
@@ -257,8 +257,7 @@ a{
 	flex-flow: row wrap;
 	justify-content: space-evenly;
 	padding-bottom: 2rem;
-	margin: auto;
-	margin-bottom: 1rem;
+	margin: 2rem auto 1rem auto;
 	border: 1px dashed blue;
 	border-radius: 4px;
 }
@@ -271,6 +270,7 @@ a{
 	background-color: green;
 	color: white;
 	font-weight: bold;
+	border-radius: 2px;
 }
 
 .toggle-socialmedia-checkbox:last-child{
@@ -342,7 +342,7 @@ a{
 	max-width: 100%;
 	max-width: -webkit-fill-available;
 	padding: 8px;
-	border-radius: 10px;
+	border-radius: 7px;
 	overflow-y: hidden;
 	transition: 0.25s ease;
 }

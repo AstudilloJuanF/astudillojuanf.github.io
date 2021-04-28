@@ -1,3 +1,4 @@
+/*
 var githubBtnText = document.getElementById('github-btn-sharerbox-version-text');
 
 window.addEventListener('load', function(){
@@ -7,19 +8,20 @@ window.addEventListener('load', function(){
         if (xhr.status === 200 && xhr.readyState === 4) {
             var responseFile = xhr.response;
             var title = responseFile.head.getElementsByTagName('title')[0];
-            title = title.innerText.toLowerCase().replace(/[^\d\.v]*/ig, '');
+            title = title.innerText.toLowerCase().replace(/[^\d\.v]+/ig, '');
 
             githubBtnText.innerText = title;
 
             return response;
         }
-    }
+    };
 
     xhr.responseType = 'document';
     xhr.open('GET', 'https://github.com/AstudilloJuanF/sharerbox/releases/latest');
     xhr.setRequestHeader('Accept', 'text/html');
     xhr.send();
 });
+*/
 
 
 var checkArray = document.getElementsByClassName('social-network-check');
@@ -67,7 +69,11 @@ function toggleCodeSnippet(e){
 toggleCodeButton.addEventListener('click', toggleCodeSnippet);
 
 function copyCodeSnippet(){
+
+    var copyCodeSnippetBtn = toggableCodeWrapper.lastElementChild;
+
     navigator.clipboard.writeText(toggableCodeWrapper.firstElementChild.innerText);
+    copyCodeSnippetBtn.innerText = 'Copied!'
 }
 
 function toggleAll(e){
