@@ -25,12 +25,13 @@
 		<link rel="stylesheet" type="text/css" href="css/styles.css">
 		<link rel="preload" as="font" type="font/woff2" href="fonts/carlito-regular-webfont.woff2" crossorigin="anonymous">
 		<link rel="preload" as="font" type="font/ttf" href="fonts/inconsolata-variable-width.ttf" crossorigin="anonymous">
+		<script type="application/javascript" src="scripts/main.js" async></script>
 		<script type="application/javascript" src="scripts/sharerbox.js" async></script>
 		<script type="application/javascript" src="scripts/scrolltop.js" async></script>
 		<script type="application/javascript" src="scripts/dev-badge.js" defer></script>
 	</head>
 	<body>
-		<script type="application/javascript">
+		<script>
 			window.onload = function(){
 				sharerboxIcons('twitter facebook whatsapp linkedin reddit tumblr pinterest telegram');
 				sharerSetup('popup', 'right', 'black', 'visible', 'Check out SharerBox! website social-media integration by AstudilloJuanF');
@@ -44,10 +45,18 @@
 				<section class="sections">
 					<p style="text-align: center;">Free, minimalist and lightweight JavaScript-based social-media sharer for websites.</p>
 					<h2 style="color: black;"><img class="h2-title-img" src="./icons/down-arrow-green.svg"> Download</h2>
-					<a id="repository-link" href="https://www.github.com/AstudilloJuanF/sharerbox/" target="_blank">
-						<figure id="github-repository-banner">
+					<a class="github-btn-link" href="https://www.github.com/AstudilloJuanF/sharerbox/releases/latest" target="_blank">
+						<figure class="github-btn">
+							<img src="./icons/favicon.svg" alt="SharerBox logo">
+							<p style="margin: 4px; text-align: center;"><b>Get SharerBox</b><br><i><span id="github-btn-sharerbox-version-text">Latest version</span></i></p>
+						</figure>
+					</a>
+					<div class="separator"></div>
+					<h2 style="color: black;">View Repository</h2>
+					<a class="github-btn-link" href="https://www.github.com/AstudilloJuanF/sharerbox/" target="_blank">
+						<figure class="github-btn">
 							<img id="github-logo" src="./icons/github-logo.svg" alt="GitHub logo">
-							<p style="margin: 4px; text-align: center;"><b>GitHub Repository</b><br><i>SharerBox v0.8.0</i></p>
+							<p style="margin: 4px; text-align: center;"><b>GitHub Repository</b><br><i>SharerBox</i></p>
 						</figure>
 					</a>
 				</section>
@@ -175,155 +184,6 @@
 					<div id="toggable-code-wrapper">
 						<!-- Load code Snippet here -->
 					</div>
-					<script>
-						var checkArray = document.getElementsByClassName('social-network-check');
-						var checkAll = document.getElementById('check-all');
-						var uncheckAll = document.getElementById('uncheck-all');
-						var behaviorRadioInput = document.getElementsByClassName('behavior-radio-check');
-						var positionRadioInput = document.getElementsByClassName('position-radio-check');
-						var visibilityRadioInput = document.getElementsByClassName('visibility-radio-check');
-						var colorInput = document.getElementById('color-picker-input');
-						var buttonsSizeInput = document.getElementById('buttons-size-input');
-
-						var submit = document.getElementById('submit-button');
-
-						var toggableCodeWrapper = document.getElementById('toggable-code-wrapper');
-						var toggleCodeButton = document.getElementById('toggle-code-button');
-
-						function toggleCodeSnippet(e){
-							if (toggableCodeWrapper.style.height < '250px') {
-
-								toggableCodeWrapper.style.height = '250px';
-								toggableCodeWrapper.firstElementChild.style.height = 'fit-content';
-								toggableCodeWrapper.firstElementChild.style.height = `${toggableCodeWrapper.firstElementChild.offsetHeight}px`;
-								e.target.value = 'Hide Code';
-							} else {
-
-								toggableCodeWrapper.removeAttribute('style');
-								toggableCodeWrapper.firstElementChild.style.height = '0';
-								e.target.value = 'View Code';
-							}
-						}
-
-						toggleCodeButton.addEventListener('click', toggleCodeSnippet);
-
-						function copyCodeSnippet(){
-							navigator.clipboard.writeText(toggableCodeWrapper.firstElementChild.innerText);
-						}
-
-						function toggleAll(e){
-
-							if(e.target === checkAll && checkAll.checked){
-								for(var i = 0; i < checkArray.length; i++){
-									checkArray[i].checked = true;
-								};
-								checkAll.checked = true;
-								uncheckAll.checked = false;
-							}else if(e.target === checkAll && !checkAll.checked && !uncheckAll.cheked){
-								checkAll.checked = true;
-							}
-							
-							if(e.target === uncheckAll && uncheckAll.checked){
-								for(var i = 0; i < checkArray.length; i++){
-									checkArray[i].checked = false;
-								};
-								uncheckAll.checked = true;
-								checkAll.checked = false;
-							}else if(e.target === uncheckAll && !uncheckAll.checked && !checkAll.checked){
-								uncheckAll.checked = true;
-							}
-						}
-
-						checkAll.addEventListener('click', toggleAll);
-						uncheckAll.addEventListener('click', toggleAll);
-
-						for(var i = 0; i < checkArray.length; i++){
-								checkArray[i].addEventListener('input', syncCheckbox);
-						}
-
-						function syncCheckbox(){
-
-							var checkedBoxesCount = 0;
-
-							for(var i = 0; i < checkArray.length; i++){
-
-								if(checkArray[i].checked === false){
-									checkAll.checked = false;
-									checkedBoxesCount === 0 ? uncheckAll.checked = true : undefined;
-
-								}else{
-									checkedBoxesCount++;
-									checkedBoxesCount === checkArray.length ? checkAll.checked = true : undefined;
-									uncheckAll.checked = false;
-								}
-							}
-						}
-
-						submit.addEventListener('click', customizeSharerbox);
-
-						function customizeSharerbox(){
-
-							var sNetworksList = '';
-							var behavior;
-							var position;
-							var visibility;
-							var color = colorInput.value;
-							var buttonsIconsize = buttonsSizeInput.value;
-
-							for(var i = 0; i < checkArray.length; i++){
-								checkArray[i].checked ? sNetworksList = sNetworksList.concat(`${checkArray[i].value} `) : undefined;
-							}
-
-							for(var i = 0; i < 2; i++){
-								behaviorRadioInput[i].checked ? behavior = behaviorRadioInput[i].value : undefined;
-								positionRadioInput[i].checked ? position = positionRadioInput[i].value : undefined;
-								visibilityRadioInput[i].checked ? visibility = visibilityRadioInput[i].value : undefined;
-							}
-							sharerboxIcons(sNetworksList, buttonsIconsize);
-							sharerSetup(behavior, position, color, visibility);
-
-							toggableCodeWrapper.innerHTML = `<pre class="code-snippet">
-&lt;<span class="html-tag">script</span>&gt;
-	<span class="method">window</span>.<span class="old-listener">onload</span> <span class="operator">=</span> <span class="function">function</span>(){
-
-		<span class="code-comment">// Buttons list: 'site1, site2, site3...'</span>
-		<span class="code-comment">// Buttons size: number</span>
-		<span class="function-call">sharerboxIcons</span>( <span class="code-quotes">'${sNetworksList.trim()}'</span>, <span class="boolean">${buttonsIconsize}</span> );
-
-		<span class="code-comment">// Setup arguments: Behavior, Position, Color, Visibility, Description</span>
-		<span class="function-call">sharerSetup</span>( <span class="code-quotes">'${behavior}'</span>, <span class="code-quotes">'${position}'</span>, <span class="code-quotes">'${color}'</span>, <span class="code-quotes">${visibility}</span>, <span class="code-quotes">'custom message or description goes here (optional)'</span> );
-	};
-&lt;/<span class="html-tag">script</span>&gt;
-</pre>
-<button style="display: block; margin: auto; margin-right: 1rem;" onclick="copyCodeSnippet()">Copy code <b>&lt;/&gt;</b></button>`;
-
-						}
-						/* end of function */
-
-						var formButtonsIcons = document.getElementsByClassName('form-buttons-icon');
-						var formButtonsWrap = document.getElementById('form-buttons-wrap');
-
-						function displayButtonIcon(number){
-							formButtonsIcons[number].removeAttribute('style');
-							if(number === 0){
-								formButtonsWrap.children[1].value = 'Default';
-								formButtonsIcons[number].style.cssText = 'transition: linear 0.35s; opacity: 1; transform: rotate(360deg)';
-								setTimeout(function(){formButtonsIcons[number].style.transitionDuration = '0.1s';}, 1000);
-								setTimeout(function(){formButtonsWrap.children[1].value = 'Reset'}, 2000);
-							}else if(number === 1){
-								formButtonsWrap.children[2].value = 'Applied';
-								formButtonsIcons[number].style.cssText = 'transition: linear 0.1s; opacity: 1;';
-								setTimeout(function(){formButtonsWrap.children[2].value = 'Apply'}, 2000);
-							}
-							setTimeout(function(){formButtonsIcons[number].style.opacity = '0';}, 2000);
-							setTimeout(function(){formButtonsIcons[number].removeAttribute('style')}, 2500);
-
-							number === 1 ? toggleCodeButton.style.display = 'block' : undefined;
-						}
-
-						formButtonsWrap.children[1].onclick = function(){displayButtonIcon(0)};
-						formButtonsWrap.children[2].onclick = function(){displayButtonIcon(1)};
-					</script>
 				</section>
 				<section class="sections gradient-background">
 					<h2><img class="h2-title-img" src="./icons/package-icon.svg"> Integration</h2>
