@@ -1,4 +1,4 @@
-/*
+
 var githubBtnText = document.getElementById('github-btn-sharerbox-version-text');
 
 window.addEventListener('load', function(){
@@ -6,22 +6,21 @@ window.addEventListener('load', function(){
     var xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function(){
         if (xhr.status === 200 && xhr.readyState === 4) {
-            var responseFile = xhr.response;
-            var title = responseFile.head.getElementsByTagName('title')[0];
-            title = title.innerText.toLowerCase().replace(/[^\d\.v]+/ig, '');
+            var title = xhr.response;
+            title = new DOMParser().parseFromString(title, 'text/html');
+            title = title.getElementById('sharerbox-semantic-version-number').innerText;
+            title = `Latest: v${title.replace(/[a-z:\- ]*/ig, '')}`;
 
             githubBtnText.innerText = title;
-
-            return response;
         }
     };
 
-    xhr.responseType = 'document';
-    xhr.open('GET', 'https://github.com/AstudilloJuanF/sharerbox/releases/latest');
-    xhr.setRequestHeader('Accept', 'text/html');
+    xhr.responseType = 'text';
+    xhr.open('GET', 'https://raw.githubusercontent.com/AstudilloJuanF/sharerbox/main/README.md');
+    xhr.setRequestHeader('Accept', 'text/markdown');
     xhr.send();
 });
-*/
+
 
 
 var checkArray = document.getElementsByClassName('social-network-check');
