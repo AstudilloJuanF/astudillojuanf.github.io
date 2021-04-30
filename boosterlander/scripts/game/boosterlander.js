@@ -48,7 +48,7 @@ var scalingPercentage = 1;
 const pauseButton = document.getElementById('pause-game-button');
 const exitButton =  document.getElementById('exit-game-button');
 
-if (typeof languages === 'undefined'){
+function displayLoadingScreen(){
 
     var loadingText = function(){
         var lang = navigator.language.slice(0, 2);
@@ -83,11 +83,15 @@ if (typeof languages === 'undefined'){
     ctx.restore();
 }
 
+if (typeof languages === 'undefined'){
+    displayLoadingScreen();
+}
+
 var text, languages;
 fetch('scripts/game/languages.json').then((response)=> response.json().then((responseJSON)=>(languages = responseJSON, welcomeScreen())));
 
 // --------- Game frame resizing function ----------------------- TESTING...
-function resizeGame(){
+function resizeGame(e){
 
     var canvasImg = ctx.getImageData(0, 0, canvasW, canvasH);
 
@@ -117,6 +121,8 @@ function resizeGame(){
         canvas.height = CTX_INITIAL_Y_SCALE;
         canvas.style.margin = 'auto';
     }
+
+    e.type === 'load' ? displayLoadingScreen() : undefined;
 
         // Self-Reminder: Replace this monstruosity and redraw a previously captured ImageData frame on each call instead
             if(game.status === 'reset'){
@@ -290,6 +296,7 @@ var game = {
         model.vy = 0;
         model.legsRotation = 115;
         model.fuel = model.fuelCapacity;
+        model.update();
 
         canvas.removeEventListener('click', game.start);
 
@@ -360,7 +367,7 @@ var game = {
         stopAudio(sounds.engines);
         stopAudio(sounds.water);
 
-        pauseButton.innerText = `${text.retry}`;
+        model.status === 'landed' ? pauseButton.innerText = `${text.next}` : pauseButton.innerText = `${text.retry}`;;
 
         canvas.removeEventListener('click', game.resume);
         ctx.resetTransform();
@@ -740,6 +747,8 @@ model.update = function(){
     this.mass = gameModel.mass;
     this.status = 're-entry';
     this.engineStatus = 'off';
+    this.inclination = 0;
+    this.inclinationLimit = 15;
 };
 model.update();
 
@@ -757,69 +766,24 @@ model.draw = function(){
 
     if(gameModel.name === 'booster'){
 
-        ctx.fillRect(this.x, this.y, this.width, this.height - 5);
-        ctx.strokeRect(this.x, this.y, this.width, this.height - 5);
+        ctx.save();
+
+        ctx.translate(this.x, this.y + this.height);
+
+        this.inclination < -this.inclinationLimit ? this.inclination = -this.inclinationLimit : undefined;
+        this.inclination > this.inclinationLimit ? this.inclination = this.inclinationLimit : undefined;
+
+        ctx.rotate(Math.PI/180 * this.inclination);
+
+        ctx.fillRect(0, -this.height, this.width, this.height - 5);
+        ctx.strokeRect(0, -this.height, this.width, this.height - 5);
         ctx.fillStyle = 'black';
-        ctx.fillRect(this.x, this.y, this.width, 5);
-        ctx.fillRect(this.x - 2, this.y + 6, 2, 1);
-        ctx.fillRect(this.x + this.width/3, this.y + 6, this.width/3, 1);
-        ctx.fillRect(this.x + this.width, this.y + 6, 2, 1);
-    }
-    if(gameModel.name === 'spaceship'){
+        ctx.fillRect(0, -this.height, this.width, 5);
+        ctx.fillRect(-2, -this.height + 6, 2, 1);
+        ctx.fillRect(this.width/3, -this.height + 6, this.width/3, 1);
+        ctx.fillRect(this.width, -this.height + 6, 2, 1);
 
-        ctx.moveTo(this.x, this.y + this.height - 5);
-            // rear flaps
-            ctx.lineTo(this.x - 6, this.y + this.height - 5);
-            ctx.lineTo(this.x - 6, this.y + (this.height/5*4));
-            ctx.lineTo(this.x, this.y + (this.height/8*5.5));
-            ctx.lineTo(this.x + this.width, this.y + (this.height/8*5.5));
-            ctx.lineTo(this.x + this.width + 6, this.y + (this.height/5*4));
-            ctx.lineTo(this.x + this.width + 6, this.y + this.height - 5);
-            ctx.lineTo(this.x, this.y + this.height - 5);
-        ctx.moveTo(this.x, this.y + this.height - 5);
-        ctx.lineTo(this.x, this.y + (this.height/4));
-            // nose cone flaps
-            ctx.lineTo(this.x - 4.5, this.y + (this.height/4));
-            ctx.lineTo(this.x - 4.5, this.y + (this.height/4) - 4.5);
-            ctx.lineTo(this.x + (this.width/2) - 1,  this.y - 1);
-            ctx.quadraticCurveTo(this.x + (this.width/2), this.y, this.x + (this.width/2) + 1,  this.y - 1);
-            ctx.lineTo(this.x + this.width + 4.5, this.y + (this.height/4) - 4.5);
-            ctx.lineTo(this.x + this.width + 4.5, this.y + (this.height/4));
-        ctx.lineTo(this.x, this.y + (this.height/4));
-        ctx.quadraticCurveTo(this.x, this.y + (this.height/6), this.x + (this.width/2) - 1, this.y - 1);
-        ctx.quadraticCurveTo(this.x + (this.width/2), this.y, this.x + (this.width/2) + 1,  this.y - 1);
-        ctx.quadraticCurveTo(this.x + this.width, this.y + (this.height/6), this.x + this.width, this.y + (this.height/4));
-        ctx.lineTo(this.x + this.width, this.y + this.height -5);
-        
-    }
-
-    ctx.closePath();
-
-    ctx.fill();
-    gameModel.name === 'spaceship' ? ctx.stroke() : undefined;
-
-
-    // Draws rocket legs when a given altitude is reached
-    if(gameModel.name === 'booster'){
-        if(game.graphics === 'low'){
-            ctx.fillRect(this.x, this.y + this.height - 5 - this.legsLength, this.width, this.legsLength);
-            if(this.y + this.height >= canvasH - 100){
-                ctx.beginPath();
-                ctx.fillStyle = this.legsColor;
-                ctx.moveTo(this.x, this.y + this.height - 7);
-                ctx.lineTo(this.x - this.legsLength, this.y + this.height);
-                ctx.lineTo(this.x, this.y + this.height - 5);
-                ctx.moveTo(this.x + this.width/3, this.y + this.height - 5);
-                ctx.lineTo(this.x + this.width/2, this.y + this.height);
-                ctx.lineTo(this.x + this.width/3*2, this.y + this.height - 5);
-                ctx.moveTo(this.x + this.width, this.y + this.height - 5);
-                ctx.lineTo(this.x + this.width + this.legsLength, this.y + this.height);
-                ctx.lineTo(this.x + this.width, this.y + this.height - 7);
-                ctx.closePath();
-                ctx.fill();
-                ctx.stroke();
-            }
-        }else{
+            // draw legs
 
             var leftLeg = new Path2D();
             var rightLeg = new Path2D();
@@ -846,9 +810,9 @@ model.draw = function(){
 
             ctx.fillStyle = 'black';
 
-            ctx.fillRect(this.x, this.y + this.height - 7, this.width, 3);
+            ctx.fillRect(0, -7, this.width, 3);
 
-            ctx.translate(this.x, this.y + (this.height - 5));
+            ctx.translate(0, -5);
             leftLeg.moveTo(0, 0);
             leftLeg.lineTo(-this.legsLength, 5);
             leftLeg.lineTo(0, -3);
@@ -859,7 +823,7 @@ model.draw = function(){
 
             ctx.fillStyle = 'black';
 
-            ctx.translate(this.x + this.width, this.y + (this.height - 5));
+            ctx.translate(this.width, -5);
             rightLeg.moveTo(0, 0);
             rightLeg.lineTo(this.legsLength, 5);
             rightLeg.lineTo(0, -3);
@@ -867,23 +831,69 @@ model.draw = function(){
             ctx.fill(rightLeg);
             ctx.resetTransform();
             ctx.restore();
-        }
-    }else if (gameModel.name === 'spaceship'){
 
+        ctx.resetTransform();
+
+        ctx.restore();
+
+
+    }
+    if(gameModel.name === 'spaceship'){
+
+        ctx.save();
+
+        ctx.translate(this.x, this.y + this.height);
+        ctx.rotate(Math.PI/180 * this.inclination);
+
+        ctx.moveTo(0, -5);
+            // rear wings
+            ctx.lineTo(0 - 6, -this.height + this.height - 5);
+            ctx.lineTo(0 - 6, -this.height + (this.height/5*4));
+            ctx.lineTo(0, -this.height + (this.height/8*5.5));
+            ctx.lineTo(0 + this.width, -this.height + (this.height/8*5.5));
+            ctx.lineTo(0 + this.width + 6, -this.height + (this.height/5*4));
+            ctx.lineTo(0 + this.width + 6, -this.height + this.height - 5);
+            ctx.lineTo(0, -this.height + this.height - 5);
+        ctx.moveTo(0, -this.height + this.height - 5);
+        ctx.lineTo(0, -this.height + (this.height/4));
+            // nose cone wings
+            ctx.lineTo(0 - 4.5, -this.height + (this.height/4));
+            ctx.lineTo(0 - 4.5, -this.height + (this.height/4) - 4.5);
+            ctx.lineTo(0 + (this.width/2) - 1,  -this.height - 1);
+            ctx.quadraticCurveTo(0 + (this.width/2), -this.height, 0 + (this.width/2) + 1,  -this.height - 1);
+            ctx.lineTo(0 + this.width + 4.5, -this.height + (this.height/4) - 4.5);
+            ctx.lineTo(0 + this.width + 4.5, -this.height + (this.height/4));
+        ctx.lineTo(0, -this.height + (this.height/4));
+        ctx.quadraticCurveTo(0, -this.height + (this.height/6), 0 + (this.width/2) - 1, -this.height - 1);
+        ctx.quadraticCurveTo(0 + (this.width/2), -this.height, 0 + (this.width/2) + 1,  -this.height - 1);
+        ctx.quadraticCurveTo(0 + this.width, -this.height + (this.height/6), 0 + this.width, -this.height + (this.height/4));
+        ctx.lineTo(0 + this.width, -this.height + this.height -5);
+
+        // Draws rocket legs when a given altitude is reached
         if(this.y + this.height >= canvasH - 100){
             gameModel.legsExtension  < 5 ? gameModel.legsExtension += 1/fps : gameModel.legsExtension = 5;
 
             ctx.fillStyle = gameModel.color;
-            ctx.fillRect(this.x - 1, this.y + this.height - 5, 3, gameModel.legsExtension);
-            ctx.strokeRect(this.x - 1, this.y + this.height - 5, 3, gameModel.legsExtension);
-            ctx.fillRect(this.x + (this.width/2) - 1, this.y + this.height - 5, 3, gameModel.legsExtension);
-            ctx.strokeRect(this.x + (this.width/2) - 1, this.y + this.height - 5, 3, gameModel.legsExtension);
-            ctx.fillRect(this.x + this.width - 2, this.y + this.height - 5, 3, gameModel.legsExtension);
-            ctx.strokeRect(this.x + this.width - 2, this.y + this.height - 5, 3, gameModel.legsExtension);
+            ctx.fillRect(0 - 1, -5, 3, gameModel.legsExtension);
+            ctx.strokeRect(0 - 1, -5, 3, gameModel.legsExtension);
+            ctx.fillRect(0 + (this.width/2) - 1, -5, 3, gameModel.legsExtension);
+            ctx.strokeRect(0 + (this.width/2) - 1, -5, 3, gameModel.legsExtension);
+            ctx.fillRect(0 + this.width - 2, -5, 3, gameModel.legsExtension);
+            ctx.strokeRect(0 + this.width - 2, -5, 3, gameModel.legsExtension);
         }else{
             gameModel.legsExtension  > 0 ? gameModel.legsExtension -= 1/fps : gameModel.legsExtension = 0;
         }
+
+
+        ctx.resetTransform();
+        ctx.restore();
+        
     }
+
+    ctx.closePath();
+
+    ctx.fill();
+    gameModel.name === 'spaceship' ? ctx.stroke() : undefined;
 
     if(model.status === 'crashed'){
 
@@ -1410,6 +1420,7 @@ function gameInput(e){
                     model.vy += -model.vy / 40;
                     engines.drawMain();
                     model.fuel -= 500;
+                    model.inclination < 0 ? model.inclination += 0.5 : model.inclination > 0 ? model.inclination -= 0.5 : undefined;
                 }
 
                 if(e.code === 'KeyL' || e.code === 'Space'){
@@ -1420,6 +1431,7 @@ function gameInput(e){
                     model.vy += -model.vy / 20;
                     model.vx += -model.vx / 100;
                     model.fuel -= 1000;
+                    model.inclination < 0 ? model.inclination += 0.5 : model.inclination > 0 ? model.inclination -= 0.5 : undefined;
                 }
 
                 if(e.code === 'KeyA'){
@@ -1427,24 +1439,28 @@ function gameInput(e){
                     model.vx -= 0.5;
                     model.vy += -model.vy / 80;
                     model.fuel -= 250;
+                    model.inclination += 0.5;
                 }
                 if(e.code === 'KeyD'){
                     engines.drawLeft();
                     model.vx += 0.5;
                     model.vy += -model.vy / 80;
                     model.fuel -= 250;
+                    model.inclination -= 0.5;
                 }
                 if(Math.sign(e.movementX) === -1){
                     engines.drawRight();
                     model.vx -= 0.5;
                     model.vy += -model.vy / 80;
                     model.fuel -= 250;
+                    model.inclination += 0.5;
                 }
                 if(Math.sign(e.movementX) === 1){
                     engines.drawLeft();
                     model.vx += 0.5;
                     model.vy += -model.vy / 80;
                     model.fuel -= 250;
+                    model.inclination -= 0.5;
                 }
 
                 if(e.movementY < -5){
@@ -1455,6 +1471,7 @@ function gameInput(e){
                     navigator.platform.match(/win|linux|mac/ig) ? model.vy += -model.vy / 10 : model.vy = 0;
                     model.vx += -model.vx / 100;
                     model.fuel -= 1000;
+                    model.inclination < 0 ? model.inclination += 0.5 : model.inclination > 0 ? model.inclination -= 0.5 : undefined;
 
                 }else if(e.movementY < 0){
                     engines.drawMain();
