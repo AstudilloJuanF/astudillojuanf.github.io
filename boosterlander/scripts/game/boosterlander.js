@@ -167,6 +167,9 @@ var spanishLangBtn = new Path2D();
 var englishLangBtn = new Path2D();
 var germanLangBtn = new Path2D();
 var japaneseLangBtn = new Path2D();
+var menuModelLeftArrow = new Path2D();
+var menuModelRightArrow = new Path2D();
+var spacecraftSelectorBtn = new Path2D();
 
 var landingPlatform = new Path2D();
 
@@ -252,10 +255,41 @@ var cronometer = {
     }
 }
 
+var spaceShip = {
+    name: 'spaceship',
+    color: 'silver',
+    stroke: 'rgba(0,0,0, 0.5)',
+    legsLength: 3,
+    fuelCapacity: 500000,
+    fuel: 500000,
+    width: 9.1440,
+    height: 71.9328 + 5,
+    legsExtension: 0,
+    mass: undefined
+};
+
+var booster = {
+    name: 'booster',
+    color: 'white',
+    stroke: 'rgba(0,0,0, 0.25)',
+    legsLength: 3.6576 * 3,
+    legsRotation: 115,
+    fuelCapacity: 245620,
+    fuel: 245620,
+    width: 3.6576,
+    height: 70.1040 + 5,
+    mass: 549054
+};
+
+// rocket object
+var gameModel = booster;
+
+// Game object and methods
 var game = {
     language: 'en',
     langInt: 1,
     langArray: ['es', 'en', 'de', 'ja'],
+    currentSpacecraft: gameModel,
     status: 'reset',
     graphics: 'medium',
     difficulty: undefined,
@@ -296,7 +330,7 @@ var game = {
         model.vy = 0;
         model.legsRotation = 115;
         model.fuel = model.fuelCapacity;
-        model.update();
+        model.update(game.currentSpacecraft);
 
         canvas.removeEventListener('click', game.start);
 
@@ -692,41 +726,49 @@ var menu = {
     },
     settings: function(){
 
+        this.current = 'settings';
+        toggleExitButton();
+
+        ctx.save();
+        this.drawBackground();
+
+        ctx.fillStyle = 'white';
+        ctx.font = '40px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText(text.settings, canvasW/8*6, canvasH/8);
+
+        ctx.font = '30px sans-serif';
+        ctx.fillText(text.spacecraft, canvasW/8*6, canvasH/8*2);
+
+        spacecraftSelectorBtn = new Path2D();
+
+        spacecraftSelectorBtn.rect(canvasW/8*6 - 100, canvasH/8*3 - 30, 200, 50);
+
+        menuModelLeftArrow = new Path2D();
+        menuModelLeftArrow.moveTo(canvasW/8*6 - 110, canvasH/8*3 - 30);
+        menuModelLeftArrow.lineTo(canvasW/8*6 - 110, canvasH/8*3 + 10);
+        menuModelLeftArrow.lineTo(canvasW/8*6 - 130, canvasH/8*3 - 10);
+        ctx.fill(menuModelLeftArrow);
+
+        menuModelRightArrow = new Path2D();
+        menuModelRightArrow.moveTo(canvasW/8*6 + 110, canvasH/8*3 - 30);
+        menuModelRightArrow.lineTo(canvasW/8*6 + 110, canvasH/8*3 + 10);
+        menuModelRightArrow.lineTo(canvasW/8*6 + 130, canvasH/8*3 - 10);
+        ctx.fill(menuModelRightArrow);
+
+        ctx.fillText(game.currentSpacecraft.name, canvasW/8*6, canvasH/8*3);
+
+        ctx.restore();
     }
 };
 
-var spaceShip = {
-    name: 'spaceship',
-    color: 'silver',
-    stroke: 'rgba(0,0,0, 0.5)',
-    legsLength: 3,
-    fuelCapacity: 500000,
-    fuel: 500000,
-    width: 9.1440,
-    height: 71.9328 + 5,
-    legsExtension: 0,
-    mass: undefined
-};
-
-var booster = {
-    name: 'booster',
-    color: 'white',
-    stroke: 'rgba(0,0,0, 0.25)',
-    legsLength: 3.6576 * 3,
-    legsRotation: 115,
-    fuelCapacity: 245620,
-    fuel: 245620,
-    width: 3.6576,
-    height: 70.1040 + 5,
-    mass: 549054
-};
-
-var gameModel = booster;
-
-// rocket object
 var model = new PhysicalObject(canvasW / 2, 0, gameModel.width, gameModel.height, undefined, 0, 0, gameModel.mass);
 
-model.update = function(){
+model.update = function(spacecraftModel = booster){
+
+    gameModel = spacecraftModel;
+
+    game.currentSpacecraft = gameModel;
     
     this.name = gameModel.name;
     this.color = gameModel.color;
@@ -970,7 +1012,7 @@ platform.draw = function(){
     // Ground FX from propellant
     if(game.graphics !== 'low'){
 
-        if(engines.status === 'on' && (model.y + model.height + 25) >= platform.y - 40){
+        if(engines.status === 'on' && (model.y + model.height*2) >= platform.y - 40){
 
             var groundFXCenter, groundFXColor;
 
@@ -1100,7 +1142,11 @@ var engines = {
 
         this.status = 'on';
 
-        var mainEngineGrad = ctx.createLinearGradient(model.x + model.width/2, model.y + model.height, model.x + model.width/2, model.y + model.height*2);
+        ctx.save();
+        ctx.translate(model.x, model.y + model.height);
+        ctx.rotate(Math.PI/180 * model.inclination);
+
+        var mainEngineGrad = ctx.createLinearGradient(model.width/2, 0, model.width/2, model.height);
 
         mainEngineGrad.addColorStop(0,'rgba(255,255,255, 0.8)');
         mainEngineGrad.addColorStop(0.5,'rgba(255,255,128, 0.8)');
@@ -1108,26 +1154,29 @@ var engines = {
 
         ctx.fillStyle = mainEngineGrad;
 
-        var boosterBase = model.y + model.height;
         var fireTail = function(val){
 
-            var boosterExhaust = boosterBase + val;
+            var boosterExhaust = model.height + val;
+            var boosterBase = model.y + model.height + val;
             var tail = boosterExhaust;
 
-            if(model.x >= platform.x && model.x + model.width <= platform.x + platform.width && boosterExhaust >= platform.y){
-                tail = platform.y;
+            if(model.x >= platform.x && model.x + model.width <= platform.x + platform.width && boosterBase + model.height >= platform.y){
+                tail = platform.y - model.y - model.height;
             }
 
             return tail;
         };
 
         mainEngineExhaust = new Path2D();
-        mainEngineExhaust.moveTo(model.x + model.width/5, model.y + model.height - 5)
-        mainEngineExhaust.quadraticCurveTo(model.x, fireTail(25), model.x + model.width/2, fireTail(50));
-        mainEngineExhaust.quadraticCurveTo(model.x + model.width, fireTail(25), model.x + model.width/5*4, model.y + model.height);
-        mainEngineExhaust.lineTo(model.x + model.width/5*4, model.y + model.height - 5);
+        mainEngineExhaust.moveTo(model.width/5, -5)
+        mainEngineExhaust.quadraticCurveTo(0, fireTail(5), model.width/2, fireTail(0));
+        mainEngineExhaust.quadraticCurveTo(model.width, fireTail(5), model.width/5*4, -5);
+        mainEngineExhaust.lineTo(model.width/5*4, -5);
         mainEngineExhaust.closePath();
         ctx.fill(mainEngineExhaust);
+
+        ctx.resetTransform();
+        ctx.restore();
     }
 }
 
@@ -1143,6 +1192,11 @@ function physics(g = 9.80665){
 
         ctx.resetTransform();
 
+        if (Math.abs(model.vx*60) < 17.5){
+            model.inclination < 0 ? model.inclination += 0.0625 : undefined;
+            model.inclination > 0 ? model.inclination -= 0.0625 : undefined;
+        }
+
         model.vx = (Math.sign(model.vx) * Math.abs(model.vx)) * 0.98;
         Math.abs(model.vx) > 0.001 ? model.x += model.vx : model.vx = 0;
 
@@ -1153,15 +1207,12 @@ function physics(g = 9.80665){
 
         if(model.y + model.height >= canvasH || ctx.isPointInPath(landingPlatform, model.x + model.width/2, model.y + model.height)){
             if(Math.abs(model.vy) > 0.2){
+                
                 model.status = 'crashed';
-            }/*else{
-                if(ctx.isPointInPath(landingPlatform, model.x - model.legsLength, model.y + model.height) && ctx.isPointInPath(landingPlatform, model.x + model.width + model.legsLength, model.y + model.height)){
-                    model.legsRotation === 1 ? model.status = 'landed' : model.status = 'crashed';
-                }else{
-                    model.status = 'missed target';
-                }
-            }*/else{
+            } else {
+                
                 if(model.x - model.legsLength >= platform.x && model.x + model.width + model.legsLength <= platform.x + platform.width && model.y + model.height >= platform.y){
+                    
                     if(model.name === 'booster'){
                         model.legsRotation === 1 ? model.status = 'landed' : model.status = 'crashed';
                     } else if(model.name === 'spaceship'){
@@ -1189,6 +1240,9 @@ function physics(g = 9.80665){
         }
 
         model.status !== 'reset' ? model.draw() : undefined;
+
+        model.x < 0 ? model.x = 0 : undefined;
+        model.x + model.width > canvasW ? model.x = canvasW - model.width : undefined;
 
     }, 1000/fps);
 }
@@ -1359,28 +1413,32 @@ function welcomeScreen(){
     ctx.fillText('Booster Lander', canvasW/20*11, canvasH/8);
     ctx.font = '50px sans-serif';
     ctx.fillStyle = 'lawngreen';
-    ctx.fillText(text.start, canvasW/10*6, canvasH/6*2);
+    ctx.fillText(text.start, canvasW/10*6, canvasH/7*2);
     ctx.fillStyle = 'darkgray';
-    ctx.fillText(text.instructions, canvasW/10*6, canvasH/6*3);
-    ctx.fillText(text.language, canvasW/10*6, canvasH/6*4);
-    ctx.fillText(text.controls, canvasW/10*6, canvasH/6*5);
+    ctx.fillText(text.instructions, canvasW/10*6, canvasH/7*3);
+    ctx.fillText(text.language, canvasW/10*6, canvasH/7*4);
+    ctx.fillText(text.controls, canvasW/10*6, canvasH/7*5);
+    ctx.fillText(text.settings, canvasW/10*6, canvasH/7*6);
 
     startGameBtn = new Path2D();
     menuControlsBtn = new Path2D();
     menuInstructionsBtn = new Path2D();
     menuLangBtn = new Path2D();
+    menuSettingsBtn = new Path2D();
 
     ctx.strokeStyle = 'red';
     ctx.strokeRect(canvasW/20*11 - 1, canvasH/8 - 1, canvasW, 65);
     ctx.strokeStyle = 'white';
 
-    startGameBtn.rect(canvasW/10*6 - 1, canvasH/6*2 - 1, ctx.measureText(text.start).width, 50);
+    startGameBtn.rect(canvasW/10*6 - 1, canvasH/7*2 - 1, ctx.measureText(text.start).width, 50);
 
-    menuInstructionsBtn.rect(canvasW/10*6 - 1, canvasH/6*3 - 1, ctx.measureText(text.instructions).width, 50);
+    menuInstructionsBtn.rect(canvasW/10*6 - 1, canvasH/7*3 - 1, ctx.measureText(text.instructions).width, 50);
 
-    menuLangBtn.rect(canvasW/10*6 - 1, canvasH/6*4 - 1, ctx.measureText(text.language).width, 50);
+    menuLangBtn.rect(canvasW/10*6 - 1, canvasH/7*4 - 1, ctx.measureText(text.language).width, 50);
 
-    menuControlsBtn.rect(canvasW/10*6 - 1, canvasH/6*5 - 1, ctx.measureText(text.controls).width, 50);
+    menuControlsBtn.rect(canvasW/10*6 - 1, canvasH/7*5 - 1, ctx.measureText(text.controls).width, 50);
+
+    menuSettingsBtn.rect(canvasW/10*6 - 1, canvasH/7*6 - 1, ctx.measureText(text.settings).width, 50);
 
     ctx.font = '15px sans-serif';
     ctx.fillStyle = 'gray';
@@ -1439,28 +1497,28 @@ function gameInput(e){
                     model.vx -= 0.5;
                     model.vy += -model.vy / 80;
                     model.fuel -= 250;
-                    model.inclination += 0.5;
+                    model.inclination < model.inclinationLimit ? model.inclination += 0.5 : undefined;
                 }
                 if(e.code === 'KeyD'){
                     engines.drawLeft();
                     model.vx += 0.5;
                     model.vy += -model.vy / 80;
                     model.fuel -= 250;
-                    model.inclination -= 0.5;
+                    model.inclination > -model.inclinationLimit ? model.inclination -= 0.5 : undefined;
                 }
                 if(Math.sign(e.movementX) === -1){
                     engines.drawRight();
                     model.vx -= 0.5;
                     model.vy += -model.vy / 80;
                     model.fuel -= 250;
-                    model.inclination += 0.5;
+                    model.inclination < model.inclinationLimit ? model.inclination += 0.5 : undefined;
                 }
                 if(Math.sign(e.movementX) === 1){
                     engines.drawLeft();
                     model.vx += 0.5;
                     model.vy += -model.vy / 80;
                     model.fuel -= 250;
-                    model.inclination -= 0.5;
+                    model.inclination > -model.inclinationLimit ? model.inclination -= 0.5 : undefined;
                 }
 
                 if(e.movementY < -5){
@@ -1542,6 +1600,10 @@ function menuInput(e){
             if(ctx.isPointInPath(menuLangBtn, eX, eY)){
                 menu.language();
             }
+
+            if(ctx.isPointInPath(menuSettingsBtn, eX, eY)){
+                menu.settings();
+            }
         }
     }
 
@@ -1562,6 +1624,15 @@ function menuInput(e){
 
         game.language = game.langArray[game.langInt];
         menu.language();
+    }
+
+    if(menu.current === 'settings'){
+        if(ctx.isPointInPath(spacecraftSelectorBtn, eX, eY) || ctx.isPointInPath(menuModelRightArrow, eX, eY) || ctx.isPointInPath(menuModelLeftArrow, eX, eY)){
+
+            gameModel === booster ? model.update(spaceShip) : model.update(booster); 
+
+        }
+        menu.settings();
     }
 
     if(e.code === 'Escape' || e.code === 'Backspace'){
