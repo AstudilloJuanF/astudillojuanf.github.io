@@ -1630,9 +1630,8 @@ function menuInput(e){
         if(ctx.isPointInPath(spacecraftSelectorBtn, eX, eY) || ctx.isPointInPath(menuModelRightArrow, eX, eY) || ctx.isPointInPath(menuModelLeftArrow, eX, eY)){
 
             gameModel === booster ? model.update(spaceShip) : model.update(booster); 
-
+            menu.settings();
         }
-        menu.settings();
     }
 
     if(e.code === 'Escape' || e.code === 'Backspace'){
