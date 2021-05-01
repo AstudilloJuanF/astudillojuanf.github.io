@@ -29,7 +29,7 @@ function focusGameFrame(){
 canvas.addEventListener('touchstart', focusGameFrame);
 canvas.addEventListener('pointerover', focusGameFrame);
 canvas.addEventListener('pointermove', focusGameFrame);
-window.addEventListener('deviceorientation', focusGameFrame);
+screen.orientation.addEventListener('change', focusGameFrame);
 
 ctx.imageSmoothingEnabled = false;
 
@@ -151,7 +151,7 @@ function resizeGame(e){
 
 window.addEventListener('load', resizeGame);
 window.addEventListener('resize', resizeGame);
-window.addEventListener('deviceorientation', resizeGame);
+screen.orientation.addEventListener('change', resizeGame);
 
 // -------------------------------------------------------
 
