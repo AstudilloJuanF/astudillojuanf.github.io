@@ -139,6 +139,9 @@ function resizeGame(e){
                     case 'controls':
                         menu.controls();
                     break;
+                    case 'settings':
+                        menu.settings();
+                    break;
                 }
             }else{
                 if(game.status === 'paused'){
