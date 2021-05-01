@@ -88,6 +88,7 @@ if (typeof languages === 'undefined'){
 }
 
 var text, languages;
+
 fetch('scripts/game/languages.json').then((response)=> response.json().then((responseJSON)=>(languages = responseJSON, welcomeScreen())));
 
 // --------- Game frame resizing function ----------------------- TESTING...
