@@ -181,6 +181,12 @@ var lEngineExhaust = new Path2D();
 var rEngineExhaust = new Path2D();
 var mainEngineExhaust = new Path2D();
 
+// animation frames per second
+if(navigator.platform.match(/win/ig)){
+    var fps = 1000;
+}else{
+    var fps = 60;
+}
 
 // Pending: To convert loose physical objects into class objects in order to organize the code and handle physics better
 class PhysicalObject {
@@ -197,17 +203,53 @@ class PhysicalObject {
 };
 
 var meteoriteRock;
-var meteorite = new PhysicalObject(Math.random() * canvasW, 0, undefined, undefined, 5, 60, 180, undefined);
+var meteorite = new PhysicalObject(Math.random() * canvasW, 0, undefined, undefined, 5, 60, 178.816, undefined);
 meteorite.draw = function(){
+
+    if (meteorite.y === 0){
+        sounds.meteorite.play();
+        meteorite.x = Math.random()*canvasW;
+        meteorite.x <= canvasW/2 ? meteorite.vx = Math.random() * 10 : meteorite.vx = Math.random() * -10;
+        meteorite.y += meteorite.vy/fps;
+    }
+
+    meteorite.x += meteorite.vx;
+    meteorite.y + meteorite.radius < canvasH ? meteorite.y += meteorite.vy/fps : (stopAudio(sounds.meteorite), meteorite.y = 0);
+    meteorite.x + meteorite.radius <= 0 || meteorite.x + meteorite.radius >= canvasW ? (stopAudio(sounds.meteorite), meteorite.y = 0) : undefined;
+
+    var meteoriteHalo = ctx.createRadialGradient(meteorite.x, meteorite.y, meteorite.radius/2, meteorite.x, meteorite.y, meteorite.radius*2);
+    meteoriteHalo.addColorStop(0, 'white');
+    meteoriteHalo.addColorStop(0.5, 'rgba(255,255,255, 0.25)');
+    meteoriteHalo.addColorStop(1, 'rgba(255,255,255, 0)');
+
+    var meteoriteTrailGradient = ctx.createLinearGradient(meteorite.x, meteorite.y,meteorite.x - meteorite.vx*fps, meteorite.y - meteorite.vy);
+    meteoriteTrailGradient.addColorStop(0, 'rgba(255,255,255, 0.75)');
+    meteoriteTrailGradient.addColorStop(0.25, 'rgba(0,255,255, 0.5)');
+    meteoriteTrailGradient.addColorStop(0.50, 'rgba(255,255,255, 0.25)');
+    meteoriteTrailGradient.addColorStop(0.75, 'rgba(255,255,0, 0.25)');
+    meteoriteTrailGradient.addColorStop(1, 'rgba(255,255,0, 0.125)');
+
     ctx.save();
+
+    var meteoriteTrail = new Path2D();
+
+    ctx.fillStyle = meteoriteTrailGradient;
+    meteoriteTrail.moveTo(meteorite.x - meteorite.radius, meteorite.y);
+    meteoriteTrail.lineTo(meteorite.x - meteorite.vx*fps, meteorite.y - meteorite.vy);
+    meteoriteTrail.lineTo(meteorite.x + meteorite.radius, meteorite.y);
+    ctx.fill(meteoriteTrail);
+
     meteoriteRock = new Path2D();
-    meteoriteRock.arc(meteorite.x, meteorite.y, meteorite.radius, 0, Math.PI*2);
-    ctx.fillStyle = 'orange';
+    meteoriteRock.arc(meteorite.x, meteorite.y, meteorite.radius*2, 0, Math.PI*2);
+    ctx.fillStyle = meteoriteHalo;
     ctx.fill(meteoriteRock);
+    
     ctx.restore();
 };
 
 var sounds = {
+    menuBlip: new Audio('sounds/blip.mp3'),
+    meteorite: new Audio('sounds/meteor-swoosh.mp3'),
     engines: new Audio('sounds/rumble.mp3'),
     water: new Audio('sounds/water.mp3'),
     explosion: new Audio('sounds/explosion.mp3')
@@ -216,13 +258,6 @@ var sounds = {
 function stopAudio(element){
     element.pause();
     element.currentTime = 0;
-}
-
-// animation frames per second
-if(navigator.platform.match(/win/ig)){
-    var fps = 1000;
-}else{
-    var fps = 60;
 }
 
 // cronometer object and methods
@@ -1208,6 +1243,12 @@ function physics(g = 9.80665){
 
         model.y += model.vy;
 
+        if(game.sky === 'night'){
+            if(Math.abs(meteorite.y - model.y) < model.height && Math.abs(meteorite.x - model.x) < model.width){
+                model.status = 'crashed';
+            };
+        }
+
 
         if(model.y + model.height >= canvasH || ctx.isPointInPath(landingPlatform, model.x + model.width/2, model.y + model.height)){
             if(Math.abs(model.vy) > 0.2){
@@ -1240,10 +1281,10 @@ function physics(g = 9.80665){
 
         if(model.status === 'landed' || model.status === 'missed target' || model.status === 'crashed' || game.status === 'over' || game.status === 'reset'){
                 clearInterval(physicsInterval.valueOf());
-                //clearInterval(scenarioInterval.valueOf());
         }
 
         model.status !== 'reset' ? model.draw() : undefined;
+        game.status != 'over' && model.status.match(/re-entry|crashed/) && game.sky === 'night' ? meteorite.draw() : undefined;
 
         model.x < 0 ? model.x = 0 : undefined;
         model.x + model.width > canvasW ? model.x = canvasW - model.width : undefined;
@@ -1404,6 +1445,10 @@ function welcomeScreen(){
     canvas.removeEventListener('pointermove', gameInput);
     canvas.removeEventListener('click', game.resume);
 
+    stopAudio(sounds.explosion);
+    stopAudio(sounds.engines);
+    stopAudio(sounds.water);
+
     clear();
 
     ctx.save();
@@ -1476,7 +1521,7 @@ function gameInput(e){
 
         var reEntryBoosterThrust = EARTH_GRAVITY/fps;
 
-        if(game.status === 'started'){
+        if(game.status === 'started' && model.status != 'crashed'){
             if(model.fuel > 0){
                 if(e.code === 'KeyW'){
                     model.vy += -model.vy / 40;
@@ -1582,30 +1627,40 @@ function menuInput(e){
     if(game.status === 'started' || game.status === 'reset'){
         if(menu.current === 'welcome' || menu.current === 'instructions'){
             if(ctx.isPointInPath(menuControlsBtn, eX, eY)){
+                sounds.menuBlip.play();
                 menu.controls();
             }
         }
 
         if(game.status === 'reset' && menu.current != 'welcome'){
-            ctx.isPointInPath(menuBackgroundTouchArea, eX, eY) ? welcomeScreen() : undefined;
+            if (ctx.isPointInPath(menuBackgroundTouchArea, eX, eY)){
+                sounds.menuBlip.play();
+                welcomeScreen();
+            }
         }
 
         if(menu.current === 'welcome'){
             if(ctx.isPointInPath(startGameBtn, eX, eY)){
+
+                sounds.menuBlip.play();
+
                 game.start();
                 canvas.removeEventListener('click', menuInput);
                 document.removeEventListener('keydown', menuInput);
             }
 
             if(ctx.isPointInPath(menuInstructionsBtn, eX, eY)){
+                sounds.menuBlip.play();
                 menu.instructions();
             }
 
             if(ctx.isPointInPath(menuLangBtn, eX, eY)){
+                sounds.menuBlip.play();
                 menu.language();
             }
 
             if(ctx.isPointInPath(menuSettingsBtn, eX, eY)){
+                sounds.menuBlip.play();
                 menu.settings();
             }
         }
@@ -1613,18 +1668,19 @@ function menuInput(e){
 
     if(menu.current === 'language'){
         if(ctx.isPointInPath(langSelectorBtn, eX, eY) || ctx.isPointInPath(menuLangRightArrow, eX, eY)){
-
+            
+            sounds.menuBlip.play();
             game.langInt < game.langArray.length - 1 ? game.langInt++ : game.langInt = 0;
 
         }else if(ctx.isPointInPath(menuLangLeftArrow, eX, eY)){
-
+            sounds.menuBlip.play();
             game.langInt > 0 ? game.langInt-- : game.langInt = game.langArray.length - 1;
         }
 
-        ctx.isPointInPath(spanishLangBtn, eX, eY) ? game.langInt = game.langArray.indexOf('es') : undefined;
-        ctx.isPointInPath(englishLangBtn, eX, eY) ? game.langInt = game.langArray.indexOf('en') : undefined;
-        ctx.isPointInPath(germanLangBtn, eX, eY) ? game.langInt = game.langArray.indexOf('de') : undefined;
-        ctx.isPointInPath(japaneseLangBtn, eX, eY) ? game.langInt = game.langArray.indexOf('ja') : undefined;
+        ctx.isPointInPath(spanishLangBtn, eX, eY) ? (game.langInt = game.langArray.indexOf('es'), sounds.menuBlip.play()) : undefined;
+        ctx.isPointInPath(englishLangBtn, eX, eY) ? (game.langInt = game.langArray.indexOf('en'), sounds.menuBlip.play()) : undefined;
+        ctx.isPointInPath(germanLangBtn, eX, eY) ? (game.langInt = game.langArray.indexOf('de'), sounds.menuBlip.play()) : undefined;
+        ctx.isPointInPath(japaneseLangBtn, eX, eY) ? (game.langInt = game.langArray.indexOf('ja'), sounds.menuBlip.play()) : undefined;
 
         game.language = game.langArray[game.langInt];
         menu.language();
@@ -1633,12 +1689,16 @@ function menuInput(e){
     if(menu.current === 'settings'){
         if(ctx.isPointInPath(spacecraftSelectorBtn, eX, eY) || ctx.isPointInPath(menuModelRightArrow, eX, eY) || ctx.isPointInPath(menuModelLeftArrow, eX, eY)){
 
+            sounds.menuBlip.play();
             gameModel === booster ? model.update(spaceShip) : model.update(booster); 
             menu.settings();
         }
     }
 
     if(e.code === 'Escape' || e.code === 'Backspace'){
+
+        sounds.menuBlip.play();
+
         canvas.removeEventListener('click', menuInput);
         document.removeEventListener('keydown', menuInput);
         game.reset();
