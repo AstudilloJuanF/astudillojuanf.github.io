@@ -218,7 +218,7 @@ meteor.draw = function(){
     if (meteor.y === 0){
         sounds.meteor.play();
         meteor.x = Math.random()*canvasW;
-        meteor.x <= canvasW/2 ? meteor.vx = Math.random() * 10 : meteor.vx = Math.random() * -10;
+        meteor.x <= canvasW/2 ? meteor.vx = Math.random() * 8.9408 : meteor.vx = Math.random() * -8.9408;
         meteor.y += meteor.vy/fps;
     }
 
@@ -1305,7 +1305,7 @@ function drawGameplayButtons(){
 
     ctx.save();
 
-    var gamePlayBtnCoordX = 40;
+    var gamePlayBtnCoordX = 50;
     platform.x + platform.width/2 < canvasW/2 ? gamePlayBtnCoordX = canvasW - gamePlayBtnCoordX : undefined;
 
     ctx.fillStyle = 'rgba(0,0,0, 0.5)';
@@ -1317,7 +1317,7 @@ function drawGameplayButtons(){
     ctx.textBaseline = 'middle';
 
     exitGameBtn = new Path2D();
-    exitGameBtn.arc(gamePlayBtnCoordX, canvasH-40, 25, 0, Math.PI*2);
+    exitGameBtn.arc(gamePlayBtnCoordX, canvasH-50, 35, 0, Math.PI*2);
 
     ctx.fill(exitGameBtn);
     ctx.stroke(exitGameBtn);
@@ -1325,20 +1325,20 @@ function drawGameplayButtons(){
     if(game.status != 'over' && game.status != 'paused'){
 
         resumePauseGameBtn = new Path2D();
-        resumePauseGameBtn.arc(gamePlayBtnCoordX, canvasH-100, 25, 0, Math.PI*2);
+        resumePauseGameBtn.arc(gamePlayBtnCoordX, canvasH-135, 35, 0, Math.PI*2);
 
         ctx.fill(resumePauseGameBtn);
         ctx.stroke(resumePauseGameBtn);
 
         ctx.fillStyle = 'rgba(0,255,255, 0.75)';
-        ctx.fillText('ll', gamePlayBtnCoordX, canvasH-95);
-        ctx.strokeText('ll', gamePlayBtnCoordX, canvasH-95);
+        ctx.fillText('ll', gamePlayBtnCoordX, canvasH-130);
+        ctx.strokeText('ll', gamePlayBtnCoordX, canvasH-130);
     }
 
     ctx.fillStyle = 'rgba(255,0,0, 0.75)';
-    ctx.fillText('x', gamePlayBtnCoordX, canvasH-40);
+    ctx.fillText('x', gamePlayBtnCoordX, canvasH-50);
     ctx.strokeStyle = 'orangered';
-    ctx.strokeText('x', gamePlayBtnCoordX, canvasH-40);
+    ctx.strokeText('x', gamePlayBtnCoordX, canvasH-50);
 
     ctx.restore();
 }
