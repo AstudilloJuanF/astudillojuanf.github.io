@@ -27,17 +27,25 @@
 			<meta name="twitter:player:height" content="720">
 		<link rel="shortcut icon" type="image/svg+xml" href="icons/favicon.svg">
 		<link rel="stylesheet" type="text/css" href="styles/styles.css">
-		<link rel="preload" href="scripts/game/languages.json" as="fetch" type="application/json" crossorigin>
+		<link rel="preload" href="game/languages/languages.json" as="fetch" type="application/json" crossorigin>
 		<script type="application/javascript" src="/scripts/sharerbox.js" async></script>
 		<script type="application/javascript" src="scripts/dev-badge.js" defer></script>
-		<script type="application/javascript" src="scripts/game/boosterlander.js" defer></script>
+		<script type="application/javascript" src="game/bin/javascript/boosterlander.js" defer></script>
 	</head>
 	<body>
 		<script>
-			window.onload = function(){
-				sharerboxIcons('twitter facebook whatsapp linkedin reddit tumblr pinterest telegram');
+
+			function launchSharerbox(){
+
+				var size;
+				window.innerHeight <= 400 || window.innerWidth <= 400? size = 30 : size = 45;
+
+				sharerboxIcons('twitter facebook whatsapp linkedin reddit tumblr pinterest telegram', size);
 				sharerSetup('popup', 'right', 'dimgray', 'hidden', 'Check out Booster Lander! SpaceX inspired JavaScript minigame by AstudilloJuanF');
-			};
+			}
+
+			window.addEventListener('load', launchSharerbox);
+			window.addEventListener('resize', launchSharerbox);
 		</script>
 		<header>
 			<h1>Booster Lander</h1>

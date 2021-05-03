@@ -89,7 +89,7 @@ if (typeof languages === 'undefined'){
 
 var text, languages;
 
-fetch('scripts/game/languages.json').then((response)=> response.json().then((responseJSON)=>(languages = responseJSON, welcomeScreen())));
+fetch('game/languages/languages.json').then((response)=> response.json().then((responseJSON)=>(languages = responseJSON, welcomeScreen())));
 
 // --------- Game frame resizing function ----------------------- TESTING...
 function resizeGame(e){
@@ -273,14 +273,14 @@ meteor.draw = function(){
 };
 
 var sounds = {
-    menuStart: new Audio('sounds/blip-start.mp3'),
-    menuBlip: new Audio('sounds/blip.mp3'),
-    switch: new Audio('sounds/switch.mp3'),
-    meteor: new Audio('sounds/swoosh.mp3'),
-    impact: new Audio('sounds/sonic-boom.mp3'),
-    engines: new Audio('sounds/rumble.mp3'),
-    water: new Audio('sounds/water.mp3'),
-    explosion: new Audio('sounds/explosion.mp3')
+    menuStart: new Audio('game/sounds/blip-start.mp3'),
+    menuBlip: new Audio('game/sounds/blip.mp3'),
+    switch: new Audio('game/sounds/switch.mp3'),
+    meteor: new Audio('game/sounds/swoosh.mp3'),
+    impact: new Audio('game/sounds/sonic-boom.mp3'),
+    engines: new Audio('game/sounds/rumble.mp3'),
+    water: new Audio('game/sounds/water.mp3'),
+    explosion: new Audio('game/sounds/explosion.mp3')
 };
 
 function stopAudio(element){
