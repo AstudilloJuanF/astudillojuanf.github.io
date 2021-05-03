@@ -167,6 +167,8 @@ screen.orientation.addEventListener('change', resizeGame);
 
 
 var startGameBtn = new Path2D();
+var exitGameBtn = new Path2D();
+var resumePauseGameBtn = new Path2D();
 var menuBackgroundTouchArea = new Path2D();
 var menuControlsBtn = new Path2D();
 var menuInstructionsBtn = new Path2D();
@@ -368,13 +370,13 @@ var game = {
     sky: 'day',
     points: undefined,
     start: function(){
-
-        sounds.menuStart.play();
         
         pauseButton.innerText = text.pause;
         exitButton.innerText = text.exit;
 
         game.status = 'started';
+        sounds.menuStart.play();
+
         toggleExitButton();
 
         game.scenario = 'ground';
@@ -404,7 +406,7 @@ var game = {
         model.fuel = model.fuelCapacity;
         model.update(game.currentSpacecraft);
 
-        canvas.removeEventListener('click', game.start);
+        canvas.removeEventListener('click', gameOverInput);
 
         clear();
         cronometer.start();
@@ -413,11 +415,12 @@ var game = {
         physics(EARTH_GRAVITY);
         model.draw();
 
-        document.addEventListener('keydown', gameInput);
-        document.addEventListener('keypress', gameInput);
-        document.addEventListener('keyup', gameInput);
+        document.addEventListener('keydown', gameplayInput);
+        document.addEventListener('keypress', gameplayInput);
+        document.addEventListener('keyup', gameplayInput);
 
-        canvas.addEventListener('pointermove', gameInput);
+        canvas.addEventListener('pointermove', gameplayInput);
+        canvas.addEventListener('click', gameplayInput);
 
     },
     resume: function(){
@@ -425,6 +428,8 @@ var game = {
         pauseButton.innerText = text.pause;
 
         game.status = 'started';
+        sounds.menuStart.play();
+
         clear();
         cronometer.start();
         physics(EARTH_GRAVITY);
@@ -439,11 +444,15 @@ var game = {
         pauseButton.innerText = text.resume;
 
         game.status = 'paused';
+        sounds.menuBlip.play();
+
         cronometer.pause();
         clearInterval(physicsInterval.valueOf());
 
         stopAudio(sounds.engines);
         sounds.water.pause();
+        sounds.meteor.pause();
+        sounds.impact.pause();
 
         ctx.save();
 
@@ -452,13 +461,21 @@ var game = {
         ctx.strokeStyle = 'dimgray'
         ctx.fillStyle = 'white';
         ctx.font = '25px sans-serif';
-        ctx.textAlign = 'end';
-        ctx.fillText(text.quitGame, canvasW - 25, canvasH - 25);
-        ctx.strokeText(text.quitGame, canvasW - 25, canvasH - 25);
+        if(platform.x + platform.width/2 < canvasW/2){
+            ctx.textAlign = 'start';
+            var textMargin = 0;
+        }else{
+            ctx.textAlign = 'end';
+            var textMargin = canvasW;
+        }
+        ctx.fillText(text.quitGame, Math.abs(textMargin - 25), canvasH - 25);
+        ctx.strokeText(text.quitGame, Math.abs(textMargin - 25), canvasH - 25);
         ctx.font = '50px sans-serif';
         ctx.textAlign = 'center';
         ctx.strokeText(text.resume, canvasW/2, canvasH/2);
         ctx.fillText(text.resume, canvasW/2, canvasH/2);
+
+        drawGameplayButtons();
 
         ctx.restore();
 
@@ -488,8 +505,14 @@ var game = {
 
         ctx.fillStyle = 'gray';
         ctx.font = '25px sans-serif';
-        ctx.textAlign = 'end';
-        ctx.fillText(text.quitGame, canvasW - 25, canvasH - 25);
+        if(platform.x + platform.width/2 < canvasW/2){
+            ctx.textAlign = 'start';
+            var textMargin = 0;
+        }else{
+            ctx.textAlign = 'end';
+            var textMargin = canvasW;
+        }
+        ctx.fillText(text.quitGame, Math.abs(textMargin - 25), canvasH - 25);
 
         game.language === 'ja' ? ctx.font = '50px sans-serif': ctx.font = 'bold 50px sans-serif';
         ctx.fillStyle = color;
@@ -543,26 +566,35 @@ var game = {
 
         if(game.level !== 4){
             model.status === 'landed' ? game.level++ : undefined;
-            canvas.addEventListener('click', game.start);
+            canvas.addEventListener('click', gameOverInput);
         }else{
             if(model.status !== 'landed'){
-                canvas.addEventListener('click', game.start);
+                canvas.addEventListener('click', gameOverInput);
             }else{
                 this.reset();
             }
         }
+
+        drawGameplayButtons();
     },
     reset: function(){
+        
         this.status = 'reset';
+
+        sounds.switch.play();
 
         cronometer.cronometerCount !== undefined ? cronometer.stop() : undefined;
 
-        document.removeEventListener('keydown', gameInput);
-        document.removeEventListener('keypress', gameInput);
-        document.removeEventListener('keyup', gameInput);
+        document.removeEventListener('keydown', gameplayInput);
+        document.removeEventListener('keypress', gameplayInput);
+        document.removeEventListener('keyup', gameplayInput);
 
-        canvas.removeEventListener('pointermove', gameInput);
+        canvas.removeEventListener('pointermove', gameplayInput);
+        canvas.removeEventListener('click', gameplayInput);
+
         canvas.removeEventListener('click', game.resume);
+
+        canvas.removeEventListener('click', gameOverInput);
 
         setTimeout(()=> welcomeScreen(), 1000);
 
@@ -1059,7 +1091,7 @@ model.draw = function(){
         }
     }else if(model.status === 'missed target'){
         ctx.resetTransform();
-        game.over(text.missedTarget,'orange')
+        game.over(text.missedTarget,'orange');
     }
 
     if(model.status === 'crashed'){
@@ -1067,6 +1099,8 @@ model.draw = function(){
             game.over(text.gameover);
         }, 1000);
     }
+
+    drawGameplayButtons();
 
     ctx.restore();
 };
@@ -1265,6 +1299,48 @@ var engines = {
         ctx.resetTransform();
         ctx.restore();
     }
+}
+
+function drawGameplayButtons(){
+
+    ctx.save();
+
+    var gamePlayBtnCoordX = 40;
+    platform.x + platform.width/2 < canvasW/2 ? gamePlayBtnCoordX = canvasW - gamePlayBtnCoordX : undefined;
+
+    ctx.fillStyle = 'rgba(0,0,0, 0.5)';
+    ctx.strokeStyle = 'lightgray';
+    ctx.strokeWidth = 1;
+
+    ctx.font = '40px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    exitGameBtn = new Path2D();
+    exitGameBtn.arc(gamePlayBtnCoordX, canvasH-40, 25, 0, Math.PI*2);
+
+    ctx.fill(exitGameBtn);
+    ctx.stroke(exitGameBtn);
+
+    if(game.status != 'over' && game.status != 'paused'){
+
+        resumePauseGameBtn = new Path2D();
+        resumePauseGameBtn.arc(gamePlayBtnCoordX, canvasH-100, 25, 0, Math.PI*2);
+
+        ctx.fill(resumePauseGameBtn);
+        ctx.stroke(resumePauseGameBtn);
+
+        ctx.fillStyle = 'rgba(0,255,255, 0.75)';
+        ctx.fillText('ll', gamePlayBtnCoordX, canvasH-95);
+        ctx.strokeText('ll', gamePlayBtnCoordX, canvasH-95);
+    }
+
+    ctx.fillStyle = 'rgba(255,0,0, 0.75)';
+    ctx.fillText('x', gamePlayBtnCoordX, canvasH-40);
+    ctx.strokeStyle = 'orangered';
+    ctx.strokeText('x', gamePlayBtnCoordX, canvasH-40);
+
+    ctx.restore();
 }
 
 // Clear the Canvas
@@ -1486,11 +1562,13 @@ function welcomeScreen(){
 
     cronometer.cronometerCount !== undefined ? cronometer.stop() : undefined;
 
-    document.removeEventListener('keydown', gameInput);
-    document.removeEventListener('keypress', gameInput);
-    document.removeEventListener('keyup', gameInput);
+    document.removeEventListener('keydown', gameplayInput);
+    document.removeEventListener('keypress', gameplayInput);
+    document.removeEventListener('keyup', gameplayInput);
 
-    canvas.removeEventListener('pointermove', gameInput);
+    canvas.removeEventListener('pointermove', gameplayInput);
+    canvas.removeEventListener('click', gameplayInput);
+
     canvas.removeEventListener('click', game.resume);
 
     stopAudio(sounds.explosion);
@@ -1563,7 +1641,7 @@ function welcomeScreen(){
 
 var soundTimeout;
 // Captures mouse and/or keyboard input
-function gameInput(e){
+function gameplayInput(e){
 
     if(game.status === 'started'){
 
@@ -1654,18 +1732,31 @@ function gameInput(e){
             }
 
             if(e.code === 'KeyP' || e.code === 'Enter'){
-                game.pause();
+                e.type === 'keydown' ? game.pause() : undefined;
             }
         }
     }else if(game.status === 'paused'){
         if(e.code === 'KeyP' || e.code === 'Enter' || e.code === 'Backspace'){
-                game.resume();
+            e.type === 'keydown' ? game.resume() : undefined;
         }
     }
 
     if(e.code === 'Escape'){
         game.reset();
     }
+
+    if(e.type === 'click'){
+        if(ctx.isPointInPath(exitGameBtn, e.offsetX, e.offsetY)){
+            sounds.switch.play();
+            game.reset();
+        }
+
+        if(game.status != 'paused' && ctx.isPointInPath(resumePauseGameBtn, e.offsetX, e.offsetY)){
+            sounds.menuBlip.play();
+            game.status === 'started' ? game.pause() : undefined;
+        }
+    }
+    
 }
 
 function menuInput(e){
@@ -1750,6 +1841,16 @@ function menuInput(e){
         canvas.removeEventListener('click', menuInput);
         document.removeEventListener('keydown', menuInput);
         game.reset();
+    }
+}
+
+function gameOverInput(e){
+
+    if(ctx.isPointInPath(exitGameBtn, e.offsetX, e.offsetY)){
+        sounds.switch.play();
+        game.reset();
+    }else{
+        game.start();
     }
 }
 
@@ -1984,22 +2085,18 @@ pauseButton.onclick = function(){
     
     switch(game.status){
         case 'reset':
-            sounds.menuStart.play();
             game.start();
             pauseButton.innerText = text.pause;
         break;
         case 'started':
-            sounds.menuBlip.play();
             game.pause();
             pauseButton.innerText = text.resume;
         break;
         case 'paused':
-            sounds.menuStart.play();
             game.resume();
             pauseButton.innerText = text.pause;
         break;
         case 'over':
-            sounds.menuStart.play();
             game.start();
             pauseButton.innerText = text.pause;
         break;
