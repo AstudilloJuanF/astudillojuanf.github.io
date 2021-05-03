@@ -148,6 +148,13 @@ function resizeGame(e){
                     model.draw();
                     game.pause();
                 }
+                if(game.status === 'over'){
+                    game.over(
+                        game.lastGameOver.message,
+                        game.lastGameOver.color,
+                        game.lastGameOver.description
+                    );
+                }
             }
         //------------------------------------------------------
 }
@@ -202,54 +209,73 @@ class PhysicalObject {
     }
 };
 
-var meteoriteRock;
-var meteorite = new PhysicalObject(Math.random() * canvasW, 0, undefined, undefined, 5, 60, 178.816, undefined);
-meteorite.draw = function(){
+var meteorite;
+var meteor = new PhysicalObject(Math.random() * canvasW, 0, undefined, undefined, 5, 60, 178.816, undefined);
+meteor.draw = function(){
 
-    if (meteorite.y === 0){
-        sounds.meteorite.play();
-        meteorite.x = Math.random()*canvasW;
-        meteorite.x <= canvasW/2 ? meteorite.vx = Math.random() * 10 : meteorite.vx = Math.random() * -10;
-        meteorite.y += meteorite.vy/fps;
+    if (meteor.y === 0){
+        sounds.meteor.play();
+        meteor.x = Math.random()*canvasW;
+        meteor.x <= canvasW/2 ? meteor.vx = Math.random() * 10 : meteor.vx = Math.random() * -10;
+        meteor.y += meteor.vy/fps;
     }
 
-    meteorite.x += meteorite.vx;
-    meteorite.y + meteorite.radius < canvasH ? meteorite.y += meteorite.vy/fps : (stopAudio(sounds.meteorite), meteorite.y = 0);
-    meteorite.x + meteorite.radius <= 0 || meteorite.x + meteorite.radius >= canvasW ? (stopAudio(sounds.meteorite), meteorite.y = 0) : undefined;
-
-    var meteoriteHalo = ctx.createRadialGradient(meteorite.x, meteorite.y, meteorite.radius/2, meteorite.x, meteorite.y, meteorite.radius*2);
-    meteoriteHalo.addColorStop(0, 'white');
-    meteoriteHalo.addColorStop(0.5, 'rgba(255,255,255, 0.25)');
-    meteoriteHalo.addColorStop(1, 'rgba(255,255,255, 0)');
-
-    var meteoriteTrailGradient = ctx.createLinearGradient(meteorite.x, meteorite.y,meteorite.x - meteorite.vx*fps, meteorite.y - meteorite.vy);
-    meteoriteTrailGradient.addColorStop(0, 'rgba(255,255,255, 0.75)');
-    meteoriteTrailGradient.addColorStop(0.25, 'rgba(0,255,255, 0.5)');
-    meteoriteTrailGradient.addColorStop(0.50, 'rgba(255,255,255, 0.25)');
-    meteoriteTrailGradient.addColorStop(0.75, 'rgba(255,255,0, 0.25)');
-    meteoriteTrailGradient.addColorStop(1, 'rgba(255,255,0, 0.125)');
-
+    meteor.x += meteor.vx;
+    meteor.y + meteor.radius < canvasH ? meteor.y += meteor.vy/fps : (stopAudio(sounds.meteor), meteor.y = 0);
+    meteor.x + meteor.radius <= 0 || meteor.x + meteor.radius >= canvasW ? (stopAudio(sounds.meteor), meteor.y = 0) : undefined;
+   
     ctx.save();
 
-    var meteoriteTrail = new Path2D();
+    var meteorHalo = ctx.createRadialGradient(meteor.x, meteor.y, meteor.radius/2, meteor.x, meteor.y, meteor.radius*2);
+    meteorHalo.addColorStop(0, 'white');
+    meteorHalo.addColorStop(0.5, 'rgba(255,255,255, 0.25)');
+    meteorHalo.addColorStop(1, 'rgba(255,255,255, 0)');
 
-    ctx.fillStyle = meteoriteTrailGradient;
-    meteoriteTrail.moveTo(meteorite.x - meteorite.radius, meteorite.y);
-    meteoriteTrail.lineTo(meteorite.x - meteorite.vx*fps, meteorite.y - meteorite.vy);
-    meteoriteTrail.lineTo(meteorite.x + meteorite.radius, meteorite.y);
-    ctx.fill(meteoriteTrail);
+    var meteorTrailGradient = ctx.createLinearGradient(meteor.x, meteor.y,meteor.x - meteor.vx*fps, meteor.y - meteor.vy);
+    meteorTrailGradient.addColorStop(0, 'rgba(255,255,255, 0.75)');
+    meteorTrailGradient.addColorStop(0.25, 'rgba(0,255,255, 0.5)');
+    meteorTrailGradient.addColorStop(0.50, 'rgba(255,255,255, 0.25)');
+    meteorTrailGradient.addColorStop(0.75, 'rgba(255,255,0, 0.25)');
+    meteorTrailGradient.addColorStop(1, 'rgba(255,255,0, 0.125)');
 
-    meteoriteRock = new Path2D();
-    meteoriteRock.arc(meteorite.x, meteorite.y, meteorite.radius*2, 0, Math.PI*2);
-    ctx.fillStyle = meteoriteHalo;
-    ctx.fill(meteoriteRock);
+
+    var meteorTrail = new Path2D();
+
+    ctx.fillStyle = meteorTrailGradient;
+    meteorTrail.moveTo(meteor.x - meteor.radius, meteor.y);
+    meteorTrail.lineTo(meteor.x - meteor.vx*fps, meteor.y - meteor.vy);
+    meteorTrail.lineTo(meteor.x + meteor.radius, meteor.y);
+    ctx.fill(meteorTrail);
+
+    meteorite = new Path2D();
+    meteorite.arc(meteor.x, meteor.y, meteor.radius*2, 0, Math.PI*2);
+    ctx.fillStyle = meteorHalo;
+    ctx.fill(meteorite);
+
+    if(meteor.y + meteor.radius*2 >= canvasH){
+
+        sounds.impact.play();
+        
+        var meteorImpact = new Path2D();
+
+        var meteorImpactGradient = ctx.createRadialGradient(meteor.x, canvasH, 0, meteor.x, canvasH, 100);
+        meteorImpactGradient.addColorStop(0, 'rgba(255,255,255, 0.5)');
+        meteorImpactGradient.addColorStop(1, 'transparent');
+
+        meteorImpact.arc(meteor.x, canvasH, 100, 0, Math.PI*2);
+        ctx.fillStyle = meteorImpactGradient;
+        ctx.fill(meteorImpact);
+    }
     
     ctx.restore();
 };
 
 var sounds = {
+    menuStart: new Audio('sounds/blip-start.mp3'),
     menuBlip: new Audio('sounds/blip.mp3'),
-    meteorite: new Audio('sounds/meteor-swoosh.mp3'),
+    switch: new Audio('sounds/switch.mp3'),
+    meteor: new Audio('sounds/swoosh.mp3'),
+    impact: new Audio('sounds/sonic-boom.mp3'),
     engines: new Audio('sounds/rumble.mp3'),
     water: new Audio('sounds/water.mp3'),
     explosion: new Audio('sounds/explosion.mp3')
@@ -328,6 +354,11 @@ var game = {
     language: 'en',
     langInt: 1,
     langArray: ['es', 'en', 'de', 'ja'],
+    lastGameOver: {
+        color: undefined,
+        message: undefined,
+        description: undefined
+    },
     currentSpacecraft: gameModel,
     status: 'reset',
     graphics: 'medium',
@@ -337,6 +368,8 @@ var game = {
     sky: 'day',
     points: undefined,
     start: function(){
+
+        sounds.menuStart.play();
         
         pauseButton.innerText = text.pause;
         exitButton.innerText = text.exit;
@@ -432,7 +465,11 @@ var game = {
         canvas.addEventListener('click', this.resume);
 
     },
-    over: function(message, color = 'red'){
+    over: function(message, color = 'red', description){
+
+        this.lastGameOver.message = message; 
+
+        this.lastGameOver.color = color; 
 
         !message ? message = text.gameover : undefined;
         this.status = 'over';
@@ -477,7 +514,12 @@ var game = {
                 var gameOverMsg = ['But cool guys don\'t look at the explosions!', 'The rocket couldn\'t keep it together, but we can', 'Rapid unscheduled disassembly', 'The landing has failed successfully', 'Hey, it\'s not my fault, there is no bottom in space', 'In space, no one can hear you explode'];
             }
 
-            ctx.fillText(gameOverMsg[Math.floor(Math.random()*gameOverMsg.length)], canvasW/2, canvasH/8*2.25);
+            gameOverMsg = gameOverMsg[Math.floor(Math.random()*gameOverMsg.length)];
+            description ? gameOverMsg = description : undefined;
+
+            ctx.fillText(gameOverMsg, canvasW/2, canvasH/8*2.25);
+
+            this.lastGameOver.description = gameOverMsg;
 
         }else if(model.status === 'missed target'){
             ctx.fillStyle = 'gray';
@@ -488,7 +530,13 @@ var game = {
                 var gameOverMsg = ['I find your lack of aiming... disturbing', 'Rockets are too expensive for target practice', 'I told you we should have asked for directions!', 'The rocket lost it\'s course, but haven\'t we all at some point?'];
             }
 
-            ctx.fillText(gameOverMsg[Math.floor(Math.random()*gameOverMsg.length)], canvasW/2, canvasH/6*3);
+            gameOverMsg = gameOverMsg[Math.floor(Math.random()*gameOverMsg.length)];
+            description ? gameOverMsg = description : undefined;
+
+            ctx.fillText(gameOverMsg, canvasW/2, canvasH/6*3);
+
+            this.lastGameOver.description = gameOverMsg;
+    
         }else if(message === text.unstableLanding){
             ctx.fillText('Per aspera ad astra', canvasW/2, canvasH/8*2.25);
         }
@@ -1244,7 +1292,7 @@ function physics(g = 9.80665){
         model.y += model.vy;
 
         if(game.sky === 'night'){
-            if(Math.abs(meteorite.y - model.y) < model.height && Math.abs(meteorite.x - model.x) < model.width){
+            if(Math.abs(meteor.y - model.y) < model.height - 5 && Math.abs(meteor.x - model.x) < model.width){
                 model.status = 'crashed';
             };
         }
@@ -1284,7 +1332,7 @@ function physics(g = 9.80665){
         }
 
         model.status !== 'reset' ? model.draw() : undefined;
-        game.status != 'over' && model.status.match(/re-entry|crashed/) && game.sky === 'night' ? meteorite.draw() : undefined;
+        game.status != 'over' && model.status.match(/re-entry|crashed/) && game.sky === 'night' ? meteor.draw() : undefined;
 
         model.x < 0 ? model.x = 0 : undefined;
         model.x + model.width > canvasW ? model.x = canvasW - model.width : undefined;
@@ -1634,7 +1682,7 @@ function menuInput(e){
 
         if(game.status === 'reset' && menu.current != 'welcome'){
             if (ctx.isPointInPath(menuBackgroundTouchArea, eX, eY)){
-                sounds.menuBlip.play();
+                sounds.switch.play();
                 welcomeScreen();
             }
         }
@@ -1642,7 +1690,7 @@ function menuInput(e){
         if(menu.current === 'welcome'){
             if(ctx.isPointInPath(startGameBtn, eX, eY)){
 
-                sounds.menuBlip.play();
+                sounds.menuStart.play();
 
                 game.start();
                 canvas.removeEventListener('click', menuInput);
@@ -1697,7 +1745,7 @@ function menuInput(e){
 
     if(e.code === 'Escape' || e.code === 'Backspace'){
 
-        sounds.menuBlip.play();
+        sounds.switch.play();
 
         canvas.removeEventListener('click', menuInput);
         document.removeEventListener('keydown', menuInput);
@@ -1933,27 +1981,32 @@ function setLevelBackground(time = 'day'){
 }
 
 pauseButton.onclick = function(){
+    
     switch(game.status){
         case 'reset':
+            sounds.menuStart.play();
             game.start();
             pauseButton.innerText = text.pause;
         break;
         case 'started':
+            sounds.menuBlip.play();
             game.pause();
             pauseButton.innerText = text.resume;
         break;
         case 'paused':
+            sounds.menuStart.play();
             game.resume();
             pauseButton.innerText = text.pause;
         break;
         case 'over':
+            sounds.menuStart.play();
             game.start();
             pauseButton.innerText = text.pause;
         break;
     }
 };
 
-exitButton.onclick = () => game.reset();
+exitButton.onclick = () => ( sounds.switch.play(), game.reset() );
 
 function toggleExitButton(){
     game.status === 'reset' && menu.current === 'welcome' ? exitButton.style.display = 'none' : exitButton.removeAttribute('style');
