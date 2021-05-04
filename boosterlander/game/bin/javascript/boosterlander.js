@@ -317,7 +317,10 @@ var cronometer = {
         clearInterval(this.cronometerCount.valueOf());
     },
     stop: function(){
+
         this.hours = 0, this.mins = 0, this.secs = 0;
+        this.elapsed = '0s';
+
         clearInterval(this.cronometerCount.valueOf());
     }
 }
@@ -583,6 +586,8 @@ var game = {
 
         sounds.switch.play();
 
+        clearInterval(physicsInterval.valueOf());
+        
         cronometer.cronometerCount !== undefined ? cronometer.stop() : undefined;
 
         document.removeEventListener('keydown', gameplayInput);
@@ -596,7 +601,7 @@ var game = {
 
         canvas.removeEventListener('click', gameOverInput);
 
-        setTimeout(()=> welcomeScreen(), 1000);
+        welcomeScreen();
 
     }
 };
@@ -997,6 +1002,8 @@ model.draw = function(){
 
         ctx.restore();
 
+        ctx.closePath();
+
 
     }
     if(gameModel.name === 'spaceship'){
@@ -1006,29 +1013,56 @@ model.draw = function(){
         ctx.translate(this.x, this.y + this.height);
         ctx.rotate(Math.PI/180 * this.inclination);
 
+        // rear wings
+        
+        ctx.fillStyle = 'gray';
+
+        rWingLeft = 6, rWingRight = 6;
+        if(engines.status === 'on'){
+            this.inclination > 0 ? rWingLeft = 3 : undefined;
+            this.inclination < 0 ? rWingRight = 3 : undefined;
+        }
         ctx.moveTo(0, -5);
-            // rear wings
-            ctx.lineTo(0 - 6, -this.height + this.height - 5);
-            ctx.lineTo(0 - 6, -this.height + (this.height/5*4));
-            ctx.lineTo(0, -this.height + (this.height/8*5.5));
-            ctx.lineTo(0 + this.width, -this.height + (this.height/8*5.5));
-            ctx.lineTo(0 + this.width + 6, -this.height + (this.height/5*4));
-            ctx.lineTo(0 + this.width + 6, -this.height + this.height - 5);
-            ctx.lineTo(0, -this.height + this.height - 5);
+        ctx.lineTo(0 - rWingLeft, -this.height + this.height - 5);
+        ctx.lineTo(0 - rWingLeft, -this.height + (this.height/5*4));
+        ctx.lineTo(0, -this.height + (this.height/8*5.5));
+        ctx.lineTo(0 + this.width, -this.height + (this.height/8*5.5));
+        ctx.lineTo(0 + this.width + rWingRight, -this.height + (this.height/5*4));
+        ctx.lineTo(0 + this.width + rWingRight, -this.height + this.height - 5);
+        ctx.lineTo(0, -this.height + this.height - 5);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // nose cone wings
+        ctx.beginPath();     
+        ctx.moveTo(0, -this.height + (this.height/4));
+        ctx.lineTo(0 - 4.5, -this.height + (this.height/4));
+        ctx.lineTo(0 - 4.5, -this.height + (this.height/4) - 4.5);
+        ctx.lineTo(0 + (this.width/2) - 1,  -this.height - 1);
+        ctx.quadraticCurveTo(0 + (this.width/2), -this.height, 0 + (this.width/2) + 1,  -this.height - 1);
+        ctx.lineTo(0 + this.width + 4.5, -this.height + (this.height/4) - 4.5);
+        ctx.lineTo(0 + this.width + 4.5, -this.height + (this.height/4));
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Spaceship main body;
+       
+        var spaceshipGradient = ctx.createLinearGradient(0, -this.height/2, this.width, -this.height/2);
+        spaceshipGradient.addColorStop(0, 'silver');
+        spaceshipGradient.addColorStop(1, 'gray');
+        ctx.fillStyle = spaceshipGradient;
+
+        ctx.beginPath();
         ctx.moveTo(0, -this.height + this.height - 5);
-        ctx.lineTo(0, -this.height + (this.height/4));
-            // nose cone wings
-            ctx.lineTo(0 - 4.5, -this.height + (this.height/4));
-            ctx.lineTo(0 - 4.5, -this.height + (this.height/4) - 4.5);
-            ctx.lineTo(0 + (this.width/2) - 1,  -this.height - 1);
-            ctx.quadraticCurveTo(0 + (this.width/2), -this.height, 0 + (this.width/2) + 1,  -this.height - 1);
-            ctx.lineTo(0 + this.width + 4.5, -this.height + (this.height/4) - 4.5);
-            ctx.lineTo(0 + this.width + 4.5, -this.height + (this.height/4));
         ctx.lineTo(0, -this.height + (this.height/4));
         ctx.quadraticCurveTo(0, -this.height + (this.height/6), 0 + (this.width/2) - 1, -this.height - 1);
         ctx.quadraticCurveTo(0 + (this.width/2), -this.height, 0 + (this.width/2) + 1,  -this.height - 1);
         ctx.quadraticCurveTo(0 + this.width, -this.height + (this.height/6), 0 + this.width, -this.height + (this.height/4));
         ctx.lineTo(0 + this.width, -this.height + this.height -5);
+        ctx.closePath();
+        ctx.fill();
 
         // Draws rocket legs when a given altitude is reached
         if(this.y + this.height >= canvasH - 100){
@@ -1050,10 +1084,6 @@ model.draw = function(){
         ctx.restore();
         
     }
-
-    ctx.closePath();
-
-    ctx.fill();
     gameModel.name === 'spaceship' ? ctx.stroke() : undefined;
 
     if(model.status === 'crashed'){
