@@ -38,8 +38,6 @@ if ('serviceWorker' in navigator){
 
                 if(response){
                     return response;
-                }  else {
-                    return fetch(event.request);
                 }
 
                 var fetchClonedRequest = event.request.clone();

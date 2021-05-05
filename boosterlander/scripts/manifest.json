@@ -2,14 +2,15 @@
 	"name": "Booster Lander",
 	"short_name": "Booster Lander",
 	"description": "Booster Lander, SpaceX inspired JavaScript minigame by AstudilloJuanF",
+	"categories": ["games"],
 	"display": "standalone",
 	"start_url": "/boosterlander/",
 	"scope": "/boosterlander/",
 	"icons": [
 		{
 			"src": "/boosterlander/icons/favicon.svg",
-			"sizes": "1200x1200",
-			"purpose": "any"
+			"sizes": "any",
+			"purpose": "mascable any"
 		}
 	],
 	"theme_color": "navy",
