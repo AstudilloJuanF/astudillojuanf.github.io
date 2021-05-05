@@ -606,16 +606,6 @@ var game = {
     }
 };
 
-var instructions = {
-    current: undefined,
-    spanish: [' Usa tu ratón y teclado para controlar el descenso', 'del cohete y aterrizarlo seguro en el objetivo!',
-    ' Para ganar, debes usar los controles y evitar los', 'obstaculos mientras mantienes al cohete estable',
-    'y en curso, presta especial atención a la altitud', 'del cohete y aterriza en la plataforma antes de', 'que se agote el conbustible.'],
-    english: [' Use your mouse and keyboard to control the', 'rocket\'s descend and land it safely on it\'s target!',
-    ' To win, you must use the controls to avoid', 'the obstacles while keeping the rocket stable',
-    'on it\'s course, pay special attention to the rocket', 'altitude and land over the landing platform', 'before the fuel runs out.']
-};
-
 game.language = navigator.language.slice(0,2);
 game.langInt = game.langArray.indexOf(game.language);
 
@@ -680,13 +670,13 @@ var menu = {
         ctx.font = '20px sans-serif';
 
         ctx.fillStyle = 'lightgray';
-        ctx.fillText(text.up, canvasW/20*12, canvasH/10*3);
-        ctx.fillText(text.fullThrust, canvasW/20*12, canvasH/10*4);
-        ctx.fillText(text.left, canvasW/20*12, canvasH/10*5);
-        ctx.fillText(text.right, canvasW/20*12, canvasH/10*6);
+        ctx.fillText(text.fullThrust, canvasW/20*11.5, canvasH/10*3);
+        ctx.fillText(text.up, canvasW/20*11.5, canvasH/10*4);
+        ctx.fillText(text.left, canvasW/20*11.5, canvasH/10*5);
+        ctx.fillText(text.right, canvasW/20*11.5, canvasH/10*6);
 
-        ctx.fillText(`${text.pause} / ${text.resume}`, canvasW/20*12, canvasH/10*8);
-        ctx.fillText(`${text.exit} / ${text.back}`, canvasW/20*12, canvasH/10*9);
+        ctx.fillText(`${text.pause} / ${text.resume}`, canvasW/20*11.5, canvasH/10*8);
+        ctx.fillText(`${text.exit} / ${text.back}`, canvasW/20*11.5, canvasH/10*9);
 
         ctx.fillStyle = 'black';
         ctx.font = '18px sans-serif';
@@ -694,13 +684,16 @@ var menu = {
         ctx.textBaseline = 'top';
 
         ctx.clearRect(canvasW/20*15.5, canvasH/10*3 - 15, 30, 30);
-        ctx.fillText('W', canvasW/20*15.5 + 5, canvasH/10*3 - 10);
+        ctx.fillText('L', canvasW/20*15.5 + 5, canvasH/10*3 - 10);
+
+        ctx.clearRect(canvasW/20*16.5, canvasH/10*3 - 15, ctx.measureText(text.space).width + 10, 30);
+        ctx.fillText(text.space, canvasW/20*16.5 + 5, canvasH/10*3 - 10);
 
         ctx.clearRect(canvasW/20*15.5, canvasH/10*4 - 15, 30, 30);
-        ctx.fillText('L', canvasW/20*15.5 + 5, canvasH/10*4 - 10);
+        ctx.fillText('W', canvasW/20*15.5 + 5, canvasH/10*4 - 10);
 
-        ctx.clearRect(canvasW/20*16.5, canvasH/10*4 - 15, ctx.measureText(text.space).width + 10, 30);
-        ctx.fillText(text.space, canvasW/20*16.5 + 5, canvasH/10*4 - 10);
+        ctx.clearRect(canvasW/20*16.5, canvasH/10*4 - 15, ctx.measureText(`${text.mouse} ${text.forward}`).width + 10, 30);
+        ctx.fillText(`${text.mouse} ${text.forward}`, canvasW/20*16.5 + 5, canvasH/10*4 - 10);
 
         ctx.clearRect(canvasW/20*15.5, canvasH/10*5 - 15, 30, 30);
         ctx.fillText('A', canvasW/20*15.5 + 5, canvasH/10*5 - 10);
@@ -739,19 +732,26 @@ var menu = {
         ctx.textAlign = 'center';
         ctx.fillText(text.instructions, canvasW/8*6, canvasH/8);
 
-        ctx.font = '22px sans-serif';
+        ctx.font = '15px dejaVu sans mono'
         ctx.textAlign = 'start';
 
-        (()=> game.language === 'es' ? (ctx.font = '20px sans-serif',instructions.current = instructions.spanish) : instructions.current = instructions.english)();
+        var linePosition = 4;
+        var charLimit = 50;
+        var instructionsText = text.instructionsDescription;
 
-        ctx.fillText(instructions.current[0], canvasW/20*10.5, canvasH/20*4);
-        ctx.fillText(instructions.current[1], canvasW/20*10.5, canvasH/20*5);
+        for (var i = 0; i < instructionsText.length; i += charLimit){
 
-        ctx.fillText(instructions.current[2], canvasW/20*10.5, canvasH/20*7);
-        ctx.fillText(instructions.current[3], canvasW/20*10.5, canvasH/20*8);
-        ctx.fillText(instructions.current[4], canvasW/20*10.5, canvasH/20*9);
-        ctx.fillText(instructions.current[5], canvasW/20*10.5, canvasH/20*10);
-        ctx.fillText(instructions.current[6], canvasW/20*10.5, canvasH/20*11);
+            
+            if(!instructionsText.substr(i, charLimit).endsWith(' ') && !instructionsText.substr(i, charLimit + 1).endsWith(' ')){
+                ctx.fillText(' -', canvasW/20*10.5 + ctx.measureText(instructionsText.substr(i, charLimit)).width, canvasH/20*linePosition);
+            }
+
+            instructionsText.substr(i, charLimit).startsWith(' ') ? i++ : undefined;
+
+            ctx.fillText(instructionsText.substr(i, charLimit), canvasW/20*10.5, canvasH/20*linePosition);
+            charLimit = 50;
+            linePosition++;
+        }
 
         menuControlsBtn = new Path2D();
         ctx.lineWidth = 2;

@@ -15,11 +15,12 @@
         "minutes": "m",
         "seconds": "s",
         "zero": 0,
-        "up": "Arriba",
         "thrust": "Impulso",
         "fullThrust": "Impulso (Máximo)",
+        "up": "Arriba",
         "left": "Izquierda",
         "right": "Derecha",
+        "forward": "Adelante",
         "mouse": "Ratón",
         "keyboard": "Teclado",
         "key": "Tecla",
@@ -65,7 +66,8 @@
         "spanish": "Español",
         "english": "Inglés",
         "german": "Alemán",
-        "japanese": "Japonés"
+        "japanese": "Japonés",
+        "instructionsDescription": " ¡Usa tu ratón y/o teclado para controlar el descenso del cohete espacial y aterrizarlo seguro en el objetivo! Para ganar, debes usar los controles y evitar los obstaculos mientras mantienes al cohete estable y en curso, presta especial atención a la altitud del cohete y aterriza en la plataforma antes de que se agote el conbustible."
     },
 
     "english": {
@@ -84,11 +86,12 @@
         "minutes": "m",
         "seconds": "s",
         "zero": 0,
-        "up": "Up",
         "thrust": "Thrust",
         "fullThrust": "Full Thrust",
+        "up": "Up",
         "left": "Left",
         "right": "Right",
+        "forward": "Forward",
         "mouse": "Mouse",
         "keyboard": "Keyboard",
         "key": "key",
@@ -134,7 +137,8 @@
         "spanish": "Spanish",
         "english": "English",
         "german": "German",
-        "japanese": "Japanese"
+        "japanese": "Japanese",
+        "instructionsDescription": " Use your mouse and/or keyboard to control the descent of the space rocket and land it safely on its target! To win, you must use the controls to avoid the obstacles while keeping the rocket stable on its course, pay special attention to the rocket altitude and land on the landing platform before the fuel runs out."
     },
     "german": {
         "start": "Starten",
@@ -152,11 +156,12 @@
         "minutes": "m",
         "seconds": "s",
         "zero": 0,
-        "up": "Rauf",
         "thrust": "Schub",
         "fullThrust": "Voller Schub",
+        "up": "Rauf",
         "left": "Links",
         "right": "Reghts",
+        "forward": "nach vorn",
         "mouse": "Maus",
         "keyboard": "Tastatur",
         "key": "taste",
@@ -202,7 +207,8 @@
         "spanish": "Spanisch",
         "english": "Englisch",
         "german": "Deutsch",
-        "japanese": "Japanisch"
+        "japanese": "Japanisch",
+        "instructionsDescription": " Verwenden Sie Ihre Maus und/oder Tastatur, um den Abstieg der Weltraumrakete zu steuern und sie sicher auf dem Ziel zu landen! Um zu gewinnen, müssen Sie die Steuerung verwenden und Hindernissen ausweichen, während Sie die Rakete stabil halten. Auf Kurs müssen Sie besonders auf die Höhe der Rakete achten und auf der Plattform landen, bevor der Treibstoff ausgeht."
     },
     "japanese": {
         "start": "「始まる」",
@@ -220,11 +226,12 @@
         "minutes": "分",
         "seconds": "秒", 
         "zero": "霊",
-        "up": "上",
         "thrust": "推力",
         "fullThrust": "いっぱい推力",
+        "up": "上",
         "left": "左",
         "right": "右",
+        "forward": "前",
         "mouse": "マウス",
         "keyboard": "鍵盤",
         "key": "キー",
@@ -270,6 +277,7 @@
         "spanish": "スペイン語",
         "english": "英語",
         "german": "ドイツ語",
-        "japanese": "日本語"
+        "japanese": "日本語",
+        "instructionsDescription": " Use your mouse and/or keyboard to control the descent of the space rocket and land it safely on its target! To win, you must use the controls to avoid the obstacles while keeping the rocket stable on its course, pay special attention to the rocket altitude and land on the landing platform before the fuel runs out."
     }
 }
