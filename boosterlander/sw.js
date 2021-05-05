@@ -41,7 +41,7 @@ self.addEventListener('fetch', function(event){
 
             return fetch(fetchClonedRequest).then(function(response){
 
-                if(!response || response.status !== 200 || response.type !== 'basic'){
+                if(!response || !response.status.toString().match(/^200$|^206$/) || response.type !== 'basic'){
                     return response;
                 }
 
