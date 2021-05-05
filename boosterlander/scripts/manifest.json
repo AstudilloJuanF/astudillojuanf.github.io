@@ -14,5 +14,6 @@
 		}
 	],
 	"theme_color": "navy",
+	"background_color": "white",
 	"orientation": "any"
 }
