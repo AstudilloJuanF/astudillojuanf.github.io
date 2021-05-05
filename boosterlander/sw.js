@@ -1,7 +1,7 @@
 if ('serviceWorker' in navigator){
     
-    self.addEventListener('load', function(){
-        navigator.serviceWorker.register('sw.js')
+    window.addEventListener('load', function(){
+        navigator.serviceWorker.register('/boosterlander/sw.js')
         .then((success)=> console.log('Service worker registered'));
     });
 
