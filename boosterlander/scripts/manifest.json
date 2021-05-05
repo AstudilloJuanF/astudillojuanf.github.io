@@ -9,8 +9,8 @@
 	"icons": [
 		{
 			"src": "/boosterlander/icons/favicon.svg",
-			"sizes": "any",
-			"purpose": "mascable any"
+			"sizes": "1200x1200",
+			"purpose": "mascable"
 		}
 	],
 	"theme_color": "navy",
