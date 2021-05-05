@@ -732,21 +732,28 @@ var menu = {
         ctx.textAlign = 'center';
         ctx.fillText(text.instructions, canvasW/8*6, canvasH/8);
 
-        ctx.font = '15px dejaVu sans mono'
+        ctx.font = '15px monospace'
         ctx.textAlign = 'start';
 
         var linePosition = 4;
         var charLimit = 50;
+        var pointerCorrection = 0;
         var instructionsText = text.instructionsDescription;
 
         for (var i = 0; i < instructionsText.length; i += charLimit){
 
-            
-            if(!instructionsText.substr(i, charLimit).endsWith(' ') && !instructionsText.substr(i, charLimit + 1).endsWith(' ')){
-                ctx.fillText(' -', canvasW/20*10.5 + ctx.measureText(instructionsText.substr(i, charLimit)).width, canvasH/20*linePosition);
-            }
+            i -= pointerCorrection;
+            pointerCorrection = 0;
 
             instructionsText.substr(i, charLimit).startsWith(' ') ? i++ : undefined;
+            
+            if(!instructionsText.substr(i, charLimit).endsWith(' ') && !instructionsText.substr(i, charLimit + 1).endsWith(' ')){
+            
+               pointerCorrection = instructionsText.substr(i, charLimit).length - instructionsText.substr(i, charLimit).lastIndexOf(' ');
+               charLimit -= pointerCorrection;
+            }
+
+            
 
             ctx.fillText(instructionsText.substr(i, charLimit), canvasW/20*10.5, canvasH/20*linePosition);
             charLimit = 50;
