@@ -10,7 +10,7 @@
 		{
 			"src": "/boosterlander/icons/favicon.svg",
 			"sizes": "1200x1200",
-			"purpose": "mascable"
+			"purpose": "maskable"
 		}
 	],
 	"theme_color": "navy",
