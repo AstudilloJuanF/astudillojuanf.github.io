@@ -9,14 +9,27 @@
 	"icons": [
 		{
 			"src": "/boosterlander/icons/favicon.svg",
+			"sizes": "any",
+			"type": "image/svg+xml",
+			"purpose": "any"
+		},
+		{
+			"src": "/boosterlander/icons/favicon-maskable.svg",
+			"sizes": "any",
+			"type": "image/svg+xml",
+			"purpose": "maskable"
+		},
+		{
+			"src": "/boosterlander/icons/favicon.png",
 			"sizes": "512x512",
 			"type": "image/png",
 			"purpose": "any"
 		},
 		{
-			"src": "/boosterlander/icons/favicon.svg",
-			"sizes": "1200x1200",
-			"purpose": "any"
+			"src": "/boosterlander/icons/favicon-maskable.png",
+			"sizes": "512x512",
+			"type": "image/png",
+			"purpose": "maskable"
 		}
 	],
 	"theme_color": "navy",

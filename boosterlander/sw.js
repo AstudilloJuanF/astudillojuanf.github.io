@@ -1,7 +1,9 @@
-self.addEventListener('load', function(){
-    navigator.serviceWorker.register('sw.js')
-    .then((success)=> console.log('Service worker registered'));
-});
+if('serviceWorker' in navigator){
+    window.addEventListener('load', function(){
+        navigator.serviceWorker.register('sw.js')
+        .then((success)=> console.log('Service worker registered'));
+    });
+}
 
 const CACHE_NAME = 'boosterlander-game-cache';
 var cacheAssets = [
