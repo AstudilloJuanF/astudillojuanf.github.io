@@ -1022,7 +1022,7 @@ model.draw = function(){
 
         // rear wings
         
-        ctx.fillStyle = 'gray';
+        ctx.fillStyle = '#808087';
 
         rWingLeft = 6, rWingRight = 6;
         if(engines.status === 'on'){
@@ -1057,8 +1057,9 @@ model.draw = function(){
         // Spaceship main body;
        
         var spaceshipGradient = ctx.createLinearGradient(0, -this.height/2, this.width, -this.height/2);
-        spaceshipGradient.addColorStop(0, 'silver');
-        spaceshipGradient.addColorStop(1, 'gray');
+        spaceshipGradient.addColorStop(0, '#c0c0c8');
+        spaceshipGradient.addColorStop(1, '#808087');
+        
         ctx.fillStyle = spaceshipGradient;
 
         ctx.beginPath();
