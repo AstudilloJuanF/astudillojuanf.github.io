@@ -19,6 +19,8 @@ function setSiteLanguage(){
     var siteLang = navigator.language.substr(0,2);
     var siteText;
 
+    siteText = siteLanguages.english;
+
     switch (siteLang){
         case 'es':
             siteText = siteLanguages.spanish;

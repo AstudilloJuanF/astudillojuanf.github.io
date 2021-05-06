@@ -22,15 +22,6 @@ const canvas = document.getElementById('canvas-frame');
 
 const ctx = canvas.getContext('2d');
 
-function focusGameFrame(){
-    !game.status.match(/reset|paused/) ? window.scrollTo(0, canvas.offsetTop) : undefined;
-}
-
-canvas.addEventListener('touchstart', focusGameFrame);
-canvas.addEventListener('pointerover', focusGameFrame);
-canvas.addEventListener('pointermove', focusGameFrame);
-screen.orientation.addEventListener('change', focusGameFrame);
-
 ctx.imageSmoothingEnabled = false;
 
 // Pixels equals meters
@@ -49,6 +40,17 @@ var scalingPercentage = 1;
 const pauseButton = document.getElementById('pause-game-button');
 const exitButton =  document.getElementById('exit-game-button');
 
+// focus the game frame on the screen
+function focusGameFrame(){
+    !game.status.match(/reset|paused/) ? window.scrollTo(0, canvas.offsetTop) : undefined;
+}
+
+canvas.addEventListener('touchstart', focusGameFrame);
+canvas.addEventListener('pointerover', focusGameFrame);
+canvas.addEventListener('pointermove', focusGameFrame);
+screen.orientation.addEventListener('change', focusGameFrame);
+
+// fallback loading message
 function displayLoadingScreen(){
 
     var loadingText = function(){
@@ -90,7 +92,12 @@ if (typeof languages === 'undefined'){
 
 var text, languages;
 
-fetch('game/languages/languages.json').then((response)=> response.json().then((responseJSON)=>(languages = responseJSON, welcomeScreen())));
+fetch('game/languages/languages.json')
+.then((response)=> response.json().then((responseJSON)=> {
+        languages = responseJSON;
+        welcomeScreen();
+    })
+);
 
 // --------- Game frame resizing function ----------------------- TESTING...
 function resizeGame(e){
