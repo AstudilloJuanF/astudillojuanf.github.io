@@ -1,5 +1,5 @@
 {
-	"name": "Booster Lander",
+	"name": "Booster Lander - game application",
 	"short_name": "Booster Lander",
 	"description": "Booster Lander, SpaceX inspired JavaScript minigame by AstudilloJuanF",
 	"categories": ["games"],
@@ -32,7 +32,9 @@
 			"purpose": "maskable"
 		}
 	],
-	"theme_color": "navy",
+	"theme_color": "#0E3C99",
 	"background_color": "white",
-	"orientation": "any"
+	"orientation": "any",
+	"version": "0.1",
+	"version_name": "0.1 webapp"
 }

@@ -368,6 +368,7 @@ var game = {
     status: 'reset',
     graphics: 'medium',
     difficulty: undefined,
+    levels: 4,
     level: 1,
     scenario: 'ground',
     sky: 'day',
@@ -408,6 +409,8 @@ var game = {
         model.legsRotation = 115;
         model.fuel = model.fuelCapacity;
         model.update(game.currentSpacecraft);
+
+        meteor.y = 0;
 
         canvas.removeEventListener('click', gameOverInput);
 
@@ -506,6 +509,8 @@ var game = {
         ctx.fillStyle = 'black';
         ctx.fillRect(0, 0, canvasW, canvasH);
 
+        drawGameplayButtons();
+
         ctx.fillStyle = 'gray';
         ctx.font = '25px sans-serif';
         if(platform.x + platform.width/2 < canvasW/2){
@@ -567,26 +572,24 @@ var game = {
             ctx.fillText('Per aspera ad astra', canvasW/2, canvasH/8*2.25);
         }
 
-        if(game.level !== 4){
+        if(game.level !== game.levels){
             model.status === 'landed' ? game.level++ : undefined;
             canvas.addEventListener('click', gameOverInput);
         }else{
             if(model.status !== 'landed'){
                 canvas.addEventListener('click', gameOverInput);
             }else{
-                this.reset();
+                setTimeout( ()=> this.reset(), 1000);
             }
         }
-
-        drawGameplayButtons();
     },
     reset: function(){
         
         this.status = 'reset';
 
-        sounds.switch.play();
-
         clearInterval(physicsInterval.valueOf());
+
+        sounds.switch.play();
         
         cronometer.cronometerCount !== undefined ? cronometer.stop() : undefined;
 
@@ -1177,7 +1180,16 @@ platform.draw = function(){
 
             ctx.beginPath();
             if(ctx.isPointInPath(landingPlatform, model.x + model.width/2, platform.y)){
-                ctx.arc(model.x + model.width/2, platform.y, 25, 0, Math.PI*2);
+                
+                var orientation = false;
+                var arcEndAngle = Math.PI * 2;
+
+                if(model.x - 25 > platform.x && model.x + model.width +25 < platform.x + platform.width){
+                    orientation = true;
+                    arcEndAngle = Math.PI;
+                }
+
+                ctx.arc(model.x + model.width/2, platform.y, 25, 0, arcEndAngle, orientation);
                 groundFXCenter = platform.y;
                 groundFXColor = 'rgba(255,255,128, 0.5)';
             }else{
@@ -1230,6 +1242,21 @@ platform.draw = function(){
     ctx.font = 'bold 15px sans-serif';
     ctx.fillText('X', this.x + this.width/2, this.y + this.height/2 + 1);
 
+    if(game.scenario === 'ocean' && game.graphics === 'high'){
+
+        var platformShip = new Path2D();
+        platformShip.moveTo(this.x + this.width, this.y + this.height/2);
+        platformShip.lineTo(this.x + this.width + 15, this.y + this.height/2);
+        platformShip.lineTo(this.x + this.width, this.y + this.height + 5);
+        platformShip.lineTo(this.x, this.y + this.height + 5);
+        platformShip.lineTo(this.x + this.width, this.y + this.height/2);
+
+        ctx.strokeStyle = 'rgba(0,0,0, 0.5)';
+        ctx.fillStyle = 'darkgray';
+        ctx.fill(platformShip);
+        ctx.stroke(platformShip);
+    }
+
     game.level === 1 ? scenario('ground') : undefined;
     game.level === 2 ? scenario('ground') : undefined;
     game.level === 3 ? scenario('ocean') : undefined;
@@ -1240,15 +1267,6 @@ platform.draw = function(){
         ctx.fillRect(this.x - 15, canvasH - 50, 3, 40);
         ctx.fillRect(this.x + this.width + 15, canvasH - 50, 3, 40);
         ctx.fillRect(this.x + this.width + 25, canvasH - 70, 3, 65);
-    }else if(game.scenario === 'ocean' && game.graphics === 'high'){
-        ctx.beginPath();
-        ctx.moveTo(this.x + this.width, this.y + this.height/2);
-        ctx.lineTo(this.x + this.width + 15, this.y + this.height/2);
-        ctx.lineTo(this.x + this.width, this.y + this.height + 5);
-        ctx.lineTo(this.x, this.y + this.height + 5);
-        ctx.lineTo(this.x - 15, this.y + this.height/2);
-        ctx.closePath();
-        ctx.fill();
     }
 
     ctx.restore();
@@ -1339,6 +1357,7 @@ var engines = {
     }
 }
 
+// Draws gameplay buttons
 function drawGameplayButtons(){
 
     ctx.save();
@@ -1480,7 +1499,9 @@ function stats(){
     ctx.fillText(`${text.time} = ${cronometer.elapsed}`, canvasW/5*4 + 5, 25);
     //ctx.fillText(`Momentum Y = ${(model.mass * model.vy).toFixed(3)} Kg*m/s`, 5, 55);
     game.sky === 'day' ? ctx.fillStyle = 'black' : ctx.fillStyle = 'white';
-    ctx.fillText(`${text.level} ${game.level}`, 5, 60);
+    var finalLevelText = '';
+    game.level === game.levels ? finalLevelText = ` (${text.finalLevel})` : undefined;
+    ctx.fillText(`${text.level} ${game.level} ${finalLevelText}`, 5, 60);
     ctx.textAlign = 'end';
     ctx.fillText(text.fuel, canvasW - 15, 55);
 
@@ -1607,6 +1628,8 @@ function welcomeScreen(){
     canvas.removeEventListener('pointermove', gameplayInput);
     canvas.removeEventListener('click', gameplayInput);
 
+    canvas.removeEventListener('click', gameOverInput);
+
     canvas.removeEventListener('click', game.resume);
 
     stopAudio(sounds.explosion);
@@ -1619,6 +1642,7 @@ function welcomeScreen(){
 
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, canvasW, canvasH);
+    
     ctx.fillStyle = 'white';
     ctx.textAlign = 'start';
     ctx.textBaseline = 'top';
@@ -1911,10 +1935,6 @@ function drawRocket(){
     var rocketDarkGradient = ctx.createLinearGradient(350, 1200/2, 450, 1200/2);
     rocketDarkGradient.addColorStop(0, '#303030');
     rocketDarkGradient.addColorStop(1, 'black');
-
-    var smokeGrad = ctx.createRadialGradient(800/2, 1200, 1, 800/2, 1200, 800/4);
-    smokeGrad.addColorStop(0, 'rgba(255,255,255, 0.25)');
-    smokeGrad.addColorStop(1, 'transparent');
 
     var sunCrown = ctx.createRadialGradient(100, 100, 12.5, 100, 100, 50);
     sunCrown.addColorStop(0, '#FFFFCC');
