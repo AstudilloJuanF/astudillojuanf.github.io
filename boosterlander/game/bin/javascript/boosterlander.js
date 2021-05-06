@@ -40,6 +40,7 @@ const CTX_INITIAL_Y_SCALE = 755;
 
 // Earth's Gravity
 const EARTH_GRAVITY = 9.80665; // meters per squared seconds;
+const MARS_GRAVITY = 3.72076; // meters per squared seconds;
 
 var canvasW = canvas.width;
 var canvasH = canvas.height;
@@ -372,13 +373,16 @@ var game = {
     level: 1,
     scenario: 'ground',
     sky: 'day',
+    gravity: undefined,
     points: undefined,
     start: function(){
         
         pauseButton.innerText = text.pause;
         exitButton.innerText = text.exit;
 
+        menu.active = false;
         game.status = 'started';
+    
         sounds.menuStart.play();
 
         toggleExitButton();
@@ -587,8 +591,6 @@ var game = {
         
         this.status = 'reset';
 
-        clearInterval(physicsInterval.valueOf());
-
         sounds.switch.play();
         
         cronometer.cronometerCount !== undefined ? cronometer.stop() : undefined;
@@ -603,6 +605,8 @@ var game = {
         canvas.removeEventListener('click', game.resume);
 
         canvas.removeEventListener('click', gameOverInput);
+
+        clearInterval(physicsInterval.valueOf());
 
         welcomeScreen();
 
@@ -1408,6 +1412,9 @@ function clear(){
 // Turns gravity on
 var physicsInterval;
 function physics(g = 9.80665){
+
+    game.gravity = g;
+
     physicsInterval = setInterval(function(){
 
         ctx.resetTransform();
@@ -1493,7 +1500,7 @@ function stats(){
     }
 
     ctx.fillText(`${text.altitude} = ${Math.round(Math.abs(canvasH - model.y - model.height))} ${text.meters}`, 5, 25);
-    ctx.fillText(`${text.gravity} = ${EARTH_GRAVITY} m/s²`, canvasW/5, 25, 175);
+    ctx.fillText(`${text.gravity} = ${game.gravity} m/s²`, canvasW/5, 25, 175);
     ctx.fillText(`Vx = ${(model.vx*60).toFixed(3)} m/s`, canvasW/5*2 + 5, 25);
     ctx.fillText(`Vy = ${(model.vy * 60).toFixed(3)} m/s`, canvasW/5*3 + 5, 25);
     ctx.fillText(`${text.time} = ${cronometer.elapsed}`, canvasW/5*4 + 5, 25);
@@ -1616,7 +1623,9 @@ function welcomeScreen(){
 
     setLanguage();
 
+    menu.active = true;
     menu.current = 'welcome';
+    
     toggleExitButton();
 
     cronometer.cronometerCount !== undefined ? cronometer.stop() : undefined;
@@ -2140,7 +2149,7 @@ function setLevelBackground(time = 'day'){
 }
 
 pauseButton.onclick = function(){
-    
+
     switch(game.status){
         case 'reset':
             game.start();
@@ -2161,7 +2170,10 @@ pauseButton.onclick = function(){
     }
 };
 
-exitButton.onclick = () => ( sounds.switch.play(), game.reset() );
+exitButton.onclick = () => {
+    sounds.switch.play(); 
+    menu.active === false ? game.reset() : welcomeScreen(); 
+};
 
 function toggleExitButton(){
     game.status === 'reset' && menu.current === 'welcome' ? exitButton.style.display = 'none' : exitButton.removeAttribute('style');
