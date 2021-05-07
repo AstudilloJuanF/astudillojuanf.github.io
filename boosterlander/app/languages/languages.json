@@ -4,7 +4,10 @@
         "underDevelopment": "(En desarrollo)",
         "homepage": "Inicio",
         "author": "Autor",
-        "gamePaused": "Juego pausado"
+        "gamePaused": "Juego pausado",
+        "resumeGame": "¿Reanudar?",
+        "resume": "Reanudar",
+        "close": "Cerrar"
 
     },
     "english": {
@@ -12,7 +15,10 @@
         "underDevelopment": "(In development)",
         "homepage": "Homepage",
         "author": "Author",
-        "gamePaused": "Game Paused"
+        "gamePaused": "Game Paused",
+        "resumeGame": "Continue?",
+        "resume": "Continue",
+        "close": "Close"
 
     },
     "german": {
@@ -20,7 +26,10 @@
         "underDevelopment": "(in Entwicklung)",
         "homepage": "Startseite",
         "author": "Autor",
-        "gamePaused": "Spiel pausiert"
+        "gamePaused": "Spiel pausiert",
+        "resumeGame": "Fortsetzen?",
+        "resume": "Fortsetzen",
+        "close": "schließen"
 
     },
     "japanese": {
@@ -28,7 +37,10 @@
         "underDevelopment": "（開発中で）",
         "homepage": "ホーム",
         "author": "著者",
-        "gamePaused": "ゲームが一時停止されました"
+        "gamePaused": "ゲームが一時停止されました",
+        "resumeGame": "継続する？",
+        "resume": "続ける",
+        "close": "閉じる"
 
     }
 }

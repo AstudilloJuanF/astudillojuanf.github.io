@@ -1190,10 +1190,11 @@ platform.draw = function(){
             var groundFXCenter, groundFXColor;
 
             ctx.beginPath();
+
+            var orientation = false;
+            var arcEndAngle = Math.PI * 2;
+
             if(ctx.isPointInPath(landingPlatform, model.x + model.width/2, platform.y)){
-                
-                var orientation = false;
-                var arcEndAngle = Math.PI * 2;
 
                 if(model.x - 25 > platform.x && model.x + model.width +25 < platform.x + platform.width){
                     orientation = true;
