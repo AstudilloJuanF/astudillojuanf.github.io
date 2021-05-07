@@ -3,24 +3,32 @@
         "gameDescription": "Minijuego JavaScript inspirado por SpaceX",
         "underDevelopment": "(En desarrollo)",
         "homepage": "Inicio",
-        "author": "Autor"
+        "author": "Autor",
+        "gamePaused": "Juego pausado"
+
     },
     "english": {
         "gameDescription": "SpaceX inspired JavaScript minigame",
         "underDevelopment": "(In development)",
         "homepage": "Homepage",
-        "author": "Author"
+        "author": "Author",
+        "gamePaused": "Game Paused"
+
     },
     "german": {
         "gameDescription": "SpaceX-inspiriertes JavaScript-Minispiel",
         "underDevelopment": "(in Entwicklung)",
         "homepage": "Startseite",
-        "author": "Autor"
+        "author": "Autor",
+        "gamePaused": "Spiel pausiert"
+
     },
     "japanese": {
         "gameDescription": "SpaceXに触発されたJavaScriptミニゲーム",
         "underDevelopment": "（開発中で）",
         "homepage": "ホーム",
-        "author": "著者"
+        "author": "著者",
+        "gamePaused": "ゲームが一時停止されました"
+
     }
 }

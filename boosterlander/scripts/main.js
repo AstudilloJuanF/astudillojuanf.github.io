@@ -1,4 +1,5 @@
-var siteLanguages;
+Notification.requestPermission();
+var gamePausedNotification;
 
 fetch('app/languages/languages.json')
 .then((response)=> response.json()
@@ -41,5 +42,23 @@ function setSiteLanguage(){
     underDevelopment.innerText = siteText.underDevelopment;
     homepage.innerText = siteText.homepage;
     author.innerText = siteText.author;
+
+    window.addEventListener('blur' , function(e){
+        if(game.status === 'started'){
+
+            game.pause();
+            
+            if(Notification.permission === 'granted'){
+                gamePausedNotification = new Notification(siteText.gamePaused, {icon: 'icons/favicon.png'});
+            }
+        }
+    });
+
+    window.addEventListener('focus', function(e){
+        typeof  gamePausedNotification !== 'undefined' ?    gamePausedNotification.close() : undefined;
+    });
+
 }
+
+
 
