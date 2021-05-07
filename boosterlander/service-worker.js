@@ -1,17 +1,9 @@
-if('serviceWorker' in navigator){
-    console.log('Service workers supported')
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('service-worker.js')
-        .then( success => console.log('Service worker: registered'));
-    });
-}else{
-    console.warn('ServiceWorker API is unsupported by the browser');
-}
+                                    /* Service Worker*/
 
 // Name of the cache
 const CACHE_NAME = 'boosterlander-game-cache';
 
-// App assets to be stored on the cache
+// App assets to be stored in the cache
 var cacheAssets = [
     '/boosterlander/index.html',
     '/boosterlander/styles/styles.css',
@@ -27,8 +19,9 @@ var cacheAssets = [
     '/boosterlander/game/sounds/explosion.mp3'
 ];
 
+// Install service worker and store assets in the cache
 self.addEventListener('install', function(event){
-    console.log('Server worker: installed')
+    console.log('Server worker: installed');
     event.waitUntil(
         caches.open(CACHE_NAME)
         .then(function(cache){
@@ -38,10 +31,14 @@ self.addEventListener('install', function(event){
     );
 });
 
+// Ask the user to allow notifications
 self.addEventListener('appinstalled', function(){
-    Notification.requestPermission();
+    if(Notification.permission !== 'granted'){
+        Notification.requestPermission();
+    }
 });
 
+// Handle fetch and HTTP requests
 self.addEventListener('fetch', fetchEvent => {
     fetchEvent.respondWith(
         fetch(fetchEvent.request)
@@ -62,6 +59,7 @@ self.addEventListener('fetch', fetchEvent => {
     );
 })
 
+// Handle notifications
 self.addEventListener('notificationclick', function(clickEvent){
     clickEvent.action === 'close' ? clickEvent.notification.close() : undefined;
 });

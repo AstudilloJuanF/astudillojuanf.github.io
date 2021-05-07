@@ -1662,9 +1662,16 @@ function welcomeScreen(){
     
     ctx.fillStyle = 'white';
     ctx.textAlign = 'start';
-    ctx.textBaseline = 'top';
+    ctx.textBaseline = 'middle';
     ctx.font = '60px sans-serif';
-    ctx.fillText('Booster Lander', canvasW/20*11, canvasH/8);
+
+    ctx.fillStyle = 'darkred';
+    ctx.strokeStyle = 'red';
+    ctx.fillRect(canvasW/20*11 - 3, canvasH/8 - 1, canvasW - canvasW/20*11 + 3, 60);
+    ctx.strokeRect(canvasW/20*11 - 3, canvasH/8 - 1, canvasW - canvasW/20*11 + 3, 60);
+
+    ctx.fillStyle = 'white';
+    ctx.fillText('Booster Lander', canvasW/20*11, canvasH/5.95);
     ctx.font = '50px sans-serif';
     ctx.fillStyle = 'lawngreen';
     ctx.fillText(text.start, canvasW/10*6, canvasH/7*2);
@@ -1680,8 +1687,6 @@ function welcomeScreen(){
     menuLangBtn = new Path2D();
     menuSettingsBtn = new Path2D();
 
-    ctx.strokeStyle = 'red';
-    ctx.strokeRect(canvasW/20*11 - 1, canvasH/8 - 1, canvasW, 65);
     ctx.strokeStyle = 'white';
 
     startGameBtn.rect(canvasW/10*6 - 1, canvasH/7*2 - 1, ctx.measureText(text.start).width, 50);

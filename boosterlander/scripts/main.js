@@ -1,5 +1,18 @@
-var gamePausedNotification;
+// Registers the ServiceWorker
+if('serviceWorker' in navigator){
+    console.log('Service workers supported')
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('service-worker.js')
+        .then( success => console.log('Service worker: registered'));
+    });
+}else{
+    console.warn('ServiceWorker API is not supported by the browser');
+}
 
+// Variable that stores the languages file
+var siteLanguages;
+
+// Fetch languages file for the site
 fetch('app/languages/languages.json')
 .then((response)=> response.json()
         .then((jsonResponse)=> {
@@ -8,6 +21,7 @@ fetch('app/languages/languages.json')
     })
 );
 
+// Functions that sets the site's language
 function setSiteLanguage(){
     
     var page = document.getElementsByTagName('html')[0];
@@ -56,16 +70,20 @@ function setSiteLanguage(){
                     icon: 'icons/favicon.png',
                     body: siteText.resumeGame,
                     vibrate: [100, 50, 100],
-                    data: {primaryKey: 1},
+                    data: {
+                        primaryKey: 1,
+                        url: self.location.href
+                    },
                     tag: 'boosterlander-notification',
                     actions: [
                         {
-                            title: siteText.resume,
-                            action: 'go'
+                            action: 'go',
+                            title: siteText.resume
+                           
                         },
                         {
-                            title: siteText.close,
-                            action: 'close'
+                            action: 'close',
+                            title: siteText.close
                         }
                     ]
                 }
