@@ -51,6 +51,7 @@ canvas.addEventListener('pointermove', focusGameFrame);
 screen.orientation.addEventListener('change', focusGameFrame);
 
 // fallback loading message
+var loadingScreenInterval;
 function displayLoadingScreen(){
 
     var loadingText = function(){
@@ -59,31 +60,52 @@ function displayLoadingScreen(){
 
         switch(lang){
             case 'es': // Spanish
-                message = 'Cargando...';
+                message = 'Cargando';
             break;
             case 'en': // English
-                message = 'Loading...';
+                message = 'Loading';
             break;
             case 'de': // German
-                message = 'Laden...';
+                message = 'Laden';
             break;
             case 'ja': // Japanese
-                message = '読み込み中・・・';
+                message = '読み込み中';
             break;
         }
 
         return message;
     };
 
-    ctx.save();
-    ctx.fillStyle = 'black';
-    ctx.fillRect(0, 0, canvasW, canvasH);
-    ctx.fillStyle = 'white';
-    ctx.font = '75px sans serif';
-    ctx.textBaseline = 'center';
-    ctx.textAlign = 'center'
-    ctx.fillText(loadingText(), canvasW/2, canvasH/2);
-    ctx.restore();
+    var loadingMsg = loadingText();
+
+    var textDot;
+    navigator.language.slice(0, 2) === 'ja' ? textDot = '・' : textDot = '.';
+
+
+    var i = 0;
+    var suspenseDots = '';
+    loadingScreenInterval = setInterval(function(){
+
+        if(i < 3){
+            suspenseDots = suspenseDots.concat(textDot);
+            i++;
+        }else{
+            suspenseDots = '';
+            i = 0;
+        }
+
+        ctx.save();
+        ctx.fillStyle = 'black';
+        ctx.fillRect(0, 0, canvasW, canvasH);
+        ctx.fillStyle = 'white';
+        ctx.font = '75px sans serif';
+        ctx.textBaseline = 'center';
+        ctx.textAlign = 'center'
+        ctx.fillText(loadingMsg, canvasW/2, canvasH/2);
+        ctx.fillText(suspenseDots, canvasW/2, canvasH/2 + 75);
+        ctx.restore();
+
+    }, 1000);
 }
 
 if (typeof languages === 'undefined'){
@@ -216,6 +238,15 @@ class PhysicalObject {
         this.vx = speedX; // Meters per Seconds
         this.vy = speedY; // Meters per Seconds
         this.mass = mass; // Kg
+        this.boundaries = function(){
+            if(this.y >= canvasH - this.height || this.y + this.vy < 0){
+                this.vy = -this.vy;
+                this.vy /= 2;
+            }
+            if(this.x + this.vx > canvasW - this.width || this.x + this.vx < 0){
+                this.vx = -this.vx;
+            }
+        }
     }
 };
 
@@ -1189,19 +1220,19 @@ platform.draw = function(){
 
             var groundFXCenter, groundFXColor;
 
-            ctx.beginPath();
-
-            var orientation = false;
+            var arcOrientation = false;
             var arcEndAngle = Math.PI * 2;
+
+            ctx.beginPath();
 
             if(ctx.isPointInPath(landingPlatform, model.x + model.width/2, platform.y)){
 
-                if(model.x - 25 > platform.x && model.x + model.width +25 < platform.x + platform.width){
-                    orientation = true;
+                if(model.x - 25 > platform.x && model.x + model.width + 25 < platform.x + platform.width){
+                    arcOrientation = true;
                     arcEndAngle = Math.PI;
                 }
 
-                ctx.arc(model.x + model.width/2, platform.y, 25, 0, arcEndAngle, orientation);
+                ctx.arc(model.x + model.width/2, platform.y, 25, 0, arcEndAngle, arcOrientation);
                 groundFXCenter = platform.y;
                 groundFXColor = 'rgba(255,255,128, 0.5)';
             }else{
@@ -1648,6 +1679,8 @@ function welcomeScreen(){
     canvas.removeEventListener('click', gameOverInput);
 
     canvas.removeEventListener('click', game.resume);
+
+    clearInterval(loadingScreenInterval);
 
     stopAudio(sounds.explosion);
     stopAudio(sounds.engines);

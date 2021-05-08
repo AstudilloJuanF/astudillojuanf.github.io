@@ -1,12 +1,12 @@
 // Registers the ServiceWorker
 if('serviceWorker' in navigator){
-    console.log('Service workers supported')
+    console.log('The browser has serviceWorker support');
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('service-worker.js')
-        .then( success => console.log('Service worker: registered'));
+        .then( success => console.log('Service worker: Registered'));
     });
 }else{
-    console.warn('ServiceWorker API is not supported by the browser');
+    console.warn('The browser does not have serviceWorker support');
 }
 
 // Variable that stores the languages file
@@ -65,10 +65,11 @@ function setSiteLanguage(){
             
             if(Notification.permission === 'granted'){
 
-                var notificationTitle = siteText.gamePaused;
+                var notificationTitle = 'Booster Lander';
                 var notificationObject = {
                     icon: 'icons/favicon.png',
-                    body: siteText.resumeGame,
+                    body: siteText.gamePaused,
+                    lang: siteLang,
                     vibrate: [100, 50, 100],
                     data: {
                         primaryKey: 1,
