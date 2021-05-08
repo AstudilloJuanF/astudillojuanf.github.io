@@ -9,6 +9,11 @@ if('serviceWorker' in navigator){
     console.warn('The browser does not have serviceWorker support');
 }
 
+// Notification button state
+var notificationButtonEnabled;
+
+Notification.permission === 'granted' ? notificationButtonEnabled = true : notificationButtonEnabled = false;
+
 // Variable that stores the languages file
 var siteLanguages;
 
@@ -21,21 +26,24 @@ fetch('app/languages/languages.json')
     })
 );
 
-// Functions that sets the site's language
-function setSiteLanguage(){
-    
-    var page = document.getElementsByTagName('html')[0];
-    var siteGameDescription = document.getElementById('game-description-text');
-    var underDevelopment = document.getElementById('game-development-text');
-    var homepage = document.getElementById('homepage-anchor');
-    var author = document.getElementById('author-text');
+// HTML Elements
+var page = document.getElementsByTagName('html')[0];
+var siteGameDescription = document.getElementById('game-description-text');
+var underDevelopment = document.getElementById('game-development-text');
+var homepage = document.getElementById('homepage-anchor');
+var author = document.getElementById('author-text'); 
 
-    var siteLang = navigator.language.substr(0,2);
-    var siteText;
+var allowNotificationsBtn = document.getElementById('notifications-button');
+
+// Functions that sets the site's language
+var navigatorLang = navigator.language.substr(0,2);
+var siteText;
+
+function setSiteLanguage(){
 
     siteText = siteLanguages.english;
 
-    switch (siteLang){
+    switch (navigatorLang){
         case 'es':
             siteText = siteLanguages.spanish;
         break;
@@ -50,64 +58,85 @@ function setSiteLanguage(){
         break;
     }
     
-    page.lang = siteLang;
+    page.lang = navigatorLang;
     siteGameDescription.innerText = siteText.gameDescription;
     underDevelopment.innerText = siteText.underDevelopment;
     homepage.innerText = siteText.homepage;
     author.innerText = siteText.author;
 
-    window.addEventListener('blur' , function(){
-        if(game.status === 'started' || game.status === 'paused'){
+    if(notificationButtonEnabled === true){
+        allowNotificationsBtn.innerText = siteText.disallowNotifications;
+    } else {
+        allowNotificationsBtn.innerText = siteText.allowNotifications;
+    }
+}
 
-            if(game.status === 'started'){
-                game.pause();
+// Toggle notifications button
+
+allowNotificationsBtn.onclick = () => {
+    if(Notification.permission !== 'granted' || notificationButtonEnabled === false){
+        Notification.requestPermission().then(result => {
+            if (result === 'granted'){
+                allowNotificationsBtn.innerText = siteText.disallowNotifications;
+                notificationButtonEnabled = true;
             }
-            
-            if(Notification.permission === 'granted'){
+        });
+    } else {
+        allowNotificationsBtn.innerText = siteText.allowNotifications;
+        notificationButtonEnabled = false;
+    }
+};
 
-                var notificationTitle = 'Booster Lander';
-                var notificationObject = {
-                    icon: 'icons/favicon.png',
-                    body: siteText.gamePaused,
-                    lang: siteLang,
-                    vibrate: [100, 50, 100],
-                    data: {
-                        primaryKey: 1,
-                        url: self.location.href
-                    },
-                    tag: 'boosterlander-notification',
-                    actions: [
-                        {
-                            action: 'go',
-                            title: siteText.resume
-                           
-                        },
-                        {
-                            action: 'close',
-                            title: siteText.close
-                        }
-                    ]
-                }
+window.addEventListener('blur' , function(){
+    if(game.status === 'started' || game.status === 'paused'){
 
-                navigator.serviceWorker.getRegistration()
-                .then((registration) => {
-                    registration.showNotification(notificationTitle, notificationObject);
-                });
-            }
+        if(game.status === 'started'){
+            game.pause();
         }
-    });
+        
+        if(Notification.permission === 'granted' && notificationButtonEnabled === true){
 
-    window.addEventListener('focus', function(){
-        if(Notification.permission === 'granted'){
-            navigator.serviceWorker.ready.then(function(registration){
-                registration.getNotifications({tag: 'boosterlander-notification'}).then(function(notifications){
-                    typeof notifications[0] !== 'undefined' ? notifications[0].close() : undefined;
-                })
+            var notificationTitle = 'Booster Lander';
+            var notificationObject = {
+                icon: 'icons/favicon.png',
+                body: siteText.gamePaused,
+                lang: navigatorLang,
+                vibrate: [100, 50, 100],
+                data: {
+                    primaryKey: 1,
+                    url: self.location.href
+                },
+                tag: 'boosterlander-notification',
+                actions: [
+                    {
+                        action: 'go',
+                        title: siteText.resume
+                       
+                    },
+                    {
+                        action: 'close',
+                        title: siteText.close
+                    }
+                ]
+            }
+
+            navigator.serviceWorker.getRegistration()
+            .then((registration) => {
+                registration.showNotification(notificationTitle, notificationObject);
             });
         }
-    });
+    }
+});
 
-}
+window.addEventListener('focus', function(){
+    if(Notification.permission === 'granted' && notificationButtonEnabled === true){
+        navigator.serviceWorker.ready.then(function(registration){
+            registration.getNotifications({tag: 'boosterlander-notification'}).then(function(notifications){
+                typeof notifications[0] !== 'undefined' ? notifications[0].close() : undefined;
+            })
+        });
+    }
+});
 
 
 

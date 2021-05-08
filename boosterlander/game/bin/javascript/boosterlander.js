@@ -105,6 +105,10 @@ function displayLoadingScreen(){
         ctx.fillText(suspenseDots, canvasW/2, canvasH/2 + 75);
         ctx.restore();
 
+        if(typeof game.status !== 'undefined'){
+            clearInterval(loadingScreenInterval);
+        }
+
     }, 1000);
 }
 

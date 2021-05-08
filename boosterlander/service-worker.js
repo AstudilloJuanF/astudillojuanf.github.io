@@ -39,9 +39,7 @@ self.addEventListener('install', function(event){
 
 // Ask the user to allow notifications
 self.addEventListener('appinstalled', function(){
-    if(Notification.permission !== 'granted'){
-        Notification.requestPermission();
-    }
+    Notification.requestPermission();
 });
 
 // Handle fetch and HTTP requests
@@ -67,10 +65,9 @@ self.addEventListener('fetch', fetchEvent => {
 
 // Handle notifications
 self.addEventListener('notificationclick', function(clickEvent){
-    clickEvent.action === 'close' ? clickEvent.notification.close() : undefined;
-});
-
-self.addEventListener('notificationclick', function(clickEvent){
+    if(clickEvent.action === 'close'){
+        clickEvent.notification.close();
+    }
 
     if(clickEvent.action === 'go'){
         clickEvent.waitUntil(

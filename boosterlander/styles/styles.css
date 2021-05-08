@@ -41,6 +41,13 @@ canvas{
     width: fit-content;
 }
 
+#notifications-button{
+    display: block;
+    margin: auto;
+    margin-top: 1rem;
+    width: fit-content;
+}
+
 h1,h2,h3,p{
     display: block;
     text-align: center;
