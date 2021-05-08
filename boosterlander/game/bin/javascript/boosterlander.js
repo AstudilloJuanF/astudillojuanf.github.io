@@ -18,6 +18,8 @@
 
 //-------------------------------------------------------------------------------------
 
+const canvasSection = document.getElementById('canvas-section');
+
 const canvas = document.getElementById('canvas-frame');
 
 const ctx = canvas.getContext('2d');
@@ -43,6 +45,7 @@ const exitButton =  document.getElementById('exit-game-button');
 // focus the game frame on the screen
 function focusGameFrame(){
     !game.status.match(/reset|paused/) ? window.scrollTo(0, canvas.offsetTop) : undefined;
+    recolorCanvasContainer();
 }
 
 canvas.addEventListener('touchstart', focusGameFrame);
@@ -125,6 +128,19 @@ fetch('game/languages/languages.json')
     })
 );
 
+function recolorCanvasContainer(color = 'black'){
+    if(canvas.height === window.innerHeight && game.status.match(/started|paused|over/)){
+        canvasSection.style.background = color;
+        canvasSection.style.color = 'white';
+        separators[0].style.background = 'linear-gradient(45deg, transparent,rgba(255,255,255, 0.5), transparent)';
+        separators[1].style.background = 'linear-gradient(45deg, transparent,rgba(255,255,255, 0.5), transparent)';
+    }else{
+        canvasSection.removeAttribute('style');
+        separators[0].removeAttribute('style');
+        separators[1].removeAttribute('style');
+    }
+}
+
 // --------- Game frame resizing function ----------------------- TESTING...
 function resizeGame(e){
 
@@ -191,6 +207,8 @@ function resizeGame(e){
                 }
             }
         //------------------------------------------------------
+
+    recolorCanvasContainer();
 }
 
 window.addEventListener('load', resizeGame);
@@ -430,6 +448,8 @@ var game = {
         toggleExitButton();
 
         game.scenario = 'ground';
+
+        focusGameFrame();
 
         // Fix behavior of the scenario() function and avoid redundances
 
@@ -1750,6 +1770,8 @@ function welcomeScreen(){
 
     canvas.addEventListener('click', menuInput);
     document.addEventListener('keydown', menuInput);
+
+    recolorCanvasContainer();
 
     game.level = 1;
     game.sky = 'day';

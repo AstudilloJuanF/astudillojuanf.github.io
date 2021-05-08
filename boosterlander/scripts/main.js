@@ -33,7 +33,9 @@ var underDevelopment = document.getElementById('game-development-text');
 var homepage = document.getElementById('homepage-anchor');
 var author = document.getElementById('author-text'); 
 
-var allowNotificationsBtn = document.getElementById('notifications-button');
+var notificationsBtn = document.getElementById('notifications-button');
+var notificationsBtnLabel = document.getElementById('notifications-button').previousElementSibling;
+var separators = document.getElementsByClassName('separator');
 
 // Functions that sets the site's language
 var navigatorLang = navigator.language.substr(0,2);
@@ -63,26 +65,31 @@ function setSiteLanguage(){
     underDevelopment.innerText = siteText.underDevelopment;
     homepage.innerText = siteText.homepage;
     author.innerText = siteText.author;
+    notificationsBtnLabel.innerText = siteText.notifications;
 
     if(notificationButtonEnabled === true){
-        allowNotificationsBtn.innerText = siteText.disallowNotifications;
+        notificationsBtn.innerText = siteText.disable;
     } else {
-        allowNotificationsBtn.innerText = siteText.allowNotifications;
+        notificationsBtn.innerText = siteText.enable;
     }
 }
 
 // Toggle notifications button
 
-allowNotificationsBtn.onclick = () => {
+notificationsBtn.onclick = () => {
     if(Notification.permission !== 'granted' || notificationButtonEnabled === false){
         Notification.requestPermission().then(result => {
             if (result === 'granted'){
-                allowNotificationsBtn.innerText = siteText.disallowNotifications;
+                notificationsBtn.innerText = siteText.disable;
+                sounds.menuBlip.play();
+
                 notificationButtonEnabled = true;
             }
         });
     } else {
-        allowNotificationsBtn.innerText = siteText.allowNotifications;
+        notificationsBtn.innerText = siteText.enable;
+        sounds.switch.play();
+
         notificationButtonEnabled = false;
     }
 };
