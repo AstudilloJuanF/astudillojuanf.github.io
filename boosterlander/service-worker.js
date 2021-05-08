@@ -65,11 +65,12 @@ self.addEventListener('fetch', fetchEvent => {
 
 // Handle notifications
 self.addEventListener('notificationclick', function(clickEvent){
+
     if(clickEvent.action === 'close'){
         clickEvent.notification.close();
     }
 
-    if(clickEvent.action === 'go'){
+    if(clickEvent.action === 'go' || clickEvent.action !== 'close'){
         clickEvent.waitUntil(
             clients.matchAll({ type: 'window' }).then(function(clientsArr){
     
