@@ -42,6 +42,38 @@ var scalingPercentage = 1;
 const pauseButton = document.getElementById('pause-game-button');
 const exitButton =  document.getElementById('exit-game-button');
 
+// hidden canvas
+const hiddenCanvas = new OffscreenCanvas(CTX_INITIAL_X_SCALE, CTX_INITIAL_Y_SCALE);
+const hiddenCtx = hiddenCanvas.getContext('2d');
+
+// star background Canvas
+const starsCanvas = new OffscreenCanvas(CTX_INITIAL_X_SCALE, CTX_INITIAL_Y_SCALE);
+const starsCtx = starsCanvas.getContext('2d');
+
+// Star background Image
+var starBackgroundImg, starBackgroundImgDisplay;
+
+function drawStars(starsCount = 100){
+    
+    starsCtx.fillStyle = 'black';
+    starsCtx.fillRect(0, 0, starsCanvas.width, starsCanvas.height);
+
+    for(var i = 0; i < starsCount; i++){
+        
+        var star = new Path2D();
+
+        starsCtx.fillStyle = 'white';
+        star.arc(Math.random()*starsCanvas.width, Math.random()*starsCanvas.height, 1, 0, Math.PI*2);
+        
+        starsCtx.fill(star);
+    }
+
+    starBackgroundImg = starsCtx.getImageData(0,0, starsCanvas.width, starsCanvas.height);
+    starBackgroundImgDisplay = starBackgroundImg;
+}
+
+drawStars();
+
 // focus the game frame on the screen
 function focusGameFrame(){
     !game.status.match(/reset|paused/) ? window.scrollTo(0, canvas.offsetTop) : undefined;
@@ -144,10 +176,18 @@ function recolorCanvasContainer(color = 'black'){
 // --------- Game frame resizing function ----------------------- TESTING...
 function resizeGame(e){
 
-    var canvasImg = ctx.getImageData(0, 0, canvasW, canvasH);
+    // copy main canvas image into the hidden canvas
+
+    /*
+    hiddenCanvas.width = canvas.width;
+    hiddenCanvas.height = canvas.height;
+    hiddenCanvas.drawImage(canvas,0,0);
+    */
 
     var deviceW = document.body.offsetWidth;
     var deviceH = window.innerHeight;
+
+    // resize main canvas
 
     ctx.resetTransform();
 
@@ -167,6 +207,8 @@ function resizeGame(e){
 
         scalingPercentage > 1 ? scalingPercentage = 1 : undefined;
         ctx.scale(scalingPercentage, scalingPercentage);
+
+        
     }else{
         canvas.width = CTX_INITIAL_X_SCALE;
         canvas.height = CTX_INITIAL_Y_SCALE;
@@ -175,7 +217,9 @@ function resizeGame(e){
 
     e.type === 'load' ? displayLoadingScreen() : undefined;
 
-        // Self-Reminder: Replace this monstruosity and redraw a previously captured ImageData frame on each call instead
+        /* Calling the drawImage or the PutImageData methods instead of this workaround would work for
+        resizing the game screen but it would have detrimental effects on the display resolution */
+
             if(game.status === 'reset'){
                 var menuStatus = menu.current;
                 welcomeScreen();
@@ -1446,7 +1490,7 @@ function drawGameplayButtons(){
     ctx.fill(exitGameBtn);
     ctx.stroke(exitGameBtn);
 
-    if(game.status != 'over' && game.status != 'paused'){
+    if(game.status !== 'over' && game.status !== 'paused'){
 
         resumePauseGameBtn = new Path2D();
         resumePauseGameBtn.arc(gamePlayBtnCoordX, canvasH-135, 35, 0, Math.PI*2);
@@ -2170,14 +2214,24 @@ function setLevelBackground(time = 'day'){
         game.sky = 'day';
         ctx.fillStyle = skyGrad;
     }else{
-        ctx.fillStyle = 'navy';
+        if(game.graphics === 'low'){
+            ctx.fillStyle = 'navy';
+        }else{
+            ctx.drawImage(starsCanvas, 0, 0);
+           
+            if(game.environment !== 'space'){
+                ctx.fillStyle = 'rgba(0,0,255,0.1775)';
+                ctx.fillRect(0,0, canvasW, canvasH);
+            }
+            ctx.fillStyle = 'black';
+        }
     }
 
-    ctx.fillRect(0,0, canvasW, canvasH);
+    time === 'day' || game.graphics === 'low' ? ctx.fillRect(0,0, canvasW, canvasH) : undefined;
 
     // Background
     if(game.scenario === 'ground'){
-        ctx.fillStyle = 'rgba(0,75,0, 0.5)';
+        time === 'day' ? ctx.fillStyle = '#3f8b7c' : ctx.fillStyle = 'rgb(0,25,0)';
         ctx.beginPath();
         ctx.moveTo(0, canvasH - 25);
         ctx.bezierCurveTo(canvasW/4*1.5, canvasH/1.5, canvasW/3, canvasH + 80, canvasW, canvasH/10*9);

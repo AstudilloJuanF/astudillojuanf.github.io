@@ -10,6 +10,7 @@
         "gamePaused": "Juego pausado",
         "resumeGame": "¿Reanudar?",
         "resume": "Reanudar",
+        "open": "Abrir",
         "close": "Cerrar"
 
     },
@@ -24,6 +25,7 @@
         "gamePaused": "Game Paused",
         "resumeGame": "Continue?",
         "resume": "Continue",
+        "open": "Open",
         "close": "Close"
 
     },
@@ -38,6 +40,7 @@
         "gamePaused": "Spiel pausiert",
         "resumeGame": "Fortsetzen?",
         "resume": "Fortsetzen",
+        "open": "öffnen",
         "close": "schließen"
 
     },
@@ -52,6 +55,7 @@
         "gamePaused": "ゲームが一時停止されました",
         "resumeGame": "継続する？",
         "resume": "続ける",
+        "open": "開いた",
         "close": "閉じる"
 
     }

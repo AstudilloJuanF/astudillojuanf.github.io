@@ -67,6 +67,10 @@ canvas{
     width: fit-content;
 }
 
+#buttons-menu-container button{
+    margin-bottom: 1rem;
+}
+
 h1,h2,h3,p{
     display: block;
     text-align: center;
