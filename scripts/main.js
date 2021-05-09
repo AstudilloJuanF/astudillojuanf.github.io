@@ -55,7 +55,7 @@ function requestProjectCard(url, projecType){
 
 
 				var cardHTMLTemplate = `<div class="project-card" style="opacity: 0; transform: translateY(-20px);">
-	<a class="project-link" href="${url}" target="_blank">
+	<a class="project-link" href="${url}">
 		<h4 class="project-card-title">${cardTitle}</h4>
 		<figure class="project-card-media-wrap">
 			<img class="project-card-img" src="${cardImgSrc}" alt="${cardTitle}">
@@ -111,7 +111,7 @@ function resizeCards(){
 	for (var i = 0; i < cardImgs.length; i++){
 
 		if (document.body.offsetWidth <= 450){
-			cardImgs[i].style.width = `${document.body.offsetWidth * 0.95}px`;
+			cardImgs[i].style.width = `${document.body.offsetWidth * 0.925}px`;
 			cardImgs[i].style.height = `${cardImgs[i].offsetWidth * (52.25 / 100)}px`;
 		} else {
 			cardImgs[i].removeAttribute('style');
