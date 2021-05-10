@@ -112,7 +112,8 @@ function updateLanguage(){
 			languageSelect.children[i].selected ? flagImg[i].style.display = 'block' : flagImg[i].removeAttribute('style');
 		}
 
-		professionTitle.innerHTML = `<code>&lt;<span class="monokai-pink">${languageJSON.webDeveloper}</span>/&gt;<br><span class="monokai-green">&</span><br><span class="monokai-purple">${languageJSON.gameDeveloper}<span class="pointer">&VerticalSeparator;</span></code>`;
+		document.getElementById('web-developer-title').innerText = languageJSON.webDeveloper;
+		document.getElementById('game-developer-title').innerText = languageJSON.gameDeveloper;
 		projectsTitle.innerText = languageJSON.projects;
 
 		footerColumnsTitles[0].innerText = languageJSON.pages;
@@ -127,7 +128,7 @@ function updateLanguage(){
 		for(var i = 0; i < projectCards.length; i++){
 
 			var tags = projectCards[i].getAttribute('data-tags').split(',');
-			console.log(projectCards[i].getAttribute('data-tags').split(','));
+			
 			var typeElement = projectCards[i].getElementsByClassName('project-type')[0];
 
 			for(var u = 0; u < tags.length; u++){

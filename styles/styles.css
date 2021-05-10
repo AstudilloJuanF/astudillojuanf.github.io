@@ -63,11 +63,18 @@ h1{
 	margin: 0;
 }
 
+#profession-title-wrap{
+	margin-top: 0.5rem;
+	background-color: black;
+	width: 100%;
+}
+
 #profession-title{
 	display: block;
 	background-color: #383830; /* Monokai background-color*/
 	color: white;
-	/* width: fit-content; */
+	width: fit-content;
+	margin: auto;
 	padding: 0.75rem;
 	/* border-radius: 5px; */
 	box-shadow: 0 0 2.5px rgba(0,0,0, 0.5);
