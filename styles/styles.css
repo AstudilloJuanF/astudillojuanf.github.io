@@ -63,9 +63,50 @@ h1{
 	margin: 0;
 }
 
+#profession-title{
+	display: block;
+	background-color: #383830; /* Monokai background-color*/
+	color: white;
+	/* width: fit-content; */
+	padding: 0.75rem;
+	/* border-radius: 5px; */
+	box-shadow: 0 0 2.5px rgba(0,0,0, 0.5);
+}
+
 h3{
 	font-size: 1.5rem;
+	color: #00004d;
 }
+
+.monokai-background{
+	background-color: #383830;
+}
+
+.monokai-pink{
+	color: #F92672;
+}
+
+.monokai-gray-lightest, code{
+	color: #E6E6E6;
+}
+
+.monokai-blue{
+	color: #89BDFF;
+}
+
+.monokai-purple{
+	color: #AE81FF;
+}
+
+.monokai-green{
+	color: #A6E22A;
+}
+
+.pointer{
+	color: #E6E6E6;
+	animation: blink 1s infinite;
+}
+
 
 canvas{
 	display: block;
@@ -231,6 +272,18 @@ footer address{
 
 	#footer-grid-container{
 		display: block;
+	}
+}
+
+@keyframes blink{
+	0%{
+		color: transparent;
+	}
+	49%{
+		color: transparent;
+	}
+	50%{
+		color: #E6E6E6
 	}
 }
 
