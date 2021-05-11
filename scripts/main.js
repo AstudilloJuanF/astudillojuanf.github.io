@@ -95,10 +95,38 @@ function updateLanguage(){
 
 	htmlTag.lang != languageSelect.value ? htmlTag.lang = languageSelect.value : undefined;
 
-	languageSelect.children[0].innerText = languageJSON.spanish;
-	languageSelect.children[1].innerText = languageJSON.english;
-	languageSelect.children[2].innerText = languageJSON.german;
-	languageSelect.children[3].innerText = languageJSON.japanese;
+	function originalLanguage(language){
+
+		var returnLanguage
+
+		switch(language){
+			case 'es':
+				returnLanguage = languages.es.spanish;
+			break;
+			case 'en':
+				returnLanguage = languages.en.english;
+			break;
+			case 'de':
+				returnLanguage = languages.de.german;
+			break;
+			case 'ja':
+				returnLanguage = languages.ja.japanese;
+			break;
+		}
+
+		returnLanguage = `(${returnLanguage})`;
+
+		if (language === htmlTag.lang){
+			returnLanguage = '';
+		}
+
+		return returnLanguage;
+	};
+
+	languageSelect.children[0].innerText = `${languageJSON.spanish} ${originalLanguage('es')}`;
+	languageSelect.children[1].innerText = `${languageJSON.english} ${originalLanguage('en')}`;
+	languageSelect.children[2].innerText = `${languageJSON.german} ${originalLanguage('de')}`;
+	languageSelect.children[3].innerText = `${languageJSON.japanese} ${originalLanguage('ja')}`;
 
 	for(var i = 0; i < languageSelect.childElementCount; i++){
 		languageSelect.children[i].value === languageSelect.value ? languageSelect.children[i].selected = true : languageSelect.children[i].selected = false;
@@ -201,6 +229,7 @@ function requestProjectCard(url, projecType, projectTags){
 	<a class="project-link" href="${url}">
 		<h4 class="project-card-title">${cardTitle}</h4>
 		<figure class="project-card-media-wrap">
+				<p class="media-card-loading">Loading...</p>
 			<img class="project-card-img" src="${cardImgSrc}" alt="${cardTitle}">
 			${cardvideoHTMLTemplate}
 		</figure>
@@ -220,6 +249,28 @@ function requestProjectCard(url, projecType, projectTags){
 					currentCard.setAttribute('style', 'opacity: 1; transform: none;');
 					currentCard.removeAttribute('style');
 				}, 1000);
+
+				var currentCardImg = currentCard.getElementsByTagName('img')[0];
+
+				currentCardImg.onerror = ()=> {
+					currentCardImg.style.opacity = 0;
+					currentCardImg.loading = 'eager';
+				};
+				currentCardImg.onload = ()=> {
+					currentCardImg.style.opacity = 1;
+				};
+
+				var currentCardVideo = currentCard.getElementsByClassName('project-card-video')[0];
+				var currentCardLoadMsg = currentCard.getElementsByClassName('media-card-loading')[0];
+
+				if(typeof currentCardVideo !== 'undefined'){
+					currentCardVideo.addEventListener('playing', (e) => {
+						if(e.target.readyState === 4){
+							currentCardLoadMsg.style.opacity = 0;
+						}
+					}); 
+					currentCardVideo.onstop = ()=> currentCardLoadMsg.style.opacity = 1;
+				}
 			}
 
 			resizeCards();
@@ -288,7 +339,9 @@ function toggleCardVideo(e){
 
 			projectCardVideo.pause();
 
-			projectCardImage.removeAttribute('style');
+			if(projectCardImage.complete === true){
+				projectCardImage.style.opacity = 1;
+			}
 
 			setTimeout(	function(){
 

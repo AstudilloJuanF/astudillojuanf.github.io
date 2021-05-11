@@ -280,6 +280,15 @@ var menuModelLeftArrow = new Path2D();
 var menuModelRightArrow = new Path2D();
 var spacecraftSelectorBtn = new Path2D();
 
+var volumeMuteBtn = new Path2D();
+var volumeMaxBtn = new Path2D();
+var volumeBtn = {
+    bar: new Path2D(),
+    width: 270,
+    maxWidth: 270
+}
+
+
 var landingPlatform = new Path2D();
 
 var lEngineExhaust = new Path2D();
@@ -472,6 +481,7 @@ var game = {
     currentSpacecraft: gameModel,
     status: 'reset',
     graphics: 'medium',
+    volume: 1,
     difficulty: undefined,
     levels: 4,
     level: 1,
@@ -973,6 +983,12 @@ var menu = {
         this.current = 'settings';
         toggleExitButton();
 
+        game.volume = (volumeBtn.width * 100 / volumeBtn.maxWidth) * 0.01;
+
+        Object.entries(sounds).forEach(([key]) => {
+            sounds[key].volume = game.volume;
+        });
+
         ctx.save();
         this.drawBackground();
 
@@ -1000,7 +1016,33 @@ var menu = {
         menuModelRightArrow.lineTo(canvasW/8*6 + 130, canvasH/8*3 - 10);
         ctx.fill(menuModelRightArrow);
 
+        ctx.fillStyle = 'lightgray';
+
         ctx.fillText(game.currentSpacecraft.name, canvasW/8*6, canvasH/8*3);
+
+        volumeMuteBtn = new Path2D();
+        volumeMuteBtn.rect(canvasW/8*4.15, canvasH/8*5, ctx.measureText(text.mute).width, 30);
+        ctx.fillText(text.mute, canvasW/8*4.5, canvasH/8*5 + 25);
+        
+        volumeMaxBtn = new Path2D();
+        volumeMaxBtn.rect(canvasW/8*7.25 + 4, canvasH/8*5, ctx.measureText(text.maximum).width, 30);
+        ctx.fillText(text.maximum, canvasW/8*7.5, canvasH/8*5 + 25);
+
+        ctx.fillStyle = 'dimgray';
+        volumeBtn.bar = new Path2D();
+        volumeBtn.bar.rect(canvasW/8*6 - 130, canvasH/8*5, volumeBtn.maxWidth, 30);
+        ctx.fill(volumeBtn.bar);
+
+        ctx.fillStyle = 'white';
+
+        ctx.fillText(text.volume, canvasW/8*6, canvasH/8*4.5);
+        
+        ctx.stokeStyle = 'white';
+        ctx.fillRect(canvasW/8*6 - 130, canvasH/8*5, volumeBtn.width, 30);
+        ctx.strokeRect(canvasW/8*6 - 130, canvasH/8*5, volumeBtn.maxWidth, 30);
+
+        ctx.fillStyle = 'black';
+        ctx.fillText(Math.floor(game.volume * 100), canvasW/8*6 + 5, canvasH/8*5 + 25);
 
         ctx.restore();
     }
@@ -2014,11 +2056,30 @@ function menuInput(e){
 
     if(menu.current === 'settings'){
         if(ctx.isPointInPath(spacecraftSelectorBtn, eX, eY) || ctx.isPointInPath(menuModelRightArrow, eX, eY) || ctx.isPointInPath(menuModelLeftArrow, eX, eY)){
-
-            sounds.menuBlip.play();
-            gameModel === booster ? model.update(spaceShip) : model.update(booster); 
-            menu.settings();
+           
+            gameModel === booster ? model.update(spaceShip) : model.update(booster);  
         }
+
+        if(ctx.isPointInPath(volumeBtn.bar, eX, eY)){
+           if(scalingPercentage < 1){
+                volumeBtn.width = Math.abs(638 - eX/scalingPercentage);
+           }else{
+                volumeBtn.width = Math.abs(638 - eX);
+           }
+        }
+
+        if(ctx.isPointInPath(volumeMuteBtn, eX, eY)){
+            game.volume = 0;
+            volumeBtn.width = 0;
+        }
+
+        if(ctx.isPointInPath(volumeMaxBtn, eX, eY)){
+            game.volume = 1;
+            volumeBtn.width = volumeBtn.maxWidth;
+        }
+
+        sounds.menuBlip.play();
+        menu.settings();
     }
 
     if(e.code === 'Escape' || e.code === 'Backspace'){
