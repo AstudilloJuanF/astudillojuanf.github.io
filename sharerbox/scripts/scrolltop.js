@@ -38,10 +38,8 @@ var scrollTopHTML = `<style type="text/css">
 </div>
 `;
 
-(function(){
-	var footer = document.getElementsByTagName('footer')[0];
-	footer.insertAdjacentHTML('beforebegin', scrollTopHTML);
-})();
+var footer = document.getElementsByTagName('footer')[0];
+footer.insertAdjacentHTML('beforebegin', scrollTopHTML);
 
 var goTopLink = document.getElementById('go-top-link');
 
