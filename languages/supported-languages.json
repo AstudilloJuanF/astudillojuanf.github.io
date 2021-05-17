@@ -1,7 +1,7 @@
 {
 	"es": {
 		"language": "Idioma",
-		"selectLanguage": "Seleccionar idioma",
+		"chooseLanguage": "Selecciona tu idioma",
 		"currentlanguage": "Español",
 		"spanish": "Español",
 		"english": "Inglés",
@@ -22,7 +22,7 @@
 	},
 	"en": {
 		"language": "Language",
-		"selectLanguage": "Select language",
+		"chooseLanguage": "Select your language",
 		"currentlanguage": "English",
 		"spanish": "Spanish",
 		"english": "English",
@@ -43,7 +43,7 @@
 	},
 	"de": {
 		"language": "Sprache",
-		"selectLanguage": "Wähle eine Sprache",
+		"chooseLanguage": "Wähle deine Sprache",
 		"currentlanguage": "Deutsch",
 		"spanish": "Spanisch",
 		"english": "Englisch",
@@ -64,7 +64,7 @@
 	},
 	"ja": {
 		"language": "言語",
-		"selectLanguage": "言語を選択する",
+		"chooseLanguage": "言語を選択",
 		"currentLanguage": "日本語",
 		"spanish": "スペイン語",
 		"english": "英語",

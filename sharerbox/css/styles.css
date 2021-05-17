@@ -103,6 +103,7 @@ a{
 
 li{
 	background: #dde7fc;
+	max-width: -moz-fit-content;
 	max-width: fit-content;
 	padding: 8px;
 	border-radius: 4px;
@@ -129,6 +130,7 @@ li{
 	align-items: center;
 	background: linear-gradient(limegreen, green);
 	color: white;
+	width: -moz-fit-content;
 	width: fit-content;
 	padding: 4px;
 	margin: auto;
@@ -145,6 +147,7 @@ li{
 a{
 	display: block;
 	margin: auto;
+	width: -moz-fit-content;
 	width: fit-content;
 }
 
@@ -285,11 +288,13 @@ a{
 
 #input-options-wrap > div:first-of-type p{
 	display: inline-block;
+	width: -moz-fit-content;
 	width: fit-content;
 	margin: 1rem 2rem;
 }
 
 #input-options-flex-wrap div p{
+	width: -moz-fit-content;
 	width: fit-content;
 }
 
@@ -304,6 +309,7 @@ a{
 	flex-flow: row wrap;
 	justify-content: space-evenly;
 	align-items: center;
+	width: -moz-fit-content;
 	width: fit-content;
 	margin: auto;
 }
@@ -330,6 +336,7 @@ a{
 
 #toggable-code-wrapper{
 	height: 0;
+	width: -moz-fit-content;
 	width: fit-content;
 	max-width: 100%;
 	margin: auto;
@@ -338,6 +345,7 @@ a{
 }
 
 #toggable-code-wrapper pre{
+	height: -moz-fit-content;
 	height: fit-content;
 	max-width: 100%;
 	max-width: -webkit-fill-available;
@@ -360,7 +368,9 @@ code, pre{
 code{
 	background: dimgray;
 	color: white;
+	width: -moz-fit-content;
 	width: fit-content;
+	height: -moz-fit-content;
 	height: fit-content;
 	padding: 4px;
 	border-radius: 4px;
@@ -383,6 +393,7 @@ pre{
 	background: #272822;
 	color: white;
 	tab-size: 4;
+	height: -moz-fit-content;
 	height: fit-content;
 	padding: 8px;
 	margin: 1rem;
@@ -448,7 +459,9 @@ footer h3{
 
 #author-disclaimer{
 	cursor: pointer;
+	width: -moz-fit-content;
 	width: fit-content;
+	height: -moz-fit-content;
 	height: fit-content;
 	margin: auto;
 }
@@ -487,7 +500,8 @@ footer h3{
 	}
 
 	#input-options-flex-wrap div{
-		width: fit-content;
+
+width: -moz-fit-content;		width: fit-content;
 		margin: auto;
 	}
 

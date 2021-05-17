@@ -97,7 +97,7 @@ function updateLanguage(){
 
 	function originalLanguage(language){
 
-		var returnLanguage
+		var returnLanguage;
 
 		switch(language){
 			case 'es':
@@ -134,7 +134,7 @@ function updateLanguage(){
 
 	if(languageSelect.value != (''||null||undefined)){
 
-		languageSelectLabel.innerText = languageJSON.selectLanguage;
+		languageSelectLabel.innerText = languageJSON.chooseLanguage;
 
 		for(var i = 0; i < flagImg.length; i++){
 			languageSelect.children[i].selected ? flagImg[i].style.display = 'block' : flagImg[i].removeAttribute('style');
@@ -251,13 +251,22 @@ function requestProjectCard(url, projecType, projectTags){
 				}, 1000);
 
 				var currentCardImg = currentCard.getElementsByTagName('img')[0];
+				currentCardImg.setAttribute('data-state', '');
 
-				currentCardImg.onerror = ()=> {
+				currentCardImg.onerror = () => {
 					currentCardImg.style.opacity = 0;
 					currentCardImg.loading = 'eager';
+					currentCardImg.setAttribute('data-state', 'failed');
 				};
 				currentCardImg.onload = ()=> {
 					currentCardImg.style.opacity = 1;
+					currentCardImg.setAttribute('data-state', 'loaded');
+				};
+
+				currentCardImg.onmouseover = () => {
+					if(currentCardImg.getAttribute('data-state') === 'failed'){
+						currentCardImg.src = currentCardImg.src;
+					}
 				};
 
 				var currentCardVideo = currentCard.getElementsByClassName('project-card-video')[0];
@@ -339,7 +348,8 @@ function toggleCardVideo(e){
 
 			projectCardVideo.pause();
 
-			if(projectCardImage.complete === true){
+			if(projectCardImage.complete){
+				projectCardImage.src = projectCardImage.src;
 				projectCardImage.style.opacity = 1;
 			}
 

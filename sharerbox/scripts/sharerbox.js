@@ -471,7 +471,7 @@ function sharerSetup(behavior = 'popup', position = 'right', color = 'black', vi
 
 
 
-	var socialIconsCollection = document.getElementsByClassName('sharerbox-icon');
+	var socialIconsCollection = document.getElementsByClassName('sharerbox-socialmedia-link');
 
 	// Link elements variables
 

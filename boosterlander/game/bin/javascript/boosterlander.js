@@ -42,12 +42,23 @@ var scalingPercentage = 1;
 const pauseButton = document.getElementById('pause-game-button');
 const exitButton =  document.getElementById('exit-game-button');
 
-// hidden canvas
-const hiddenCanvas = new OffscreenCanvas(CTX_INITIAL_X_SCALE, CTX_INITIAL_Y_SCALE);
-const hiddenCtx = hiddenCanvas.getContext('2d');
+// hidden canvas & star background canvas
 
-// star background Canvas
-const starsCanvas = new OffscreenCanvas(CTX_INITIAL_X_SCALE, CTX_INITIAL_Y_SCALE);
+if(window.chrome){
+    var hiddenCanvas = new OffscreenCanvas(CTX_INITIAL_X_SCALE, CTX_INITIAL_Y_SCALE);
+    var starsCanvas = new OffscreenCanvas(CTX_INITIAL_X_SCALE, CTX_INITIAL_Y_SCALE);
+} else {
+    var hiddenCanvas = document.createElement('canvas');
+    hiddenCanvas.width = CTX_INITIAL_X_SCALE;
+    hiddenCanvas.height = CTX_INITIAL_Y_SCALE;
+
+    var starsCanvas = document.createElement('canvas');
+    starsCanvas.width = CTX_INITIAL_X_SCALE;
+    starsCanvas.height = CTX_INITIAL_Y_SCALE;
+
+}
+
+const hiddenCtx = hiddenCanvas.getContext('2d');
 const starsCtx = starsCanvas.getContext('2d');
 
 // Star background Image

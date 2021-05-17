@@ -38,6 +38,7 @@ canvas{
 
 #game-buttons-wrap{
     margin: 1.5rem auto;
+    width: -moz-fit-content;
     width: fit-content;
 }
 
@@ -56,6 +57,7 @@ canvas{
     display: block;
     margin: auto;
     padding: 1rem;
+    width: -moz-fit-content;
     width: fit-content;
 }
 
@@ -64,6 +66,7 @@ canvas{
 {
     display: block;
     margin: 0.5rem auto;
+    width: -moz-fit-content;
     width: fit-content;
 }
 
@@ -79,6 +82,7 @@ h1,h2,h3,p{
 a{
     text-decoration: none;
     display: block;
+    width: -moz-fit-content;
     width: fit-content;
     margin: auto;
 }

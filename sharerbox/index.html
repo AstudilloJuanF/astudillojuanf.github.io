@@ -68,7 +68,7 @@
 					<div id="overview-text-box">
 						<p> &nbsp; <strong>SharerBox</strong> is a free, minimalistic and lightweight <i>JavaScript-Based</i> social-media sharebar feature developed to provide fast and easy-to-use social-media sharing integration for small websites by eliminating the need of loading heavy/bulky third-party social APIs, which generally have a negative impact on loading speeds and unauthorizedly recolect private user information.</p>
 						<p> &nbsp; Integrating SharerBox directly on your website for sharing social-media instead of external social APIs should significantly reduce loading speeds for visitors connected on slow networks, which will result on improved SEO indexation for your website and enhanced performance, user experience and device portability for your visitors, this specially for users connected from old computers or low-end devices. Plus, since there is no need for implementing obscure social third-party code there is no unauthorized recolection of private user information directly derived from SharerBox use.</p>
-						<p> &nbsp; SharerBox is currently a personal development project, but it's implementation is intended to be intuitive for unexperienced users as well as very easy to customize for developers.</p>
+						<p> &nbsp; SharerBox is currently a personal development project, but its implementation is intended to be intuitive for unexperienced users as well as very easy to customize for developers.</p>
 					</div>
 					<h3 style="text-align: center;">Support:</h3>
 					<div id="supported-icons-wrapper">
@@ -164,7 +164,7 @@
 								<div>
 									<h3>Color:</h3>
 									<img class="input-options-img" src="./icons/color-wheel.svg">
-									<label class="input-wrapping-label" for="color-picker-input">Choose color: <input type="color" id="color-picker-input"></label>
+									<label class="input-wrapping-label" for="color-picker-input">Choose color: <input type="color" id="color-picker-input" value="#000000"></label>
 								</div>
 								<div>
 									<h3>Size:</h3>
@@ -219,13 +219,13 @@
 					</ul>
 					<div class="setting-option-wrap">
 						<h4>Setting Icons:</h4>
-						<p> &nbsp; You can specify which social-network icons will be displayed by SharerBox by going to the <code><span class="function-call">sharerboxIcons</span>()</code> function inside the <code><span class="identifyer">&lt;body&gt;</span></code> tag code snippet and typing a list of supported social-network items separated by spaces or commas, the full list must be a single text string (wrapped around quotation marks).</p>
+						<p> &nbsp; When you integrate SharerBox, you can specify which social-network icons SharerBox will display by setting the <code><span class="function-call">sharerboxIcons</span>()</code> function in the script which will be placed inside the HTML <code><span class="identifyer">&lt;body&gt;</span></code> tag with a list of supported social-network items separated either by spaces or commas, the full list must be on a single text string (text wrapped around quotation marks).</p>
 						<p><i class="example-subtitle">Example:</i> <b>&lt;/&gt;</b></p>
 							<pre class="code-snippet">
 <span class="function-call">sharerboxIcons</span>(<span class="code-quotes">'site1, site2, site3, site...'</span>);
 							</pre>
-						<p><i> &nbsp; (if this function is leaved blank SharerBox will display it's default social icons)</i></p>
-						<p>Additionally, you can customize the size of the buttons by adding an additional numeric parameter representing a given number of pixels (accepted size ranges: 25-100 pixels):</p>
+						<p><i> &nbsp; (if this function is leaved blank SharerBox will display its default social icons)</i></p>
+						<p>Additionally, you can customize the size of the buttons by adding an additional numeric parameter representing a given number of pixels (default size: 45 pixels, accepted size ranges: 25 to 100 pixels):</p>
 						<p><i class="example-subtitle">Example:</i> <b>&lt;/&gt;</b></p>
 							<pre class="code-snippet">
 <span class="function-call">sharerboxIcons</span>(<span class="code-quotes">'site1, site2, site3, site...'</span>, <span class="boolean">45</span> );
@@ -246,7 +246,7 @@
 							<code class="code-snippet">
 								<span class="function-call">sharerSetup</span>(<span class="code-quotes">'tab'</span>, <span class="code-quotes">'right'</span>, <span class="code-quotes">'black'</span>, <span class="code-quotes">'visible'</span>);
 							</code>
-						<p><i> &nbsp; (if these options are leaved blank SharerBox will display it's default behavior)</i></p>
+						<p><i> &nbsp; (if these options are leaved blank SharerBox will display its default behavior)</i></p>
 					</div>
 				</section>
 				<section class="sections">

@@ -95,42 +95,44 @@ notificationsBtn.onclick = () => {
 };
 
 window.addEventListener('blur' , function(){
-    if(game.status === 'started' || game.status === 'paused'){
+    if(game){
+        if(game.status === 'started' || game.status === 'paused'){
 
-        if(game.status === 'started'){
-            game.pause();
-        }
-        
-        if(Notification.permission === 'granted' && notificationButtonEnabled === true){
-
-            var notificationTitle = 'Booster Lander';
-            var notificationObject = {
-                icon: 'icons/favicon.png',
-                body: siteText.gamePaused,
-                lang: navigatorLang,
-                vibrate: [100, 50, 100],
-                data: {
-                    primaryKey: 1,
-                    url: self.location.href
-                },
-                tag: 'boosterlander-notification',
-                actions: [
-                    {
-                        action: 'go',
-                        title: siteText.resume
-                       
-                    },
-                    {
-                        action: 'close',
-                        title: siteText.close
-                    }
-                ]
+            if(game.status === 'started'){
+                game.pause();
             }
-
-            navigator.serviceWorker.getRegistration()
-            .then((registration) => {
-                registration.showNotification(notificationTitle, notificationObject);
-            });
+            
+            if(Notification.permission === 'granted' && notificationButtonEnabled === true){
+    
+                var notificationTitle = 'Booster Lander';
+                var notificationObject = {
+                    icon: 'icons/favicon.png',
+                    body: siteText.gamePaused,
+                    lang: navigatorLang,
+                    vibrate: [100, 50, 100],
+                    data: {
+                        primaryKey: 1,
+                        url: self.location.href
+                    },
+                    tag: 'boosterlander-notification',
+                    actions: [
+                        {
+                            action: 'go',
+                            title: siteText.resume
+                           
+                        },
+                        {
+                            action: 'close',
+                            title: siteText.close
+                        }
+                    ]
+                }
+    
+                navigator.serviceWorker.getRegistration()
+                .then((registration) => {
+                    registration.showNotification(notificationTitle, notificationObject);
+                });
+            }
         }
     }
 });

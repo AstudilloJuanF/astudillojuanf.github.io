@@ -168,10 +168,30 @@ function customizeSharerbox(){
 
 var formButtonsIcons = document.getElementsByClassName('form-buttons-icon');
 var formButtonsWrap = document.getElementById('form-buttons-wrap');
+var resetButton = formButtonsWrap.children[1];
 
 function displayButtonIcon(number){
+    
     formButtonsIcons[number].removeAttribute('style');
+
     if(number === 0){
+
+        checkAll.checked = false;
+        uncheckAll.checked = false;
+
+        colorInput.value = colorInput.defaultValue;
+        buttonsSizeInput.value = buttonsSizeInput.defaultValue;
+
+        for(var i = 0; i < checkArray.length; i++){
+            checkArray[i].defaultChecked === true ? checkArray[i].checked = true : checkArray[i].checked = false;
+        }
+
+        for(var i = 0; i < 2; i++){
+            behaviorRadioInput[i].defaultChecked === true ? behaviorRadioInput[i].checked = true : undefined;
+            positionRadioInput[i].defaultChecked === true ? positionRadioInput[i].checked = true : undefined;
+            visibilityRadioInput[i].defaultChecked === true ? visibilityRadioInput[i].checked = true : undefined;
+        }
+
         formButtonsWrap.children[1].value = 'Default';
         formButtonsIcons[number].style.cssText = 'transition: linear 0.35s; opacity: 1; transform: rotate(360deg)';
         setTimeout(function(){formButtonsIcons[number].style.transitionDuration = '0.1s';}, 1000);

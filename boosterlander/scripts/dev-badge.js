@@ -9,6 +9,7 @@ var badgeHTML = `<section class="disclaimer">
 			right: 0;
 			bottom: 60px;
 			background: #404040;
+			width: -moz-fit-content;
 			width: fit-content;
 			height: auto;
 			margin: auto;
@@ -63,6 +64,7 @@ var badgeHTML = `<section class="disclaimer">
 
 		#badge-wrapper{
 			display: block;
+			width: -moz-fit-content;
 			width: fit-content;
 			height: auto;
 			margin: auto;
@@ -114,7 +116,7 @@ var badgeHTML = `<section class="disclaimer">
 		</div>
 		<div id="badge-wrapper">
 			<figure>
-				<img src="./images/developer.jpg" alt="Website Developer">
+				<img src="/images/developer.jpg" alt="Website Developer">
 			</figure>
 			<div id="badge-text-wrapper">
 				<p style="font-weight:bold; margin-top: 0.5rem;">Juan Astudillo</p>

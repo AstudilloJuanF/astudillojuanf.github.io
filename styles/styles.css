@@ -25,13 +25,8 @@ nav {
 }
 
 #language-select-label {
-	opacity: 0;
 	font-size: 0.8rem;
 	transition: 0.125s ease;
-}
-
-nav:hover #language-select-label {
-	opacity: 1;
 }
 
 label:nth-of-type(2) {
@@ -53,6 +48,7 @@ label:nth-of-type(2) {
 header{
 	display: block;
 	width: 100%;
+	height: -moz-fit-content;
 	height: fit-content;
 	margin: 0;
 	padding: 0;
@@ -64,15 +60,18 @@ h1{
 }
 
 #profession-title-wrap{
-	margin-top: 1rem;
 	background-color: black;
-	width: 100%;
+	width: auto;
+	margin: auto;
+	margin-top: 1rem;
+	padding: 0 1rem;
 }
 
 #profession-title{
 	display: block;
 	background-color: #383830; /* Monokai background-color*/
 	color: white;
+	width: -moz-fit-content;
 	width: fit-content;
 	margin: auto;
 	padding: 0.75rem;
@@ -135,6 +134,7 @@ h1,h2,h3,p{
 a{
 	text-decoration: none;
 	display: block;
+	width: -moz-fit-content;
 	width: fit-content;
 	margin: auto;
 }
@@ -145,6 +145,7 @@ a{
 	justify-content: center;
 	align-content: space-evenly;
 	width: 90%;
+	height: -moz-fit-content;
 	height: fit-content;
 	margin: auto;
 }
@@ -192,7 +193,9 @@ a{
 	left: 0;
 	right: 0;
 	bottom: 0;
+	width: -moz-fit-content;
 	width: fit-content;
+	height: -moz-fit-content;
 	height: fit-content;
 	margin: auto;
 }
@@ -252,6 +255,7 @@ footer{
 	margin-top: 4rem;
 	padding: 0;
 	width: auto;
+	height: -moz-fit-content;
 	height: fit-content;
 	border: solid 1px black;
 }
