@@ -1887,6 +1887,8 @@ function gameplayInput(e){
 
         var reEntryBoosterThrust = EARTH_GRAVITY/fps;
 
+        e.code === 'Space' ? e.preventDefault() : undefined;
+
         if(game.status === 'started' && model.status != 'crashed'){
             if(model.fuel > 0){
                 if(e.code === 'KeyW'){
@@ -1897,6 +1899,7 @@ function gameplayInput(e){
                 }
 
                 if(e.code === 'KeyL' || e.code === 'Space'){
+
                     engines.drawLeft();
                     engines.drawMain();
                     engines.drawRight();
