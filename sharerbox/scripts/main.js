@@ -46,12 +46,15 @@ function toggleCodeSnippet(e){
 
     if (toggableCodeWrapper.style.height < '1px') {
 
+        var cssHeightRule = 'fit-content';
+        navigator.vendor === '' ? cssHeightRule = '-moz-fit-content' : undefined;
+
         toggableCodeWrapper.style.height = '250px';
-        codeSnippet.style.height = 'fit-content';
+        codeSnippet.style.height = cssHeightRule;
         codeSnippet.style.height = `${codeSnippet.offsetHeight}px`;
         toggableCodeWrapper.style.height = `${codeSnippet.offsetHeight + copyCodeSnippetBtn.offsetHeight + 16 + 2 +16}px`;
         setTimeout(function(){
-            toggableCodeWrapper.style.height = 'fit-content'
+            toggableCodeWrapper.style.height = 'fit-content';
         }, 250);
 
         e.target.value = 'Hide Code';

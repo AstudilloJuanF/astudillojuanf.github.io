@@ -11,7 +11,9 @@ var scrollTopHTML = `<style type="text/css">
 		display: block;
 		opacity: 0.5;
 		bottom: 0;
+		width: -moz-fit-content;
 		width: fit-content;
+		height: -moz-fit-content;
 		height: fit-content;
 		margin: auto;
 		margin-top: 5rem;
