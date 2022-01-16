@@ -124,8 +124,8 @@ function displayLoadingScreen(){
 
     var loadingMsg = loadingText();
 
-    var textDot;
-    navigator.language.slice(0, 2) === 'ja' ? textDot = '・' : textDot = '.';
+    var textDotChar;
+    navigator.language.slice(0, 2) === 'ja' ? textDotChar = '・' : textDotChar = '.';
 
 
     var i = 0;
@@ -133,7 +133,7 @@ function displayLoadingScreen(){
     loadingScreenInterval = setInterval(function(){
 
         if(i < 3){
-            suspenseDots = suspenseDots.concat(textDot);
+            suspenseDots = suspenseDots.concat(textDotChar);
             i++;
         }else{
             suspenseDots = '';
@@ -175,12 +175,17 @@ function recolorCanvasContainer(color = 'black'){
     if(canvas.height === window.innerHeight && game.status.match(/started|paused|over/)){
         canvasSection.style.background = color;
         canvasSection.style.color = 'white';
-        separators[0].style.background = 'linear-gradient(45deg, transparent,rgba(255,255,255, 0.5), transparent)';
-        separators[1].style.background = 'linear-gradient(45deg, transparent,rgba(255,255,255, 0.5), transparent)';
+
+        for(var i = 0; i < separators.length; i++) {
+            separators[i].style.background = 'linear-gradient(45deg, transparent,rgba(255,255,255, 0.5), transparent)';
+        }
+
     }else{
         canvasSection.removeAttribute('style');
-        separators[0].removeAttribute('style');
-        separators[1].removeAttribute('style');
+        
+        for(var i = 0; i < separators.length; i++) {
+            separators[i].removeAttribute('style');
+        }
     }
 }
 
