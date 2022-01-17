@@ -87,7 +87,7 @@ drawStars();
 
 // focus the game frame on the screen
 function focusGameFrame(){
-    !game.status.match(/reset|paused/) ? window.scrollTo(0, canvas.offsetTop) : undefined;
+    game && !game.status.match(/reset|paused|loading|loaded|error/) ? window.scrollTo(0, canvas.offsetTop) : undefined;
     recolorCanvasContainer();
 }
 
@@ -100,40 +100,48 @@ screen.orientation.addEventListener('change', focusGameFrame);
 var loadingScreenInterval;
 function displayLoadingScreen(){
 
-    var loadingText = function(){
-        var lang = navigator.language.slice(0, 2);
-        var message = 'Loading...'; // Fallback loading message
+    var displayText = function(){
+        let lang = navigator.language.slice(0, 2);
+        let loadingMsg = 'Loading...'; // Fallback loading message
+        let errorMsg = 'Error'; // Fallback error message
 
         switch(lang){
             case 'es': // Spanish
-                message = 'Cargando';
+                loadingMsg = 'Cargando';
+                errorMsg = 'Error';
             break;
             case 'en': // English
-                message = 'Loading';
+                loadingMsg = 'Loading';
+                errorMsg = 'Error';
             break;
             case 'de': // German
-                message = 'Laden';
+                loadingMsg = 'Laden';
+                errorMsg = 'Fehler';
             break;
             case 'ja': // Japanese
-                message = '読み込み中';
+                loadingMsg = '読み込み中';
+                errorMsg = 'エラー';
             break;
         }
 
-        return message;
+        if(game.status === 'error') {
+            return errorMsg;
+        }
+
+        return loadingMsg;
     };
 
-    var loadingMsg = loadingText();
-
-    var textDotChar;
-    navigator.language.slice(0, 2) === 'ja' ? textDotChar = '・' : textDotChar = '.';
+    let dotChar;
+    navigator.language.slice(0, 2) === 'ja' ? dotChar = '・' : dotChar = '.';
 
 
-    var i = 0;
-    var suspenseDots = '';
+    let i = 0;
+    let suspenseDots = '';
+    loadingScreenInterval = null;
     loadingScreenInterval = setInterval(function(){
 
         if(i < 3){
-            suspenseDots = suspenseDots.concat(textDotChar);
+            suspenseDots = suspenseDots.concat(dotChar);
             i++;
         }else{
             suspenseDots = '';
@@ -147,12 +155,17 @@ function displayLoadingScreen(){
         ctx.font = '75px sans serif';
         ctx.textBaseline = 'center';
         ctx.textAlign = 'center'
-        ctx.fillText(loadingMsg, canvasW/2, canvasH/2);
+        ctx.fillText(displayText(), canvasW/2, canvasH/2);
         ctx.fillText(suspenseDots, canvasW/2, canvasH/2 + 75);
         ctx.restore();
 
-        if(typeof game.status !== 'undefined'){
+        if (typeof languages !== 'undefined'){
+            game.status = 'reset';
+        }
+
+        if(typeof game !== 'undefined' && game.status !== 'error'){
             clearInterval(loadingScreenInterval);
+            displayGameMenu();
         }
 
     }, 1000);
@@ -167,8 +180,8 @@ var text, languages;
 fetch('game/languages/languages.json')
 .then((response)=> response.json().then((responseJSON)=> {
         languages = responseJSON;
-        welcomeScreen();
-    })
+    },
+    (errorResponse)=> game.status = 'error')
 );
 
 function recolorCanvasContainer(color = 'black'){
@@ -231,14 +244,19 @@ function resizeGame(e){
         canvas.style.margin = 'auto';
     }
 
-    e.type === 'load' ? displayLoadingScreen() : undefined;
+    if(e.type === 'load'){
+        if(game.status.match(/loading|error/)){
+            clearInterval(loadingScreenInterval)
+            displayLoadingScreen();
+        }
+    }
 
         /* Calling the drawImage or the PutImageData methods instead of this workaround would work for
         resizing the game screen but it would have detrimental effects on the display resolution */
 
-            if(game.status === 'reset'){
+            if(game.status.match(/loaded|reset/)){
                 var menuStatus = menu.current;
-                welcomeScreen();
+                displayGameMenu();
                 switch(menuStatus){
                     case 'instructions':
                         menu.instructions();
@@ -495,7 +513,7 @@ var game = {
         description: undefined
     },
     currentSpacecraft: gameModel,
-    status: 'reset',
+    status: 'loading',
     graphics: 'medium',
     volume: 1,
     difficulty: undefined,
@@ -740,8 +758,7 @@ var game = {
 
         clearInterval(physicsInterval.valueOf());
 
-        welcomeScreen();
-
+        displayGameMenu();
     }
 };
 
@@ -1784,7 +1801,7 @@ function stats(){
 }
 
 // Displays a welcome screen for the game
-function welcomeScreen(){
+function displayGameMenu(){
 
     setLanguage();
 
@@ -2022,7 +2039,7 @@ function menuInput(e){
         if(game.status === 'reset' && menu.current != 'welcome'){
             if (ctx.isPointInPath(menuBackgroundTouchArea, eX, eY)){
                 sounds.switch.play();
-                welcomeScreen();
+                displayGameMenu();
             }
         }
 
@@ -2378,7 +2395,7 @@ pauseButton.onclick = function(){
 
 exitButton.onclick = () => {
     sounds.switch.play(); 
-    menu.active === false ? game.reset() : welcomeScreen(); 
+    menu.active === false ? game.reset() : displayGameMenu(); 
 };
 
 function toggleExitButton(){
