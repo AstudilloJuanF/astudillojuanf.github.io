@@ -62,7 +62,7 @@ const hiddenCtx = hiddenCanvas.getContext('2d');
 const starsCtx = starsCanvas.getContext('2d');
 
 // Star background Image
-var starBackgroundImg, starBackgroundImgDisplay;
+var bgStars, bgStarsDisplay;
 
 function drawStars(starsCount = 100){
     
@@ -71,23 +71,23 @@ function drawStars(starsCount = 100){
 
     for(var i = 0; i < starsCount; i++){
         
-        var star = new Path2D();
+        var stars = new Path2D();
 
         starsCtx.fillStyle = 'white';
-        star.arc(Math.random()*starsCanvas.width, Math.random()*starsCanvas.height, 1, 0, Math.PI*2);
+        stars.arc(Math.random()*starsCanvas.width, Math.random()*starsCanvas.height, 1, 0, Math.PI*2);
         
-        starsCtx.fill(star);
+        starsCtx.fill(stars);
     }
 
-    starBackgroundImg = starsCtx.getImageData(0,0, starsCanvas.width, starsCanvas.height);
-    starBackgroundImgDisplay = starBackgroundImg;
+    bgStars = starsCtx.getImageData(0,0, starsCanvas.width, starsCanvas.height);
+    bgStarsDisplay = bgStars;
 }
 
 drawStars();
 
 // focus the game frame on the screen
 function focusGameFrame(){
-    game && !game.status.match(/reset|paused|loading|loaded|error/) ? window.scrollTo(0, canvas.offsetTop) : undefined;
+    game && game.status.match(/started|over/) ? window.scrollTo(0, canvas.offsetTop) : undefined;
     recolorCanvasContainer();
 }
 
@@ -1909,43 +1909,48 @@ function gameplayInput(e){
 
         var reEntryBoosterThrust = EARTH_GRAVITY/fps;
 
-        e.code === 'Space' ? e.preventDefault() : undefined;
+        if(e.type.includes('key')){
+            e.code === 'Space' || e.code.includes('Arrow', 0) ? e.preventDefault() : undefined;
+        }
 
         if(game.status === 'started' && model.status != 'crashed'){
             if(model.fuel > 0){
-                if(e.code === 'KeyW'){
-                    model.vy += -model.vy / 40;
-                    engines.drawMain();
-                    model.fuel -= 500;
-                    model.inclination < 0 ? model.inclination += 0.5 : model.inclination > 0 ? model.inclination -= 0.5 : undefined;
+                if(e.type.includes('key')){
+                    if(e.code.match(/KeyW|ArrowUp/)){
+                        model.vy += -model.vy / 40;
+                        engines.drawMain();
+                        model.fuel -= 500;
+                        model.inclination < 0 ? model.inclination += 0.5 : model.inclination > 0 ? model.inclination -= 0.5 : undefined;
+                    }
+
+                    if(e.code === 'KeyL' || e.code === 'Space'){
+
+                        engines.drawLeft();
+                        engines.drawMain();
+                        engines.drawRight();
+
+                        model.vy += -model.vy / 20;
+                        model.vx += -model.vx / 100;
+                        model.fuel -= 1000;
+                        model.inclination < 0 ? model.inclination += 0.5 : model.inclination > 0 ? model.inclination -= 0.5 : undefined;
+                    }
+
+                    if(e.code.match(/KeyA|ArrowLeft/)){
+                        engines.drawRight();
+                        model.vx -= 0.5;
+                        model.vy += -model.vy / 80;
+                        model.fuel -= 250;
+                        model.inclination < model.inclinationLimit ? model.inclination += 0.5 : undefined;
+                    }
+                    if(e.code.match(/KeyD|ArrowRight/)){
+                        engines.drawLeft();
+                        model.vx += 0.5;
+                        model.vy += -model.vy / 80;
+                        model.fuel -= 250;
+                        model.inclination > -model.inclinationLimit ? model.inclination -= 0.5 : undefined;
+                    }
                 }
 
-                if(e.code === 'KeyL' || e.code === 'Space'){
-
-                    engines.drawLeft();
-                    engines.drawMain();
-                    engines.drawRight();
-
-                    model.vy += -model.vy / 20;
-                    model.vx += -model.vx / 100;
-                    model.fuel -= 1000;
-                    model.inclination < 0 ? model.inclination += 0.5 : model.inclination > 0 ? model.inclination -= 0.5 : undefined;
-                }
-
-                if(e.code === 'KeyA'){
-                    engines.drawRight();
-                    model.vx -= 0.5;
-                    model.vy += -model.vy / 80;
-                    model.fuel -= 250;
-                    model.inclination < model.inclinationLimit ? model.inclination += 0.5 : undefined;
-                }
-                if(e.code === 'KeyD'){
-                    engines.drawLeft();
-                    model.vx += 0.5;
-                    model.vy += -model.vy / 80;
-                    model.fuel -= 250;
-                    model.inclination > -model.inclinationLimit ? model.inclination -= 0.5 : undefined;
-                }
                 if(Math.sign(e.movementX) === -1){
                     engines.drawRight();
                     model.vx -= 0.5;

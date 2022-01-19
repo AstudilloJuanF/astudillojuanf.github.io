@@ -36,6 +36,15 @@ canvas{
     padding-bottom: 4rem;
 }
 
+#canvas-frame {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: black;
+    color: white;
+    border: solid 1px black;
+}
+
 #game-buttons-wrap{
     margin: 1.5rem auto;
     width: -moz-fit-content;
