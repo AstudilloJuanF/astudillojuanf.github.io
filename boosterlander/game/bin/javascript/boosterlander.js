@@ -18,6 +18,45 @@
 
 //-------------------------------------------------------------------------------------
 
+const getDeviceOS = function() {
+
+    let platformInfo, platform = '';
+
+    let listOS = [
+        'linux',
+        'android',
+        'mac',
+        'ios',
+        'iphone',
+        'win'
+    ];
+
+    if (navigator.platform) {
+
+        platformInfo = navigator.platform;
+
+    } else if (navigator.userAgentData) {
+
+        platformInfo = navigator.userAgentData.platform;
+        
+    } else {
+
+        platformInfo = navigator.userAgent;
+    }
+
+    platformInfo = platformInfo.toLowerCase();
+    platform = platformInfo;
+    
+
+    listOS.forEach(function(index) {
+        platformInfo.includes(index) ? platform = index : undefined;
+    });
+
+    platform === 'win' ? platform = 'window' : undefined;
+
+    return platform;
+};
+
 const canvasSection = document.getElementById('canvas-section');
 
 const canvas = document.getElementById('canvas-frame');
@@ -44,7 +83,7 @@ const exitButton =  document.getElementById('exit-game-button');
 
 // hidden canvas & star background canvas
 
-if(window.chrome){
+if (window.chrome) {
     var hiddenCanvas = new OffscreenCanvas(CTX_INITIAL_X_SCALE, CTX_INITIAL_Y_SCALE);
     var starsCanvas = new OffscreenCanvas(CTX_INITIAL_X_SCALE, CTX_INITIAL_Y_SCALE);
 } else {
@@ -64,12 +103,12 @@ const starsCtx = starsCanvas.getContext('2d');
 // Star background Image
 var bgStars, bgStarsDisplay;
 
-function drawStars(starsCount = 100){
+function drawStars(starsCount = 100) {
     
     starsCtx.fillStyle = 'black';
     starsCtx.fillRect(0, 0, starsCanvas.width, starsCanvas.height);
 
-    for(var i = 0; i < starsCount; i++){
+    for(var i = 0; i < starsCount; i++) {
         
         var stars = new Path2D();
 
@@ -86,7 +125,7 @@ function drawStars(starsCount = 100){
 drawStars();
 
 // focus the game frame on the screen
-function focusGameFrame(){
+function focusGameFrame() {
     game && game.status.match(/started|over/) ? window.scrollTo(0, canvas.offsetTop) : undefined;
     recolorCanvasContainer();
 }
@@ -98,14 +137,14 @@ screen.orientation.addEventListener('change', focusGameFrame);
 
 // fallback loading message
 var loadingScreenInterval;
-function displayLoadingScreen(){
+function displayLoadingScreen() {
 
-    var displayText = function(){
+    var displayText = function() {
         let lang = navigator.language.slice(0, 2);
         let loadingMsg = 'Loading...'; // Fallback loading message
         let errorMsg = 'Error'; // Fallback error message
 
-        switch(lang){
+        switch(lang) {
             case 'es': // Spanish
                 loadingMsg = 'Cargando';
                 errorMsg = 'Error';
@@ -124,7 +163,7 @@ function displayLoadingScreen(){
             break;
         }
 
-        if(game.status === 'error') {
+        if (game.status === 'error') {
             return errorMsg;
         }
 
@@ -138,12 +177,12 @@ function displayLoadingScreen(){
     let i = 0;
     let suspenseDots = '';
     loadingScreenInterval = null;
-    loadingScreenInterval = setInterval(function(){
+    loadingScreenInterval = setInterval(function() {
 
-        if(i < 3){
+        if (i < 3) {
             suspenseDots = suspenseDots.concat(dotChar);
             i++;
-        }else{
+        } else {
             suspenseDots = '';
             i = 0;
         }
@@ -159,11 +198,11 @@ function displayLoadingScreen(){
         ctx.fillText(suspenseDots, canvasW/2, canvasH/2 + 75);
         ctx.restore();
 
-        if (typeof languages !== 'undefined'){
+        if (typeof languages !== 'undefined') {
             game.status = 'reset';
         }
 
-        if(typeof game !== 'undefined' && game.status !== 'error'){
+        if (typeof game !== 'undefined' && game.status !== 'error') {
             clearInterval(loadingScreenInterval);
             displayGameMenu();
         }
@@ -171,7 +210,7 @@ function displayLoadingScreen(){
     }, 1000);
 }
 
-if (typeof languages === 'undefined'){
+if (typeof languages === 'undefined') {
     displayLoadingScreen();
 }
 
@@ -184,8 +223,8 @@ fetch('game/languages/languages.json')
     (errorResponse)=> game.status = 'error')
 );
 
-function recolorCanvasContainer(color = 'black'){
-    if(canvas.height === window.innerHeight && game.status.match(/started|paused|over/)){
+function recolorCanvasContainer(color = 'black') {
+    if (canvas.height === window.innerHeight && game.status.match(/started|paused|over/)) {
         canvasSection.style.background = color;
         canvasSection.style.color = 'white';
 
@@ -193,7 +232,7 @@ function recolorCanvasContainer(color = 'black'){
             separators[i].style.background = 'linear-gradient(45deg, transparent,rgba(255,255,255, 0.5), transparent)';
         }
 
-    }else{
+    } else {
         canvasSection.removeAttribute('style');
         
         for(var i = 0; i < separators.length; i++) {
@@ -203,7 +242,7 @@ function recolorCanvasContainer(color = 'black'){
 }
 
 // --------- Game frame resizing function ----------------------- TESTING...
-function resizeGame(e){
+function resizeGame(e) {
 
     // copy main canvas image into the hidden canvas
 
@@ -220,14 +259,14 @@ function resizeGame(e){
 
     ctx.resetTransform();
 
-    if(deviceW < CTX_INITIAL_X_SCALE || deviceH < CTX_INITIAL_Y_SCALE){
+    if (deviceW < CTX_INITIAL_X_SCALE || deviceH < CTX_INITIAL_Y_SCALE) {
 
-        if(deviceW <= deviceH){
+        if (deviceW <= deviceH) {
             scalingPercentage = deviceW / CTX_INITIAL_X_SCALE;
             canvas.width = deviceW;
             canvas.height = Math.floor((CTX_INITIAL_Y_SCALE / CTX_INITIAL_X_SCALE) * deviceW);
             canvas.style.margin = '0';
-        }else{
+        } else {
             scalingPercentage = deviceH / CTX_INITIAL_Y_SCALE;
             canvas.height = deviceH;
             canvas.width = Math.floor((CTX_INITIAL_X_SCALE / CTX_INITIAL_Y_SCALE) * deviceH);
@@ -238,14 +277,14 @@ function resizeGame(e){
         ctx.scale(scalingPercentage, scalingPercentage);
 
         
-    }else{
+    } else {
         canvas.width = CTX_INITIAL_X_SCALE;
         canvas.height = CTX_INITIAL_Y_SCALE;
         canvas.style.margin = 'auto';
     }
 
-    if(e.type === 'load'){
-        if(game.status.match(/loading|error/)){
+    if (e.type === 'load') {
+        if (game.status.match(/loading|error/)) {
             clearInterval(loadingScreenInterval)
             displayLoadingScreen();
         }
@@ -254,10 +293,10 @@ function resizeGame(e){
         /* Calling the drawImage or the PutImageData methods instead of this workaround would work for
         resizing the game screen but it would have detrimental effects on the display resolution */
 
-            if(game.status.match(/loaded|reset/)){
+            if (game.status.match(/loaded|reset/)) {
                 var menuStatus = menu.current;
                 displayGameMenu();
-                switch(menuStatus){
+                switch(menuStatus) {
                     case 'instructions':
                         menu.instructions();
                     break;
@@ -271,12 +310,12 @@ function resizeGame(e){
                         menu.settings();
                     break;
                 }
-            }else{
-                if(game.status === 'paused'){
+            } else {
+                if (game.status === 'paused') {
                     model.draw();
                     game.pause();
                 }
-                if(game.status === 'over'){
+                if (game.status === 'over') {
                     game.over(
                         game.lastGameOver.message,
                         game.lastGameOver.color,
@@ -330,15 +369,15 @@ var rEngineExhaust = new Path2D();
 var mainEngineExhaust = new Path2D();
 
 // animation frames per second
-if(navigator.platform.match(/win/ig)){
+if (getDeviceOS() === 'windows') {
     var fps = 1000;
-}else{
+} else {
     var fps = 60;
 }
 
 // Pending: To convert loose physical objects into class objects in order to organize the code and handle physics better
 class PhysicalObject {
-    constructor(posX = 0, posY = 0, width = 0, height = 0, radius = undefined, speedX = 0, speedY = 0, mass = undefined){
+    constructor(posX = 0, posY = 0, width = 0, height = 0, radius = undefined, speedX = 0, speedY = 0, mass = undefined) {
         this.x = posX; // Meters
         this.y = posY; // Meters
         this.width = width; // Meters
@@ -347,12 +386,12 @@ class PhysicalObject {
         this.vx = speedX; // Meters per Seconds
         this.vy = speedY; // Meters per Seconds
         this.mass = mass; // Kg
-        this.boundaries = function(){
-            if(this.y >= canvasH - this.height || this.y + this.vy < 0){
+        this.boundaries = function() {
+            if (this.y >= canvasH - this.height || this.y + this.vy < 0) {
                 this.vy = -this.vy;
                 this.vy /= 2;
             }
-            if(this.x + this.vx > canvasW - this.width || this.x + this.vx < 0){
+            if (this.x + this.vx > canvasW - this.width || this.x + this.vx < 0) {
                 this.vx = -this.vx;
             }
         }
@@ -361,9 +400,9 @@ class PhysicalObject {
 
 var meteorite;
 var meteor = new PhysicalObject(Math.random() * canvasW, 0, undefined, undefined, 5, 60, 178.816, undefined);
-meteor.draw = function(){
+meteor.draw = function() {
 
-    if (meteor.y === 0){
+    if (meteor.y === 0) {
         sounds.meteor.play();
         meteor.x = Math.random()*canvasW;
         meteor.x <= canvasW/2 ? meteor.vx = Math.random() * 8.9408 : meteor.vx = Math.random() * -8.9408;
@@ -402,7 +441,7 @@ meteor.draw = function(){
     ctx.fillStyle = meteorHalo;
     ctx.fill(meteorite);
 
-    if(meteor.y + meteor.radius*2 >= canvasH){
+    if (meteor.y + meteor.radius*2 >= canvasH) {
 
         sounds.impact.play();
         
@@ -431,7 +470,7 @@ var sounds = {
     explosion: new Audio('game/sounds/explosion.mp3')
 };
 
-function stopAudio(element){
+function stopAudio(element) {
     element.pause();
     element.currentTime = 0;
 }
@@ -443,28 +482,28 @@ var cronometer = {
     secs: 0,
     elapsed: '0s',
     cronometerCount: undefined,
-    start: function(){
-        this.cronometerCount = setInterval(function(){
+    start: function() {
+        this.cronometerCount = setInterval(function() {
 
             ++cronometer.secs;
 
-            if(cronometer.secs === 60){cronometer.secs = 0; cronometer.mins++;}
+            if (cronometer.secs === 60) {cronometer.secs = 0; cronometer.mins++;}
 
-            if(cronometer.mins === 60){cronometer.secs = 0; cronometer.hours++;}
+            if (cronometer.mins === 60) {cronometer.secs = 0; cronometer.hours++;}
 
-            if(cronometer.mins === 0 && cronometer.hours === 0){
+            if (cronometer.mins === 0 && cronometer.hours === 0) {
                 cronometer.elapsed = `${cronometer.secs + text.seconds}`;
-            }else if(cronometer.hours === 0){
+            } else if (cronometer.hours === 0) {
                 cronometer.elapsed = `${cronometer.mins + text.minutes}: ${cronometer.secs + text.seconds}`;
-            }else{
+            } else {
                 cronometer.elapsed = `${cronometer.hours + text.hours}: ${cronometer.mins + text.minutes}: ${cronometer.secs + text.seconds}`;
             }
         },1000);
     },
-    pause: function(){
+    pause: function() {
         clearInterval(this.cronometerCount.valueOf());
     },
-    stop: function(){
+    stop: function() {
 
         this.hours = 0, this.mins = 0, this.secs = 0;
         this.elapsed = '0s';
@@ -523,7 +562,7 @@ var game = {
     sky: 'day',
     gravity: undefined,
     points: undefined,
-    start: function(){
+    start: function() {
         
         pauseButton.innerText = text.pause;
         exitButton.innerText = text.exit;
@@ -583,7 +622,7 @@ var game = {
         canvas.addEventListener('click', gameplayInput);
 
     },
-    resume: function(){
+    resume: function() {
 
         pauseButton.innerText = text.pause;
 
@@ -599,7 +638,7 @@ var game = {
 
         canvas.removeEventListener('click', game.resume);
     },
-    pause: function(){
+    pause: function() {
 
         pauseButton.innerText = text.resume;
 
@@ -621,10 +660,10 @@ var game = {
         ctx.strokeStyle = 'dimgray'
         ctx.fillStyle = 'white';
         ctx.font = '25px sans-serif';
-        if(platform.x + platform.width/2 < canvasW/2){
+        if (platform.x + platform.width/2 < canvasW/2) {
             ctx.textAlign = 'start';
             var textMargin = 0;
-        }else{
+        } else {
             ctx.textAlign = 'end';
             var textMargin = canvasW;
         }
@@ -642,7 +681,7 @@ var game = {
         canvas.addEventListener('click', this.resume);
 
     },
-    over: function(message, color = 'red', description){
+    over: function(message, color = 'red', description) {
 
         this.lastGameOver.message = message; 
 
@@ -667,10 +706,10 @@ var game = {
 
         ctx.fillStyle = 'gray';
         ctx.font = '25px sans-serif';
-        if(platform.x + platform.width/2 < canvasW/2){
+        if (platform.x + platform.width/2 < canvasW/2) {
             ctx.textAlign = 'start';
             var textMargin = 0;
-        }else{
+        } else {
             ctx.textAlign = 'end';
             var textMargin = canvasW;
         }
@@ -689,13 +728,13 @@ var game = {
         ctx.fillText(successsFailureMsg, canvasW/2, canvasH/5*3);
 
         ctx.font = '35px sans-serif';
-        if(model.status === 'crashed'){
+        if (model.status === 'crashed') {
             ctx.fillText(text.rocketCrashed, canvasW/2, canvasH/5*1);
             ctx.fillStyle = 'lightgray';
 
-            if(game.language === 'es'){
+            if (game.language === 'es') {
                 var gameOverMsg = ['¡Pero la gente cool no observa las explosiones!', 'El cohete explotó, pero nosotros no podemos', 'Desensamblaje rápido no programado', 'El aterrizaje falló exitosamente', 'Ey, no es mi culpa, no existe el abajo en el espacio', 'En el espacio, nadie puede oirte explotar'];
-            }else{
+            } else {
                 var gameOverMsg = ['But cool guys don\'t look at the explosions!', 'The rocket couldn\'t keep it together, but we can', 'Rapid unscheduled disassembly', 'The landing has failed successfully', 'Hey, it\'s not my fault, there is no bottom in space', 'In space, no one can hear you explode'];
             }
 
@@ -706,12 +745,12 @@ var game = {
 
             this.lastGameOver.description = gameOverMsg;
 
-        }else if(model.status === 'missed target'){
+        } else if (model.status === 'missed target') {
             ctx.fillStyle = 'gray';
 
-            if(game.language === 'es'){
+            if (game.language === 'es') {
                 var gameOverMsg = ['Encuentro tu falta de puntería... inquietante', 'Los cohetes son demasiado caros para prácticar dianas', '¡Te dije que debiamos pedir direcciones!', 'El cohete está perdido, ¿Pero no lo hemos estado todos?'];
-            }else{
+            } else {
                 var gameOverMsg = ['I find your lack of aiming... disturbing', 'Rockets are too expensive for target practice', 'I told you we should have asked for directions!', 'The rocket lost it\'s course, but haven\'t we all at some point?'];
             }
 
@@ -722,22 +761,22 @@ var game = {
 
             this.lastGameOver.description = gameOverMsg;
     
-        }else if(message === text.unstableLanding){
+        } else if (message === text.unstableLanding) {
             ctx.fillText('Per aspera ad astra', canvasW/2, canvasH/8*2.25);
         }
 
-        if(game.level !== game.levels){
+        if (game.level !== game.levels) {
             model.status === 'landed' ? game.level++ : undefined;
             canvas.addEventListener('click', gameOverInput);
-        }else{
-            if(model.status !== 'landed'){
+        } else {
+            if (model.status !== 'landed') {
                 canvas.addEventListener('click', gameOverInput);
-            }else{
+            } else {
                 setTimeout( ()=> this.reset(), 1000);
             }
         }
     },
-    reset: function(){
+    reset: function() {
         
         this.status = 'reset';
 
@@ -765,13 +804,13 @@ var game = {
 game.language = navigator.language.slice(0,2);
 game.langInt = game.langArray.indexOf(game.language);
 
-function setLanguage(){
-    if(game.language.match(/^es|^en|^de|^ja/)){
+function setLanguage() {
+    if (game.language.match(/^es|^en|^de|^ja/)) {
         game.language === 'es' ? text = languages.spanish : undefined;
         game.language === 'en' ? text = languages.english : undefined;
         game.language === 'de' ? text = languages.german : undefined;
         game.language === 'ja' ? text = languages.japanese : undefined;
-    }else{
+    } else {
         text = languages.english;
     }
 }
@@ -779,7 +818,7 @@ function setLanguage(){
 var menu = {
     active: undefined,
     current: 'welcome',
-    drawBackground: function(){
+    drawBackground: function() {
         drawRocket();
 
         ctx.save();
@@ -802,7 +841,7 @@ var menu = {
 
         ctx.restore();
     },
-    controls: function(){
+    controls: function() {
 
         this.current = 'controls';
         toggleExitButton();
@@ -874,7 +913,7 @@ var menu = {
 
         ctx.restore();
     },
-    instructions: function(){
+    instructions: function() {
 
         this.current = 'instructions';
         toggleExitButton();
@@ -896,14 +935,14 @@ var menu = {
         var pointerCorrection = 0;
         var instructionsText = text.instructionsDescription;
 
-        for (var i = 0; i < instructionsText.length; i += charLimit){
+        for (var i = 0; i < instructionsText.length; i += charLimit) {
 
             i -= pointerCorrection;
             pointerCorrection = 0;
 
             instructionsText.substr(i, charLimit).startsWith(' ') ? i++ : undefined;
             
-            if(!instructionsText.substr(i, charLimit).endsWith(' ') && !instructionsText.substr(i, charLimit + 1).endsWith(' ')){
+            if (!instructionsText.substr(i, charLimit).endsWith(' ') && !instructionsText.substr(i, charLimit + 1).endsWith(' ')) {
             
                pointerCorrection = instructionsText.substr(i, charLimit).length - instructionsText.substr(i, charLimit).lastIndexOf(' ');
                charLimit -= pointerCorrection;
@@ -928,7 +967,7 @@ var menu = {
 
         ctx.restore();
     },
-    language: function(){
+    language: function() {
 
         this.current = 'language';
         toggleExitButton();
@@ -998,11 +1037,11 @@ var menu = {
 
         ctx.beginPath();
 
-        var greenCircleXYArray = function(){
-            if(game.language === 'es'){return [textWidth(text.spanish), canvasH/8*4]};
-            if(game.language === 'en'){return [textWidth(text.english), canvasH/8*5]};
-            if(game.language === 'de'){return [textWidth(text.german), canvasH/8*6]};
-            if(game.language === 'ja'){return [textWidth(text.japanese), canvasH/8*7]};
+        var greenCircleXYArray = function() {
+            if (game.language === 'es') {return [textWidth(text.spanish), canvasH/8*4]};
+            if (game.language === 'en') {return [textWidth(text.english), canvasH/8*5]};
+            if (game.language === 'de') {return [textWidth(text.german), canvasH/8*6]};
+            if (game.language === 'ja') {return [textWidth(text.japanese), canvasH/8*7]};
         };
 
         ctx.arc(canvasW/8*6 - greenCircleXYArray()[0]/2 - 40, greenCircleXYArray()[1] - 12.5, 12.5, 0, Math.PI*2);
@@ -1011,7 +1050,7 @@ var menu = {
 
         ctx.restore();
     },
-    settings: function(){
+    settings: function() {
 
         this.current = 'settings';
         toggleExitButton();
@@ -1083,7 +1122,7 @@ var menu = {
 
 var model = new PhysicalObject(canvasW / 2, 0, gameModel.width, gameModel.height, undefined, 0, 0, gameModel.mass);
 
-model.update = function(spacecraftModel = booster){
+model.update = function(spacecraftModel = booster) {
 
     gameModel = spacecraftModel;
 
@@ -1093,7 +1132,7 @@ model.update = function(spacecraftModel = booster){
     this.color = gameModel.color;
     this.legsLength = gameModel.legsLength;
 
-    if(this.name != 'spaceship'){
+    if (this.name != 'spaceship') {
 
         this.legsColor = 'black';
         this.legsRotation = gameModel.legsRotation;
@@ -1113,7 +1152,7 @@ model.update = function(spacecraftModel = booster){
 };
 model.update();
 
-model.draw = function(){
+model.draw = function() {
 
     ctx.save();
 
@@ -1125,7 +1164,7 @@ model.draw = function(){
     ctx.fillStyle = this.color;
     ctx.strokeStyle = this.stroke;
 
-    if(gameModel.name === 'booster'){
+    if (gameModel.name === 'booster') {
 
         ctx.save();
 
@@ -1151,18 +1190,18 @@ model.draw = function(){
             var centerLeg = new Path2D();
 
             var rotationChangeVal;
-            navigator.platform.match(/win/ig) ? rotationChangeVal = 2.5 : rotationChangeVal = 1;
+            getDeviceOS() === 'windows' ? rotationChangeVal = 2.5 : rotationChangeVal = 1;
 
-            if(this.y + this.height >= canvasH - 100){
-                if(this.legsRotation > 0){
+            if (this.y + this.height >= canvasH - 100) {
+                if (this.legsRotation > 0) {
                     this.legsRotation -= rotationChangeVal;
-                }else{
+                } else {
                     this.legsRotation = rotationChangeVal;
                 }
-            }else{
-                if(this.legsRotation < 115){
+            } else {
+                if (this.legsRotation < 115) {
                     this.legsRotation += rotationChangeVal;
-                }else{
+                } else {
                     this.legsRotation = 115;
                 }
             }
@@ -1201,7 +1240,7 @@ model.draw = function(){
 
 
     }
-    if(gameModel.name === 'spaceship'){
+    if (gameModel.name === 'spaceship') {
 
         ctx.save();
 
@@ -1213,7 +1252,7 @@ model.draw = function(){
         ctx.fillStyle = '#808087';
 
         rWingLeft = 6, rWingRight = 6;
-        if(engines.status === 'on'){
+        if (engines.status === 'on') {
             this.inclination > 0 ? rWingLeft = 3 : undefined;
             this.inclination < 0 ? rWingRight = 3 : undefined;
         }
@@ -1261,7 +1300,7 @@ model.draw = function(){
         ctx.fill();
 
         // Draws rocket legs when a given altitude is reached
-        if(this.y + this.height >= canvasH - 100){
+        if (this.y + this.height >= canvasH - 100) {
             gameModel.legsExtension  < 5 ? gameModel.legsExtension += 1/fps : gameModel.legsExtension = 5;
 
             ctx.fillStyle = gameModel.color;
@@ -1271,7 +1310,7 @@ model.draw = function(){
             ctx.strokeRect(0 + (this.width/2) - 1, -5, 3, gameModel.legsExtension);
             ctx.fillRect(0 + this.width - 2, -5, 3, gameModel.legsExtension);
             ctx.strokeRect(0 + this.width - 2, -5, 3, gameModel.legsExtension);
-        }else{
+        } else {
             gameModel.legsExtension  > 0 ? gameModel.legsExtension -= 1/fps : gameModel.legsExtension = 0;
         }
 
@@ -1282,12 +1321,12 @@ model.draw = function(){
     }
     gameModel.name === 'spaceship' ? ctx.stroke() : undefined;
 
-    if(model.status === 'crashed'){
+    if (model.status === 'crashed') {
 
         sounds.explosion.play();
 
         var explosionRadius = 75;
-        var explosionInterval = setInterval(function(){
+        var explosionInterval = setInterval(function() {
 
             var explosionGrad = ctx.createRadialGradient(model.x + model.width/2 ,model.y + model.height - 5,explosionRadius/10,model.x + model.width/2 ,model.y + model.height, explosionRadius);
             explosionGrad.addColorStop(0,'white');
@@ -1308,20 +1347,20 @@ model.draw = function(){
     // Draws Landing target
     platform.draw();
 
-    if(model.status === 'landed'){
+    if (model.status === 'landed') {
         ctx.resetTransform();
-        if(model.vx >= -0.1 && model.vx <= 0.1 && ctx.isPointInPath(landingPlatform, model.x + model.width/2, model.y + model.height)){
+        if (model.vx >= -0.1 && model.vx <= 0.1 && ctx.isPointInPath(landingPlatform, model.x + model.width/2, model.y + model.height)) {
             game.over(text.sucessfulLanding, 'limegreen');
-        }else if(ctx.isPointInPath(landingPlatform, model.x + model.width/2, model.y + model.height)){
+        } else if (ctx.isPointInPath(landingPlatform, model.x + model.width/2, model.y + model.height)) {
             game.over(text.unstableLanding, 'yellow');
         }
-    }else if(model.status === 'missed target'){
+    } else if (model.status === 'missed target') {
         ctx.resetTransform();
         game.over(text.missedTarget,'orange');
     }
 
-    if(model.status === 'crashed'){
-        setTimeout(function(){
+    if (model.status === 'crashed') {
+        setTimeout(function() {
             game.over(text.gameover);
         }, 1000);
     }
@@ -1332,19 +1371,19 @@ model.draw = function(){
 };
 
 var platform = new PhysicalObject(Math.abs(Math.random() * canvasW - 100), canvasH - 15, 100, 10, undefined, 0.25, 0.25);
-platform.draw = function(){
+platform.draw = function() {
 
     landingPlatform = new Path2D();
 
     ctx.save();
 
-    if(game.graphics !== 'low' && game.scenario === 'ocean'){
+    if (game.graphics !== 'low' && game.scenario === 'ocean') {
         var bwy = wy - 2;
         ctx.fillStyle = 'rgb(115,115,206)';
         ctx.beginPath();
         ctx.moveTo(0,bwy);
 
-        for(var i = 0; i <= 10; i++){
+        for(var i = 0; i <= 10; i++) {
             ctx.bezierCurveTo(i*canvasW/10-canvasW/40, bwy+my, i*canvasW/10-canvasW/40*2 , bwy-my, i*canvasW/10, bwy);
         }
 
@@ -1357,9 +1396,9 @@ platform.draw = function(){
     landingPlatform.rect(this.x, this.y, this.width, this.height);
 
     // Ground FX from propellant
-    if(game.graphics !== 'low'){
+    if (game.graphics !== 'low') {
 
-        if(engines.status === 'on' && (model.y + model.height*2) >= platform.y - 40){
+        if (engines.status === 'on' && (model.y + model.height*2) >= platform.y - 40) {
 
             var groundFXCenter, groundFXColor;
 
@@ -1368,9 +1407,9 @@ platform.draw = function(){
 
             ctx.beginPath();
 
-            if(ctx.isPointInPath(landingPlatform, model.x + model.width/2, platform.y)){
+            if (ctx.isPointInPath(landingPlatform, model.x + model.width/2, platform.y)) {
 
-                if(model.x - 25 > platform.x && model.x + model.width + 25 < platform.x + platform.width){
+                if (model.x - 25 > platform.x && model.x + model.width + 25 < platform.x + platform.width) {
                     arcOrientation = true;
                     arcEndAngle = Math.PI;
                 }
@@ -1378,7 +1417,7 @@ platform.draw = function(){
                 ctx.arc(model.x + model.width/2, platform.y, 25, 0, arcEndAngle, arcOrientation);
                 groundFXCenter = platform.y;
                 groundFXColor = 'rgba(255,255,128, 0.5)';
-            }else{
+            } else {
                 ctx.arc(model.x + model.width/2, platform.y + platform.height, 25, 0, Math.PI*2);
                 groundFXCenter = platform.y + platform.height;
                 groundFXColor = 'rgba(255,255,255, 0.5)';
@@ -1398,7 +1437,7 @@ platform.draw = function(){
         }
     }
 
-    if(game.scenario === 'ground'){
+    if (game.scenario === 'ground') {
         ctx.fillStyle = 'darkgreen';
         ctx.fillRect(0, canvasH - 5, canvasW, 5);
     }
@@ -1409,9 +1448,9 @@ platform.draw = function(){
     ctx.fill(landingPlatform);
 
     ctx.resetTransform();
-    if(ctx.isPointInPath(landingPlatform, model.x - model.legsLength, platform.y) && ctx.isPointInPath(landingPlatform, model.x + model.width + model.legsLength, platform.y)){
+    if (ctx.isPointInPath(landingPlatform, model.x - model.legsLength, platform.y) && ctx.isPointInPath(landingPlatform, model.x + model.width + model.legsLength, platform.y)) {
         ctx.fillStyle = 'limegreen';
-    }else{
+    } else {
         model.y + model.height < canvasH - 200 ? ctx.fillStyle = 'orange' : ctx.fillStyle = 'red';
     }
     scalingPercentage !== 0 ? ctx.scale(scalingPercentage, scalingPercentage) : undefined;
@@ -1428,7 +1467,7 @@ platform.draw = function(){
     ctx.font = 'bold 15px sans-serif';
     ctx.fillText('X', this.x + this.width/2, this.y + this.height/2 + 1);
 
-    if(game.scenario === 'ocean' && game.graphics === 'high'){
+    if (game.scenario === 'ocean' && game.graphics === 'high') {
 
         var platformShip = new Path2D();
         platformShip.moveTo(this.x + this.width, this.y + this.height/2);
@@ -1448,7 +1487,7 @@ platform.draw = function(){
     game.level === 3 ? scenario('ocean') : undefined;
     game.level === 4 ? scenario('ocean') : undefined;
 
-    if(game.scenario !== 'ocean'){
+    if (game.scenario !== 'ocean') {
         ctx.fillRect(this.x - 25, canvasH - 70, 3, 65);
         ctx.fillRect(this.x - 15, canvasH - 50, 3, 40);
         ctx.fillRect(this.x + this.width + 15, canvasH - 50, 3, 40);
@@ -1465,7 +1504,7 @@ var engines = {
     sideEnginesHeight: 5,
     mainEngineWidth: model.width/5*3,
     mainEngineHeight: 50,
-    drawLeft: function(){
+    drawLeft: function() {
 
         var lEngineGrad = ctx.createLinearGradient(model.x - 15, model.y + model.height + 15, model.x + model.width/10, model.y + model.height - 5);
 
@@ -1483,7 +1522,7 @@ var engines = {
         ctx.fill(lEngineExhaust);
     },
 
-    drawRight: function(){
+    drawRight: function() {
 
         var rEngineGrad = ctx.createLinearGradient(model.x + model.width/10*9, model.y + model.height - 5, model.x + model.width + 15, model.y + model.height + 15);
 
@@ -1501,7 +1540,7 @@ var engines = {
         ctx.fill(rEngineExhaust);
     },
 
-    drawMain: function(){
+    drawMain: function() {
 
         this.status = 'on';
 
@@ -1517,13 +1556,13 @@ var engines = {
 
         ctx.fillStyle = mainEngineGrad;
 
-        var fireTail = function(val){
+        var fireTail = function(val) {
 
             var boosterExhaust = model.height + val;
             var boosterBase = model.y + model.height + val;
             var tail = boosterExhaust;
 
-            if(model.x >= platform.x && model.x + model.width <= platform.x + platform.width && boosterBase + model.height >= platform.y){
+            if (model.x >= platform.x && model.x + model.width <= platform.x + platform.width && boosterBase + model.height >= platform.y) {
                 tail = platform.y - model.y - model.height;
             }
 
@@ -1544,7 +1583,7 @@ var engines = {
 }
 
 // Draws gameplay buttons
-function drawGameplayButtons(){
+function drawGameplayButtons() {
 
     ctx.save();
 
@@ -1565,7 +1604,7 @@ function drawGameplayButtons(){
     ctx.fill(exitGameBtn);
     ctx.stroke(exitGameBtn);
 
-    if(game.status !== 'over' && game.status !== 'paused'){
+    if (game.status !== 'over' && game.status !== 'paused') {
 
         resumePauseGameBtn = new Path2D();
         resumePauseGameBtn.arc(gamePlayBtnCoordX, canvasH-135, 35, 0, Math.PI*2);
@@ -1587,21 +1626,21 @@ function drawGameplayButtons(){
 }
 
 // Clear the Canvas
-function clear(){
+function clear() {
     ctx.clearRect(0, 0, canvasW, canvasH);
 }
 
 // Turns gravity on
 var physicsInterval;
-function physics(g = 9.80665){
+function physics(g = 9.80665) {
 
     game.gravity = g;
 
-    physicsInterval = setInterval(function(){
+    physicsInterval = setInterval(function() {
 
         ctx.resetTransform();
 
-        if (Math.abs(model.vx*60) < 17.5){
+        if (Math.abs(model.vx*60) < 17.5) {
             model.inclination < 0 ? model.inclination += 0.0625 : undefined;
             model.inclination > 0 ? model.inclination -= 0.0625 : undefined;
         }
@@ -1609,47 +1648,47 @@ function physics(g = 9.80665){
         model.vx = (Math.sign(model.vx) * Math.abs(model.vx)) * 0.98;
         Math.abs(model.vx) > 0.001 ? model.x += model.vx : model.vx = 0;
 
-        navigator.platform.match(/win/ig) ? model.vy += g/fps : model.vy += g/fps/60;
+        getDeviceOS() === 'windows' ? model.vy += g/fps : model.vy += g/fps/60;
 
         model.y += model.vy;
 
-        if(game.sky === 'night'){
-            if(Math.abs(meteor.y - model.y) < model.height - 5 && Math.abs(meteor.x - model.x) < model.width){
+        if (game.sky === 'night') {
+            if (Math.abs(meteor.y - model.y) < model.height - 5 && Math.abs(meteor.x - model.x) < model.width) {
                 model.status = 'crashed';
             };
         }
 
 
-        if(model.y + model.height >= canvasH || ctx.isPointInPath(landingPlatform, model.x + model.width/2, model.y + model.height)){
-            if(Math.abs(model.vy) > 0.2){
+        if (model.y + model.height >= canvasH || ctx.isPointInPath(landingPlatform, model.x + model.width/2, model.y + model.height)) {
+            if (Math.abs(model.vy) > 0.2) {
                 
                 model.status = 'crashed';
             } else {
                 
-                if(model.x - model.legsLength >= platform.x && model.x + model.width + model.legsLength <= platform.x + platform.width && model.y + model.height >= platform.y){
+                if (model.x - model.legsLength >= platform.x && model.x + model.width + model.legsLength <= platform.x + platform.width && model.y + model.height >= platform.y) {
                     
-                    if(model.name === 'booster'){
+                    if (model.name === 'booster') {
                         model.legsRotation === 1 ? model.status = 'landed' : model.status = 'crashed';
-                    } else if(model.name === 'spaceship'){
+                    } else if (model.name === 'spaceship') {
                         gameModel.legsExtension === 5 ? model.status = 'landed' : model.status = 'crashed';
                     }
-                }else{
+                } else {
                     model.status = 'missed target';
                 }
             }
         }
 
-        if(model.y >= canvasH - model.height || model.y + model.vy < 0 || ctx.isPointInPath(landingPlatform, model.x + model.width/2, model.y + model.height)){
+        if (model.y >= canvasH - model.height || model.y + model.vy < 0 || ctx.isPointInPath(landingPlatform, model.x + model.width/2, model.y + model.height)) {
             model.vy = -model.vy;
             model.vy /= 2;
         }
-        if(model.x + model.vx > canvasW - model.width || model.x + model.vx < 0){
+        if (model.x + model.vx > canvasW - model.width || model.x + model.vx < 0) {
             model.vx = -model.vx;
         }
 
         scalingPercentage !== 0 ? ctx.scale(scalingPercentage, scalingPercentage) : undefined;
 
-        if(model.status === 'landed' || model.status === 'missed target' || model.status === 'crashed' || game.status === 'over' || game.status === 'reset'){
+        if (model.status === 'landed' || model.status === 'missed target' || model.status === 'crashed' || game.status === 'over' || game.status === 'reset') {
                 clearInterval(physicsInterval.valueOf());
         }
 
@@ -1663,7 +1702,7 @@ function physics(g = 9.80665){
 }
 
 // shows game statistic
-function stats(){
+function stats() {
 
     ctx.save();
     ctx.font = '20px sans-serif';
@@ -1671,7 +1710,7 @@ function stats(){
     ctx.fillStyle = 'rgba(0,0,0, 0.75)';
     ctx.fillRect(0, 0, canvasW, 35);
     ctx.fillStyle = 'white';
-    if(game.sky !== 'day'){
+    if (game.sky !== 'day') {
         ctx.strokeStyle = 'rgba(255,255,255, 0.5)';
         ctx.lineWidth = 0.5;
         ctx.beginPath();
@@ -1697,7 +1736,7 @@ function stats(){
 
     var fuelPercentage = (model.fuel * 100 / model.fuelCapacity).toPrecision(3);
 
-    if(model.fuel > 0){
+    if (model.fuel > 0) {
         ctx.fillText(`${fuelPercentage} %`, canvasW - 10, 250);
     }
 
@@ -1718,7 +1757,7 @@ function stats(){
     
     ctx.fillRect(canvasW -50, 225 - fuelPercentage*fuelBarAspectRatio, 25, fuelPercentage*fuelBarAspectRatio);
 
-    if(model.fuel <= 0){
+    if (model.fuel <= 0) {
         ctx.fillStyle = 'white';
         ctx.textAlign = 'center';
         ctx.fillText(text.zero, canvasW - 37.5, 220);
@@ -1737,45 +1776,45 @@ function stats(){
 
     ctx.textAlign = 'start';
 
-    if(model.y + model.height >= canvasH - 200){
+    if (model.y + model.height >= canvasH - 200) {
 
         ctx.fillRect(815, 150, 150, 35);
         ctx.strokeStyle = 'black';
         ctx.strokeRect(815, 150, 150, 35);
         ctx.fillStyle = 'white';
 
-        if(model.y + model.height >= canvasH || ctx.isPointInPath(landingPlatform, model.x + model.width/2, model.y + model.height)){
-            var landingStatus = function(){
-                if(Math.abs(model.vy) > 0.2){
+        if (model.y + model.height >= canvasH || ctx.isPointInPath(landingPlatform, model.x + model.width/2, model.y + model.height)) {
+            var landingStatus = function() {
+                if (Math.abs(model.vy) > 0.2) {
                     return text.impact;
-                }else{
+                } else {
                     return text.contact;
                 }
             };
             ctx.fillText(landingStatus(), 825, 175);
-        }else if(model.y + model.height >= canvasH - 100){
+        } else if (model.y + model.height >= canvasH - 100) {
             ctx.fillText(text.imminentContact, 825, 175, 135);
-        }else{
+        } else {
             ctx.fillText(text.proximityWarning, 825, 175, 135);
         }
 
-        if(model.y + model.height >= canvasH - 100){
+        if (model.y + model.height >= canvasH - 100) {
             var legsState;
-            if (gameModel.name === 'booster'){
+            if (gameModel.name === 'booster') {
                 model.legsRotation > 1 ? legsState = text.deployLegs : legsState = text.legsDeployed;
-            }else if (gameModel.name === 'spaceship'){
+            } else if (gameModel.name === 'spaceship') {
                 gameModel.legsExtension < 5 ? legsState = text.deployLegs : legsState = text.legsDeployed;
             }
             ctx.fillText(legsState, 825, 225, 135);
         }
     }
 
-    if(model.fuel <= 0 || fuelPercentage <= 25){
+    if (model.fuel <= 0 || fuelPercentage <= 25) {
         var fuelWarningY, fuelTextWarningY;
-        var fuelWarning = function(){
-            if(model.fuel <= 0){
+        var fuelWarning = function() {
+            if (model.fuel <= 0) {
                 return text.noFuel;
-            }else{
+            } else {
                 return text.lowFuel;
             }
         };
@@ -1792,16 +1831,16 @@ function stats(){
     }
 
     game.sky === 'day' ? ctx.fillStyle = 'rgba(0,0,0, 0.7)' : ctx.fillStyle = 'rgba(255,255,255, 0.7)';
-    if(model.x < platform.x){
+    if (model.x < platform.x) {
         Math.sign(model.vx) === -1 ? ctx.fillText(text.adjustCourse, 650, 87.5, 150) : undefined;
-    }else if(model.x > platform.x + platform.width){
+    } else if (model.x > platform.x + platform.width) {
         Math.sign(model.vx) === 1 ? ctx.fillText(text.adjustCourse, 650, 87.5, 150) : undefined;
     }
     ctx.restore();
 }
 
 // Displays a welcome screen for the game
-function displayGameMenu(){
+function displayGameMenu() {
 
     setLanguage();
 
@@ -1903,27 +1942,27 @@ function displayGameMenu(){
 
 var soundTimeout;
 // Captures mouse and/or keyboard input
-function gameplayInput(e){
+function gameplayInput(e) {
 
-    if(game.status === 'started'){
+    if (game.status === 'started') {
 
         var reEntryBoosterThrust = EARTH_GRAVITY/fps;
 
-        if(e.type.includes('key')){
+        if (e.type.includes('key')) {
             e.code === 'Space' || e.code.includes('Arrow', 0) ? e.preventDefault() : undefined;
         }
 
-        if(game.status === 'started' && model.status != 'crashed'){
-            if(model.fuel > 0){
-                if(e.type.includes('key')){
-                    if(e.code.match(/KeyW|ArrowUp/)){
+        if (game.status === 'started' && model.status != 'crashed') {
+            if (model.fuel > 0) {
+                if (e.type.includes('key')) {
+                    if (e.code.match(/KeyW|ArrowUp/)) {
                         model.vy += -model.vy / 40;
                         engines.drawMain();
                         model.fuel -= 500;
                         model.inclination < 0 ? model.inclination += 0.5 : model.inclination > 0 ? model.inclination -= 0.5 : undefined;
                     }
 
-                    if(e.code === 'KeyL' || e.code === 'Space'){
+                    if (e.code === 'KeyL' || e.code === 'Space') {
 
                         engines.drawLeft();
                         engines.drawMain();
@@ -1935,14 +1974,14 @@ function gameplayInput(e){
                         model.inclination < 0 ? model.inclination += 0.5 : model.inclination > 0 ? model.inclination -= 0.5 : undefined;
                     }
 
-                    if(e.code.match(/KeyA|ArrowLeft/)){
+                    if (e.code.match(/KeyA|ArrowLeft/)) {
                         engines.drawRight();
                         model.vx -= 0.5;
                         model.vy += -model.vy / 80;
                         model.fuel -= 250;
                         model.inclination < model.inclinationLimit ? model.inclination += 0.5 : undefined;
                     }
-                    if(e.code.match(/KeyD|ArrowRight/)){
+                    if (e.code.match(/KeyD|ArrowRight/)) {
                         engines.drawLeft();
                         model.vx += 0.5;
                         model.vy += -model.vy / 80;
@@ -1951,14 +1990,14 @@ function gameplayInput(e){
                     }
                 }
 
-                if(Math.sign(e.movementX) === -1){
+                if (Math.sign(e.movementX) === -1) {
                     engines.drawRight();
                     model.vx -= 0.5;
                     model.vy += -model.vy / 80;
                     model.fuel -= 250;
                     model.inclination < model.inclinationLimit ? model.inclination += 0.5 : undefined;
                 }
-                if(Math.sign(e.movementX) === 1){
+                if (Math.sign(e.movementX) === 1) {
                     engines.drawLeft();
                     model.vx += 0.5;
                     model.vy += -model.vy / 80;
@@ -1966,62 +2005,62 @@ function gameplayInput(e){
                     model.inclination > -model.inclinationLimit ? model.inclination -= 0.5 : undefined;
                 }
 
-                if(e.movementY < -5){
+                if (e.movementY < -5) {
                     engines.drawLeft();
                     engines.drawMain();
                     engines.drawRight();
 
-                    navigator.platform.match(/win|linux|mac/ig) ? model.vy += -model.vy / 10 : model.vy = 0;
+                    getDeviceOS().match(/win|linux|mac/ig) ? model.vy += -model.vy / 10 : model.vy = 0;
                     model.vx += -model.vx / 100;
                     model.fuel -= 1000;
                     model.inclination < 0 ? model.inclination += 0.5 : model.inclination > 0 ? model.inclination -= 0.5 : undefined;
 
-                }else if(e.movementY < 0){
+                } else if (e.movementY < 0) {
                     engines.drawMain();
-                    navigator.platform.match(/win|linux|mac/ig) ? model.vy += -model.vy / 20 : model.vy += -model.vy / 4;
+                    getDeviceOS().match(/win|linux|mac/ig) ? model.vy += -model.vy / 20 : model.vy += -model.vy / 4;
                     model.fuel -= 500;
                 }
 
-                if(e.code && e.code.match(/Key[AWDL]+|Space/ig)){
+                if (e.code && e.code.match(/Key[AWDL]+|Arrow(Left|Up|Right)|Space/ig)) {
                     e.type !== 'keyup' ? sounds.engines.play() : stopAudio(sounds.engines);
                 }
 
-                if(e.type === 'pointermove'){
+                if (e.type === 'pointermove') {
                     clearTimeout(soundTimeout);
                     e.movementY <= 0 ? sounds.engines.play() : undefined;
 
-                    soundTimeout = setTimeout(function(){
+                    soundTimeout = setTimeout(function() {
                         sounds.engines.pause();
                     }, 300);
 
                 }
 
-            }else{
+            } else {
                 model.fuel = 0;
                 stopAudio(sounds.engines);
             }
 
-            if(e.code === 'KeyP' || e.code === 'Enter'){
+            if (e.code === 'KeyP' || e.code === 'Enter') {
                 e.type === 'keydown' ? game.pause() : undefined;
             }
         }
-    }else if(game.status === 'paused'){
-        if(e.code === 'KeyP' || e.code === 'Enter' || e.code === 'Backspace'){
+    } else if (game.status === 'paused') {
+        if (e.code === 'KeyP' || e.code === 'Enter' || e.code === 'Backspace') {
             e.type === 'keydown' ? game.resume() : undefined;
         }
     }
 
-    if(e.code === 'Escape'){
+    if (e.code === 'Escape') {
         game.reset();
     }
 
-    if(e.type === 'click'){
-        if(ctx.isPointInPath(exitGameBtn, e.offsetX, e.offsetY)){
+    if (e.type === 'click') {
+        if (ctx.isPointInPath(exitGameBtn, e.offsetX, e.offsetY)) {
             sounds.switch.play();
             game.reset();
         }
 
-        if(game.status != 'paused' && ctx.isPointInPath(resumePauseGameBtn, e.offsetX, e.offsetY)){
+        if (game.status != 'paused' && ctx.isPointInPath(resumePauseGameBtn, e.offsetX, e.offsetY)) {
             sounds.menuBlip.play();
             game.status === 'started' ? game.pause() : undefined;
         }
@@ -2029,27 +2068,27 @@ function gameplayInput(e){
     
 }
 
-function menuInput(e){
+function menuInput(e) {
 
     var eX = e.offsetX, eY = e.offsetY;
 
-    if(game.status === 'started' || game.status === 'reset'){
-        if(menu.current === 'welcome' || menu.current === 'instructions'){
-            if(ctx.isPointInPath(menuControlsBtn, eX, eY)){
+    if (game.status === 'started' || game.status === 'reset') {
+        if (menu.current === 'welcome' || menu.current === 'instructions') {
+            if (ctx.isPointInPath(menuControlsBtn, eX, eY)) {
                 sounds.menuBlip.play();
                 menu.controls();
             }
         }
 
-        if(game.status === 'reset' && menu.current != 'welcome'){
-            if (ctx.isPointInPath(menuBackgroundTouchArea, eX, eY)){
+        if (game.status === 'reset' && menu.current != 'welcome') {
+            if (ctx.isPointInPath(menuBackgroundTouchArea, eX, eY)) {
                 sounds.switch.play();
                 displayGameMenu();
             }
         }
 
-        if(menu.current === 'welcome'){
-            if(ctx.isPointInPath(startGameBtn, eX, eY)){
+        if (menu.current === 'welcome') {
+            if (ctx.isPointInPath(startGameBtn, eX, eY)) {
 
                 sounds.menuStart.play();
 
@@ -2058,30 +2097,30 @@ function menuInput(e){
                 document.removeEventListener('keydown', menuInput);
             }
 
-            if(ctx.isPointInPath(menuInstructionsBtn, eX, eY)){
+            if (ctx.isPointInPath(menuInstructionsBtn, eX, eY)) {
                 sounds.menuBlip.play();
                 menu.instructions();
             }
 
-            if(ctx.isPointInPath(menuLangBtn, eX, eY)){
+            if (ctx.isPointInPath(menuLangBtn, eX, eY)) {
                 sounds.menuBlip.play();
                 menu.language();
             }
 
-            if(ctx.isPointInPath(menuSettingsBtn, eX, eY)){
+            if (ctx.isPointInPath(menuSettingsBtn, eX, eY)) {
                 sounds.menuBlip.play();
                 menu.settings();
             }
         }
     }
 
-    if(menu.current === 'language'){
-        if(ctx.isPointInPath(langSelectorBtn, eX, eY) || ctx.isPointInPath(menuLangRightArrow, eX, eY)){
+    if (menu.current === 'language') {
+        if (ctx.isPointInPath(langSelectorBtn, eX, eY) || ctx.isPointInPath(menuLangRightArrow, eX, eY)) {
             
             sounds.menuBlip.play();
             game.langInt < game.langArray.length - 1 ? game.langInt++ : game.langInt = 0;
 
-        }else if(ctx.isPointInPath(menuLangLeftArrow, eX, eY)){
+        } else if (ctx.isPointInPath(menuLangLeftArrow, eX, eY)) {
             sounds.menuBlip.play();
             game.langInt > 0 ? game.langInt-- : game.langInt = game.langArray.length - 1;
         }
@@ -2095,26 +2134,26 @@ function menuInput(e){
         menu.language();
     }
 
-    if(menu.current === 'settings'){
-        if(ctx.isPointInPath(spacecraftSelectorBtn, eX, eY) || ctx.isPointInPath(menuModelRightArrow, eX, eY) || ctx.isPointInPath(menuModelLeftArrow, eX, eY)){
+    if (menu.current === 'settings') {
+        if (ctx.isPointInPath(spacecraftSelectorBtn, eX, eY) || ctx.isPointInPath(menuModelRightArrow, eX, eY) || ctx.isPointInPath(menuModelLeftArrow, eX, eY)) {
            
             gameModel === booster ? model.update(spaceShip) : model.update(booster);  
         }
 
-        if(ctx.isPointInPath(volumeBtn.bar, eX, eY)){
-           if(scalingPercentage < 1){
+        if (ctx.isPointInPath(volumeBtn.bar, eX, eY)) {
+           if (scalingPercentage < 1) {
                 volumeBtn.width = Math.abs(638 - eX/scalingPercentage);
-           }else{
+           } else {
                 volumeBtn.width = Math.abs(638 - eX);
            }
         }
 
-        if(ctx.isPointInPath(volumeMuteBtn, eX, eY)){
+        if (ctx.isPointInPath(volumeMuteBtn, eX, eY)) {
             game.volume = 0;
             volumeBtn.width = 0;
         }
 
-        if(ctx.isPointInPath(volumeMaxBtn, eX, eY)){
+        if (ctx.isPointInPath(volumeMaxBtn, eX, eY)) {
             game.volume = 1;
             volumeBtn.width = volumeBtn.maxWidth;
         }
@@ -2123,7 +2162,7 @@ function menuInput(e){
         menu.settings();
     }
 
-    if(e.code === 'Escape' || e.code === 'Backspace'){
+    if (e.code === 'Escape' || e.code === 'Backspace') {
 
         sounds.switch.play();
 
@@ -2133,18 +2172,18 @@ function menuInput(e){
     }
 }
 
-function gameOverInput(e){
+function gameOverInput(e) {
 
-    if(ctx.isPointInPath(exitGameBtn, e.offsetX, e.offsetY)){
+    if (ctx.isPointInPath(exitGameBtn, e.offsetX, e.offsetY)) {
         sounds.switch.play();
         game.reset();
-    }else{
+    } else {
         game.start();
     }
 }
 
 // Draws rocket background for the welcome screen, needs polishing
-function drawRocket(){
+function drawRocket() {
 
     ctx.save();
     ctx.scale(canvasH/1200, canvasH/1200);
@@ -2262,13 +2301,13 @@ function drawRocket(){
 
 var scenarioInterval;
 var my = 0, myprev = 1, wy = canvasH - 20;
-function scenario(environment = 'ground'){
+function scenario(environment = 'ground') {
 
     game.scenario = environment;
 
     ctx.save();
 
-    switch(environment){
+    switch(environment) {
         case 'ground':
             platform.y = canvasH - 15;
         break;
@@ -2280,7 +2319,7 @@ function scenario(environment = 'ground'){
 
             platform.y = wy - my - platform.height/2;
 
-            if(platform.x <= 0 || platform.x >= canvasW - platform.width){
+            if (platform.x <= 0 || platform.x >= canvasW - platform.width) {
                 platform.vx *= -1;
             }
 
@@ -2291,7 +2330,7 @@ function scenario(environment = 'ground'){
             ctx.beginPath();
             ctx.moveTo(0,wy);
 
-            for(var i = 0; i <= 10; i++){
+            for(var i = 0; i <= 10; i++) {
                 ctx.bezierCurveTo(i*canvasW/10-canvasW/40, wy-my, i*canvasW/10-canvasW/40*2, wy+my, i*canvasW/10, wy);
             }
 
@@ -2305,23 +2344,23 @@ function scenario(environment = 'ground'){
     ctx.restore();
 }
 
-function setLevelBackground(time = 'day'){
+function setLevelBackground(time = 'day') {
 
     // Sky background gradient
     var skyGrad = ctx.createLinearGradient(canvasW/2, 0, canvasW/2, canvasH);
     skyGrad.addColorStop(0,'deepskyblue');
     skyGrad.addColorStop(1,'lightskyblue');
 
-    if(time === 'day'){
+    if (time === 'day') {
         game.sky = 'day';
         ctx.fillStyle = skyGrad;
-    }else{
-        if(game.graphics === 'low'){
+    } else {
+        if (game.graphics === 'low') {
             ctx.fillStyle = 'navy';
-        }else{
+        } else {
             ctx.drawImage(starsCanvas, 0, 0);
            
-            if(game.environment !== 'space'){
+            if (game.environment !== 'space') {
                 ctx.fillStyle = 'rgba(0,0,255,0.1775)';
                 ctx.fillRect(0,0, canvasW, canvasH);
             }
@@ -2332,7 +2371,7 @@ function setLevelBackground(time = 'day'){
     time === 'day' || game.graphics === 'low' ? ctx.fillRect(0,0, canvasW, canvasH) : undefined;
 
     // Background
-    if(game.scenario === 'ground'){
+    if (game.scenario === 'ground') {
         time === 'day' ? ctx.fillStyle = '#3f8b7c' : ctx.fillStyle = 'rgb(0,25,0)';
         ctx.beginPath();
         ctx.moveTo(0, canvasH - 25);
@@ -2346,7 +2385,7 @@ function setLevelBackground(time = 'day'){
         ctx.fillRect(0, canvasH - 10, canvasW, 10);
     }
 
-    if(time === 'night'){
+    if (time === 'night') {
         game.sky = 'night';
         ctx.fillStyle = 'rgba(0,0,0, 0.5)';
         ctx.fillRect(0,0, canvasW, canvasH);
@@ -2376,9 +2415,9 @@ function setLevelBackground(time = 'day'){
     ctx.fill();
 }
 
-pauseButton.onclick = function(){
+pauseButton.onclick = function() {
 
-    switch(game.status){
+    switch(game.status) {
         case 'reset':
             game.start();
             pauseButton.innerText = text.pause;
@@ -2403,6 +2442,6 @@ exitButton.onclick = () => {
     menu.active === false ? game.reset() : displayGameMenu(); 
 };
 
-function toggleExitButton(){
+function toggleExitButton() {
     game.status === 'reset' && menu.current === 'welcome' ? exitButton.style.display = 'none' : exitButton.removeAttribute('style');
 }
