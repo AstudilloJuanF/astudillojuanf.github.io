@@ -22,7 +22,7 @@ const getDeviceOS = function() {
 
     let platformInfo, platform = '';
 
-    let listOS = [
+    const OS_LIST = [
         'linux',
         'android',
         'mac',
@@ -48,7 +48,7 @@ const getDeviceOS = function() {
     platform = platformInfo;
     
 
-    listOS.forEach(function(index) {
+    OS_LIST.forEach(function(index) {
         platformInfo.includes(index) ? platform = index : undefined;
     });
 
@@ -241,6 +241,7 @@ function recolorCanvasContainer(color = 'black') {
     }
 }
 
+
 // --------- Game frame resizing function ----------------------- TESTING...
 function resizeGame(e) {
 
@@ -373,6 +374,12 @@ if (getDeviceOS() === 'windows') {
     var fps = 1000;
 } else {
     var fps = 60;
+}
+
+// function to convert degrees to radians
+function toRadians(degrees){
+
+    return degrees * Math.PI / 180;
 }
 
 // Pending: To convert loose physical objects into class objects in order to organize the code and handle physics better
@@ -607,7 +614,7 @@ var game = {
 
         canvas.removeEventListener('click', gameOverInput);
 
-        clear();
+        clearCanvas();
         cronometer.start();
 
 
@@ -629,7 +636,7 @@ var game = {
         game.status = 'started';
         sounds.menuStart.play();
 
-        clear();
+        clearCanvas();
         cronometer.start();
         physics(EARTH_GRAVITY);
         model.draw();
@@ -1237,9 +1244,8 @@ model.draw = function() {
         ctx.restore();
 
         ctx.closePath();
-
-
     }
+
     if (gameModel.name === 'spaceship') {
 
         ctx.save();
@@ -1316,9 +1322,9 @@ model.draw = function() {
 
 
         ctx.resetTransform();
-        ctx.restore();
-        
+        ctx.restore();    
     }
+
     gameModel.name === 'spaceship' ? ctx.stroke() : undefined;
 
     if (model.status === 'crashed') {
@@ -1626,7 +1632,7 @@ function drawGameplayButtons() {
 }
 
 // Clear the Canvas
-function clear() {
+function clearCanvas() {
     ctx.clearRect(0, 0, canvasW, canvasH);
 }
 
@@ -1868,7 +1874,7 @@ function displayGameMenu() {
     stopAudio(sounds.engines);
     stopAudio(sounds.water);
 
-    clear();
+    clearCanvas();
 
     ctx.save();
 

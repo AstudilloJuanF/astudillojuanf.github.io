@@ -32,10 +32,16 @@
 	</head>
 	<body>
 		<script>
-			window.onload = function(){
-				sharerboxIcons('twitter facebook whatsapp linkedin reddit tumblr pinterest telegram');
-				sharerSetup('popup', 'right', 'black', 'visible', 'Check out SharerBox! website social-media integration by AstudilloJuanF');
-			};
+			window.addEventListener('load', function(){
+				sharerbox({
+					socialNetworks: 'twitter facebook whatsapp linkedin reddit tumblr pinterest telegram',
+					behavior: 'popup',
+					position: 'right',
+					color: 'black',
+					visibility: 'visible',
+					message: 'Check out SharerBox! ebsite social-media integration by AstudilloJuanF'
+				});
+			});
 		</script>
 		<header>
 			<h1><img style="width:1.5rem; height:1.5rem; transform: rotate(180deg)" src="./icons/favicon.svg"> SharerBox</h1>
@@ -197,14 +203,15 @@
 						</pre>
 						</li><br>
 						<li>Copy and paste this code snippet as it is (or configure it as listed bellow) anywhere within or after your <b>HTML</b> page's <code><span class="identifyer">&lt;body&gt;</span></code> tag to execute SharerBox.<br>
+							<br>
+							Or alternatively, use your own logic to execute the code.
 						<br>
 						<p><i class="example-subtitle">Snippet:</i> <b>&lt;/&gt;</b></p>
 					<pre class="code-snippet" title="paste within <body> section">
 &lt;<span class="html-tag">script</span>&gt;
-	<span class="method">window</span>.<span class="old-listener">onload</span> <span class="operator">=</span> <span class="function">function</span>(){
-		<span class="function-call">sharerboxIcons</span>( <span class="code-comment">/* list your preferred social-networks here, else options are set to default */</span> );
-		<span class="function-call">sharerSetup</span>( <span class="code-comment">/* Behavior options go here, else options are set to default */</span> );
-	};
+	<span class="method">window</span>.<span class="old-listener">addEventListener</span>(<span class="code-quotes">'load'</span>, <span class="function">function</span>() {
+		<span class="function-call">sharerbox</span>(<span class="code-comment">/* list your preferred social-networks and other options here, if blank options will be set to default */</span> );
+	});
 &lt;/<span class="html-tag">script</span>&gt;
 </pre></li><br>
 						<li>Save changes and load your site.</li><br>
@@ -213,55 +220,76 @@
 				</section>
 				<section class="sections gradient-background">
 					<h2><img class="h2-title-img" src="./icons/gear.svg"> Customization:</h2>
-					<h3>Icons <img class="h3-title-img" src="./icons/share-slateblue.svg"></h3>
-					<ul>
-						<li><strong> Social-Networks:</strong> A list of supported social-network platforms separated by spaces or commas.</li><br>
-					</ul>
 					<div class="setting-option-wrap">
-						<h4>Setting Icons:</h4>
-						<p> &nbsp; When you integrate SharerBox, you can specify which social-network icons SharerBox will display by setting the <code><span class="function-call">sharerboxIcons</span>()</code> function in the script which will be placed inside the HTML <code><span class="identifyer">&lt;body&gt;</span></code> tag with a list of supported social-network items separated either by spaces or commas, the full list must be on a single text string (text wrapped around quotation marks).</p>
+						<h4>Setting options:</h4>
+						<p> &nbsp; You can customize Sharerbox by passing options as object properties to the <code><span class="function-call">sharerbox</span>()</code> function in your code snippet.</p>
+						<p><i> &nbsp; (if no arguments are passed to the function SharerBox behavior will be set to default.)</i></p>
 						<p><i class="example-subtitle">Example:</i> <b>&lt;/&gt;</b></p>
 							<pre class="code-snippet">
-<span class="function-call">sharerboxIcons</span>(<span class="code-quotes">'site1, site2, site3, site...'</span>);
-							</pre>
-						<p><i> &nbsp; (if this function is leaved blank SharerBox will display its default social icons)</i></p>
-						<p>Additionally, you can customize the size of the buttons by adding an additional numeric parameter representing a given number of pixels (default size: 45 pixels, accepted size ranges: 25 to 100 pixels):</p>
-						<p><i class="example-subtitle">Example:</i> <b>&lt;/&gt;</b></p>
-							<pre class="code-snippet">
-<span class="function-call">sharerboxIcons</span>(<span class="code-quotes">'site1, site2, site3, site...'</span>, <span class="boolean">45</span> );
+<span class="function-call">sharerbox</span>({
+	propertyA: <span class="code-quotes">'string'</span>,
+	propertyB: <span class="boolean">50</span>,
+	propertyC: <span class="boolean">true</span>
+});
 							</pre>
 					</div>
-					<h3>Behavior <img class="h3-title-img" src="./icons/browser-window.svg"></h3>
+					<h3>Icon Options <img class="h3-title-img" src="./icons/share-slateblue.svg"></h3>
 					<ul>
-						<li><strong>Behavior:</strong> <code><span class="code-quotes">'pop-up'</span></code> <i>(default)</i> or <code><span class="code-quotes">'new tab'</span></code>; Sets how the sharer window will be deployed.</li><br>
-						<li><strong>Position:</strong> <code><span class="code-quotes">'left'</span></code> or <code><span class="code-quotes">'right'</span></code> <i>(default)</i>; Sets the position of the sharebar in the screen.</li><br>
-						<li><strong>Color:</strong> <code><span class="code-quotes">'color name'</span></code> <i>(Black by default)</i>; Selects a color for the toggle button.</li><br>
-						<li><strong>Visibility:</strong> <code><span class="code-quotes">'visible'</span></code>, <code><span class="code-quotes">'yes'</span></code> or <code><span class="identifyer">true</span></code>; Enables the icon bar default visibility <i>(hidden by default)</i>.</li><br>
-						<li><strong>Description:</strong> <code><span class="code-quotes">'quoted text sting'</span></code>; Creates a predefined message or website description for social-networks.</li><br>
+						<li><strong> socialNetworks:</strong> Supported social-network names passed as a string (separated by spaces or commas) or as an array.</li><br>
+						<li><strong>iconSize:</strong> Sets the size of the icons in pixels. It accepts numeric values (default size: 45 pixels, accepted size ranges: 25 to 100 pixels)</li>
 					</ul>
 					<div class="setting-option-wrap">
-						<h4>Setting Behavior:</h4>
-						<p> &nbsp; To customize SharerBox overall behavior enter these options into the <code><span class="function-call">sharerSetup</span>()</code> function located inside the code snippet pasted within your page's <code><span class="identifyer">&lt;body&gt;</span></code> tag, each argument must be on a separate text string (written as a quoted word <code><span class="code-quotes">'word'</span></code>), being each string separated from each other by commas.</p>
 						<p><i class="example-subtitle">Example:</i> <b>&lt;/&gt;</b></p>
-							<code class="code-snippet">
-								<span class="function-call">sharerSetup</span>(<span class="code-quotes">'tab'</span>, <span class="code-quotes">'right'</span>, <span class="code-quotes">'black'</span>, <span class="code-quotes">'visible'</span>);
-							</code>
-						<p><i> &nbsp; (if these options are leaved blank SharerBox will display its default behavior)</i></p>
+							<pre class="code-snippet">
+<span class="function-call">sharerbox</span>({
+	<span class="code-comment">// Icon list: 'site1, site2, site3...'</span>
+	<span class="code-comment">// Icon size: number</span>
+	socialNetworks: <span class="code-quotes">'site1, site2, site3, site...'</span>),
+	iconSize: <span class="boolean">45</span>
+});
+							</pre>
+					</div>
+					<h3>Other Options <img class="h3-title-img" src="./icons/browser-window.svg"></h3>
+					<ul>
+						<li><strong>behavior:</strong> <code><span class="code-quotes">'pop-up'</span></code> <i>(default)</i> or <code><span class="code-quotes">'new tab'</span></code>; Sets how the sharer window will be deployed.</li><br>
+						<li><strong>position:</strong> <code><span class="code-quotes">'left'</span></code> or <code><span class="code-quotes">'right'</span></code> <i>(default)</i>; Sets the position of the sharebar on the screen.</li><br>
+						<li><strong>color:</strong> <code><span class="code-quotes">'color name'</span></code> <i>(Black by default)</i>; Selects a color for the toggle button.</li><br>
+						<li><strong>visibility:</strong> <code><span class="code-quotes">'visible'</span></code>, <code><span class="code-quotes">'yes'</span></code> or <code><span class="identifyer">true</span></code>; Changes the icon bar default visibility <i>(hidden by default)</i>.</li><br>
+						<li><strong>message:</strong> <code><span class="code-quotes">'quoted text sting'</span></code>; Sets a predefined message or description of your website for people to share on social-networks.</li><br>
+					</ul>
+					<div class="setting-option-wrap">
+						<p><i class="example-subtitle">Example:</i> <b>&lt;/&gt;</b></p>
+							<pre class="code-snippet">
+<span class="function-call">sharerbox</span>({
+	<span class="code-comment">// Setup arguments: Behavior, Position, Color, Visibility, Message</span>
+	behavior: <span class="code-quotes">'popup'</span>,
+	position: <span class="code-quotes">'right'</span>,
+	color: <span class="code-quotes">'black'</span>,
+	visibility: <span class="boolean">true</span>,
+	message: <span class="code-quotes">'Write a custom message/description here (optional)'</span>
+});
+							</pre>
 					</div>
 				</section>
 				<section class="sections">
 					<h4><i class="example-subtitle">Full Example:</i> <b>&lt;/&gt;</b></h4>
 					<pre class="code-snippet">
 &lt;<span class="html-tag">script</span>&gt;
-	<span class="method">window</span>.<span class="old-listener">onload</span> <span class="operator">=</span> <span class="function">function</span>(){
+	<span class="method">window</span>.<span class="old-listener">addEventListener</span>(<span class="code-quotes">'load'</span>, <span class="function">function</span>(){
 
-		<span class="code-comment">// Buttons list: 'site1, site2, site3...'</span>
-		<span class="code-comment">// Buttons size: number</span>
-		<span class="function-call">sharerboxIcons</span>(<span class="code-quotes">'facebook twitter whatsapp linkedin reddit'</span>, <span class="boolean">45</span> );
-
-		<span class="code-comment">// Setup arguments: Behavior, Position, Color, Visibility, Description</span>
-		<span class="function-call">sharerSetup</span>(<span class="code-quotes">'pop-up'</span>, <span class="code-quotes">'left'</span>, <span class="code-quotes">'black'</span>, <span class="boolean">true</span>, <span class="code-quotes">'custom message or description goes here (optional)'</span>);
-	};
+		<span class="function-call">sharerbox</span>({
+			<span class="code-comment">// Icon list: 'site1, site2, site3...'</span>
+			<span class="code-comment">// Icon size: number</span>
+			socialNetworks: <span class="code-quotes">'facebook twitter whatsapp linkedin reddit'</span>,
+			iconSize: <span class="boolean">45</span>,
+			<span class="code-comment">// Setup arguments: Behavior, Position, Color, Visibility, Message</span>
+			behavior: <span class="code-quotes">'popup'</span>,
+			position: <span class="code-quotes">'right'</span>,
+			color: <span class="code-quotes">'black'</span>,
+			visibility: <span class="boolean">true</span>,
+			message: <span class="code-quotes">'Write a custom message/description here (optional)'</span>
+		});
+	});
 &lt;/<span class="html-tag">script</span>&gt;
 </pre>
 				</section>
