@@ -1,0 +1,87 @@
+#firefox-banner-container {
+    box-sizing: border-box;
+    z-index: 9999;
+    position: fixed;
+    right: 1rem;
+    bottom: 1rem;
+    background: linear-gradient(45deg, white, #e3e3e3);
+    font-family: inter, sans-serif;
+    border-radius: 10px;
+    box-shadow: 0 0 2px rgba(0,0,0, 0.5);
+    animation: slideIn linear 0.5s
+}
+
+#firefox-banner-container a {
+    text-decoration: none;
+}
+
+#firefox-banner-wrap {
+    display: flex;
+    flex-flow: row nowrap;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    gap: 1rem;
+    padding: 1rem;
+    padding-right: 1.5rem;
+}
+
+#firefox-logo-fig {
+    width: 55px;
+    height: 55px;
+    margin: auto;
+}
+
+#firefox-logo-fig img {
+    width: 100%;
+    height: 100%;
+}
+
+.ff-btn {
+    background: linear-gradient(0deg, darkgreen, forestgreen);
+    color: white;
+    font-family: metropolis, inter, sans-serif;
+    font-weight: bold;
+    width: -webkit-fit-content;
+    width: -moz-fit-content;
+    width: fit-content;
+    padding: 0.5rem;
+    text-align: center;
+    padding: 0.5rem 1rem;
+    margin: auto;
+    border-radius: 10px;
+}
+
+#close-firefox-banner {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    font-family: monospace;
+    color: gray;
+    font-weight: bold;
+    cursor: default;
+}
+
+@keyframes slideIn {
+    0% {
+        transform: translateX(100%);
+    }
+    100% {
+        transform: none;
+    }
+}
+
+@font-face {
+    font-family: inter;
+    src: url(/firefox-banner/fonts/Inter-variable.woff2);
+}
+
+@font-face {
+    font-family: metropolis;
+    src: url(/firefox-banner/fonts/Metropolis-Regular.woff2);
+}
+
+@font-face {
+    font-family: 'Metropolis Bold';
+    src: url(/firefox-banner/fonts/Metropolis-Bold.woff2);
+}
