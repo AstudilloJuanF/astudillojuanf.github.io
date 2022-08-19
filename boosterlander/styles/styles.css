@@ -45,10 +45,15 @@ canvas{
     border: solid 1px black;
 }
 
-#game-buttons-wrap{
+.game-buttons-wrap {
     margin: 1.5rem auto;
     width: -moz-fit-content;
     width: fit-content;
+}
+
+.game-buttons-wrap:nth-child(even) label {
+    display: block;
+    text-align: center;
 }
 
 .separator{

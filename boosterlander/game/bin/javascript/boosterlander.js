@@ -80,6 +80,8 @@ var scalingPercentage = 1;
 
 const pauseButton = document.getElementById('pause-game-button');
 const exitButton =  document.getElementById('exit-game-button');
+const volumeSlider = document.getElementById('volume-slider');
+const volumeSliderText = document.getElementById('volume-slider-text');
 
 // hidden canvas & star background canvas
 
@@ -474,12 +476,21 @@ var sounds = {
     impact: new Audio('game/sounds/sonic-boom.mp3'),
     engines: new Audio('game/sounds/rumble.mp3'),
     water: new Audio('game/sounds/water.mp3'),
+    waterSplash: new Audio('game/sounds/big-water-splash.mp3'),
     explosion: new Audio('game/sounds/explosion.mp3')
 };
 
 function stopAudio(element) {
     element.pause();
     element.currentTime = 0;
+}
+
+function stopSounds() {
+    Object.values(sounds).forEach(
+        function(e){
+            stopAudio(e);
+        }
+    );
 }
 
 // cronometer object and methods
@@ -650,15 +661,12 @@ var game = {
         pauseButton.innerText = text.resume;
 
         game.status = 'paused';
+        stopSounds();
+
         sounds.menuBlip.play();
 
         cronometer.pause();
         clearInterval(physicsInterval.valueOf());
-
-        stopAudio(sounds.engines);
-        sounds.water.pause();
-        sounds.meteor.pause();
-        sounds.impact.pause();
 
         ctx.save();
 
@@ -1062,11 +1070,7 @@ var menu = {
         this.current = 'settings';
         toggleExitButton();
 
-        game.volume = (volumeBtn.width * 100 / volumeBtn.maxWidth) * 0.01;
-
-        Object.entries(sounds).forEach(([key]) => {
-            sounds[key].volume = game.volume;
-        });
+        menu.changeVolume((volumeBtn.width * 100 / volumeBtn.maxWidth), false);
 
         ctx.save();
         this.drawBackground();
@@ -1124,6 +1128,21 @@ var menu = {
         ctx.fillText(Math.floor(game.volume * 100), canvasW/8*6 + 5, canvasH/8*5 + 25);
 
         ctx.restore();
+    },
+    changeVolume: function(value, refreshMenu = true) {
+
+        game.volume = value * 0.01;
+        volumeBtn.width = volumeBtn.maxWidth * value / 100;
+        volumeSliderText.innerText = `${Math.floor(value)}%`;
+        volumeSlider.value = value;
+
+        Object.entries(sounds).forEach(([key]) => {
+            sounds[key].volume = game.volume;
+        });
+
+        if (refreshMenu === true) {
+            menu.current === 'settings' ? menu.settings() : null;
+        }
     }
 };
 
@@ -1329,6 +1348,11 @@ model.draw = function() {
 
     if (model.status === 'crashed') {
 
+        if (game.scenario === 'ocean') {
+            if (!ctx.isPointInPath(landingPlatform, model.x - model.legsLength, platform.y) && !ctx.isPointInPath(landingPlatform, model.x + model.width + model.legsLength, platform.y)) {
+                sounds.waterSplash.play();
+            }
+        }
         sounds.explosion.play();
 
         var explosionRadius = 75;
@@ -1585,6 +1609,54 @@ var engines = {
 
         ctx.resetTransform();
         ctx.restore();
+    },
+    ignite: function(configuration) {
+
+        let conf = configuration.toLowerCase();
+
+        const SIDE_ENGINE_FUEL_RATE = 250;
+        const MAIN_ENGINE_FUEL_RATE = 500;
+        const FULL_ENGINE_FUEL_RATE = 1000;
+    
+        switch(conf) {
+            case 'left':
+
+                this.drawRight();
+
+                model.vx -= 0.5;
+                model.vy += -model.vy / 80;
+                model.fuel -= SIDE_ENGINE_FUEL_RATE;
+                model.inclination < model.inclinationLimit ? model.inclination += 0.5 : undefined;
+            break;
+            case 'right':
+
+                this.drawLeft();
+
+                model.vx += 0.5;
+                model.vy += -model.vy / 80;
+                model.fuel -= SIDE_ENGINE_FUEL_RATE;
+                model.inclination > -model.inclinationLimit ? model.inclination -= 0.5 : undefined;
+            break;
+            case 'vertical':
+
+                this.drawMain();
+
+                model.vy += -model.vy / 40;
+                model.fuel -= MAIN_ENGINE_FUEL_RATE;
+                model.inclination < 0 ? model.inclination += 0.5 : model.inclination > 0 ? model.inclination -= 0.5 : undefined;
+            break;
+            case 'full thrust':
+
+                this.drawLeft();
+                this.drawMain();
+                this.drawRight();
+
+                model.vy += -model.vy / 20;
+                model.vx += -model.vx / 100;
+                model.fuel -= FULL_ENGINE_FUEL_RATE;
+                model.inclination < 0 ? model.inclination += 0.5 : model.inclination > 0 ? model.inclination -= 0.5 : undefined;
+            break;
+        }
     }
 }
 
@@ -1853,6 +1925,9 @@ function displayGameMenu() {
     menu.active = true;
     menu.current = 'welcome';
     
+    volumeSlider.value = game.volume * 100;
+    volumeSliderText.innerText = `${Math.floor(game.volume * 100)}%`;
+    
     toggleExitButton();
 
     cronometer.cronometerCount !== undefined ? cronometer.stop() : undefined;
@@ -1945,7 +2020,6 @@ function displayGameMenu() {
     exitButton.innerText = text.back;
 }
 
-
 var soundTimeout;
 // Captures mouse and/or keyboard input
 function gameplayInput(e) {
@@ -1962,53 +2036,32 @@ function gameplayInput(e) {
             if (model.fuel > 0) {
                 if (e.type.includes('key')) {
                     if (e.code.match(/KeyW|ArrowUp/)) {
-                        model.vy += -model.vy / 40;
-                        engines.drawMain();
-                        model.fuel -= 500;
-                        model.inclination < 0 ? model.inclination += 0.5 : model.inclination > 0 ? model.inclination -= 0.5 : undefined;
+
+                        engines.ignite('vertical');
                     }
 
                     if (e.code === 'KeyL' || e.code === 'Space') {
 
-                        engines.drawLeft();
-                        engines.drawMain();
-                        engines.drawRight();
-
-                        model.vy += -model.vy / 20;
-                        model.vx += -model.vx / 100;
-                        model.fuel -= 1000;
-                        model.inclination < 0 ? model.inclination += 0.5 : model.inclination > 0 ? model.inclination -= 0.5 : undefined;
+                        engines.ignite('full thrust');
                     }
 
                     if (e.code.match(/KeyA|ArrowLeft/)) {
-                        engines.drawRight();
-                        model.vx -= 0.5;
-                        model.vy += -model.vy / 80;
-                        model.fuel -= 250;
-                        model.inclination < model.inclinationLimit ? model.inclination += 0.5 : undefined;
+
+                        engines.ignite('left');
                     }
                     if (e.code.match(/KeyD|ArrowRight/)) {
-                        engines.drawLeft();
-                        model.vx += 0.5;
-                        model.vy += -model.vy / 80;
-                        model.fuel -= 250;
-                        model.inclination > -model.inclinationLimit ? model.inclination -= 0.5 : undefined;
+                        
+                        engines.ignite('right');
                     }
                 }
 
                 if (Math.sign(e.movementX) === -1) {
-                    engines.drawRight();
-                    model.vx -= 0.5;
-                    model.vy += -model.vy / 80;
-                    model.fuel -= 250;
-                    model.inclination < model.inclinationLimit ? model.inclination += 0.5 : undefined;
+
+                    engines.ignite('left');
                 }
                 if (Math.sign(e.movementX) === 1) {
-                    engines.drawLeft();
-                    model.vx += 0.5;
-                    model.vy += -model.vy / 80;
-                    model.fuel -= 250;
-                    model.inclination > -model.inclinationLimit ? model.inclination -= 0.5 : undefined;
+                    
+                    engines.ignite('right');
                 }
 
                 if (e.movementY < -5) {
@@ -2447,6 +2500,8 @@ exitButton.onclick = () => {
     sounds.switch.play(); 
     menu.active === false ? game.reset() : displayGameMenu(); 
 };
+
+volumeSlider.addEventListener('input', ()=>{menu.changeVolume(volumeSlider.value)})
 
 function toggleExitButton() {
     game.status === 'reset' && menu.current === 'welcome' ? exitButton.style.display = 'none' : exitButton.removeAttribute('style');

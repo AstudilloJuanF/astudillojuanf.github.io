@@ -25,9 +25,9 @@
 		<link rel="stylesheet" type="text/css" href="css/styles.css">
 		<link rel="preload" as="font" type="font/woff2" href="fonts/carlito-regular-webfont.woff2" crossorigin="anonymous">
 		<link rel="preload" as="font" type="font/ttf" href="fonts/inconsolata-variable-width.ttf" crossorigin="anonymous">
-		<script type="application/javascript" src="scripts/main.js" async></script>
+		<script type="application/javascript" src="scripts/main.js" defer></script>
 		<script type="application/javascript" src="scripts/sharerbox.js" async></script>
-		<script type="application/javascript" src="scripts/scrolltop.js" async></script>
+		<script type="application/javascript" src="scripts/scrolltop.js" defer></script>
 		<script type="application/javascript" src="scripts/dev-badge.js" defer></script>
 	</head>
 	<body>
@@ -175,7 +175,8 @@
 								<div>
 									<h3>Size:</h3>
 									<img class="input-options-img" src="./icons/triangle-ruler.svg">
-									<label class="input-wrapping-label" for="buttons-size-input">Icons size: <input id="buttons-size-input" type="number" min="25" max="100" value="45" placeholder="number of pixels"></label>
+									<label class="input-wrapping-label" for="icon-size-input">Icon size: <input id="icon-size-input" type="number" min="25" max="100" value="45" placeholder="number of pixels"></label>
+									<input type="reset" id="default-icon-size-button" value="Default" data-default="45">
 								</div>
 							</div>
 						</div>
@@ -196,24 +197,25 @@
 					<ol>
 						<li>Download SharerBox's script file and store it on your server.</li><br>
 						<li>Load the script asynchronously within your webpage's <b>HTML</b> <code><span class="identifyer">&lt;head&gt;</span></code> tag using the <code><span class="html-attribute">async</span></code> attribute.<br>
-						<br>
-						<p><i class="example-subtitle">Example:</i> <b>&lt;/&gt;</b></p>
-						<pre class="code-snippet" title="paste within <head> section">
+							<br>
+							<p><i class="example-subtitle">Example:</i> <b>&lt;/&gt;</b></p>
+							<pre class="code-snippet" title="paste within <head> section">
 &lt;<span class="html-tag">script</span> <span class="html-attribute">type</span>=<span class="code-quotes">"application/javascript"</span> <span class="html-attribute">src</span>=<span class="code-quotes">"path/to/sharerbox.js"</span> <span class="html-attribute">async</span>&gt;&lt;/<span class="html-tag">script</span>&gt;
-						</pre>
+							</pre>
 						</li><br>
 						<li>Copy and paste this code snippet as it is (or configure it as listed bellow) anywhere within or after your <b>HTML</b> page's <code><span class="identifyer">&lt;body&gt;</span></code> tag to execute SharerBox.<br>
 							<br>
 							Or alternatively, use your own logic to execute the code.
-						<br>
+							<br>
 						<p><i class="example-subtitle">Snippet:</i> <b>&lt;/&gt;</b></p>
-					<pre class="code-snippet" title="paste within <body> section">
+						<pre class="code-snippet" title="paste within <body> section">
 &lt;<span class="html-tag">script</span>&gt;
 	<span class="method">window</span>.<span class="old-listener">addEventListener</span>(<span class="code-quotes">'load'</span>, <span class="function">function</span>() {
 		<span class="function-call">sharerbox</span>(<span class="code-comment">/* list your preferred social-networks and other options here, if blank options will be set to default */</span> );
 	});
 &lt;/<span class="html-tag">script</span>&gt;
-</pre></li><br>
+</pre>
+						</li><br>
 						<li>Save changes and load your site.</li><br>
 						<li>All done, SharerBox will now be enabled on your site.</li><br>
 					</ol>
