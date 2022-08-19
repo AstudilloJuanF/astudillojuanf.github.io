@@ -26,6 +26,7 @@ function firefoxBanner() {
 		`<style>
 			#firefox-banner-container {
 				box-sizing: border-box;
+				z-index: 9999;
 				position: fixed;
 				right: 1rem;
 				bottom: 1rem;
