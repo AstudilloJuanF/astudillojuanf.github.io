@@ -5,8 +5,13 @@ function firefoxBanner() {
 
 	let browserIsFirefox = false;
 
-	let bannerMsg = 'Let\'s make a free web together';
-	navigator.language.match(/^es$|^es-/ig) ? bannerMsg = 'Hagamos una web libre juntos' : null;
+	let bannerDescription = 'Let\'s make a free web together';
+	let bannerBtnMsg = 'Get Firefox';
+	
+	if (navigator.language.match(/^es$|^es-/ig)) {
+		bannerDescription = 'Hagamos una web libre juntos';
+		bannerBtnMsg = 'Obten Firefox';
+	}
 
 	if (!navigator.brave) {
 
@@ -106,8 +111,8 @@ function firefoxBanner() {
 						<img id="firefox-logo" src="/images/firefox-logo.svg">
 					</figure>
 					<div>
-						<p><span id="ff-banner-msg">${bannerMsg}</span></p>
-						<p class="ff-btn">Get Firefox</p>
+						<p><span id="ff-banner-msg">${bannerDescription}</span></p>
+						<p class="ff-btn">${bannerBtnMsg}</p>
 					</div>
 				</div>
 			</a>
