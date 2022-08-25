@@ -1,57 +1,105 @@
 function firefoxBanner() {
 
-	let browserInfo = navigator.userAgent;
-	let browser = 'Unknown';
+	var userAgent = navigator.userAgent;
+	var vendor = null;
+	if (navigator.vendor) {
+		vendor = navigator.vendor;
+	}
+	var browser = 'Unknown Web Browser';
 
-	let browserIsFirefox = false;
+	var isBrowserFirefox = false;
 
-	let bannerDescription = 'Let\'s make a free web together';
-	let bannerBtnMsg = 'Get Firefox';
-	
+	var deprecationWarning = 'Your current web browser is obsolete';
+	var callToAction = "Let's get a free web together";
+	var bannerBtnText = 'Get Firefox';
+
+	// Language
 	if (navigator.language.match(/^es$|^es-/ig)) {
-		bannerDescription = 'Hagamos una web libre juntos';
-		bannerBtnMsg = 'Obten Firefox';
+
+		deprecationWarning = 'Su navegador actual es obsoleto';
+		callToAction = 'Logremos una web libre juntos';
+		bannerBtnText = 'Obten Firefox';
 	}
 
-	if (!navigator.brave) {
+	try {
 
-		if (browserInfo.includes('Firefox')) {
+		// Firefox
+		if (userAgent.match(/firefox/ig) && vendor.match(/(^$|null)/ig)) {
 
-			browser = 'Mozilla Firefox';
-			browserIsFirefox = true;
+				browser = 'Mozilla Firefox';
+				isBrowserFirefox = true;
 		}
 
-		browserInfo.includes('Chrome') ? browser = 'Google Chrome' : null;
-		browserInfo.includes('Safari') ? browser = 'Safari Web Browser' : null;
+		// Microsoft Internet Explorer
+		userAgent.match(/\b(MSIE|Trident)/ig) ? browser = 'Internet Explorer' : null;
 
-	} else {
+		if (isBrowserFirefox === false) {
 
-		browser = 'Brave Browser';
-	}
+			var deprecationWarningHTML = '';
+			if (browser.match(/Internet Explorer/ig)) {
+				deprecationWarningHTML = `<p id="deprecation-warning"><b><span>${deprecationWarning}</span></b></p>`;
+			}
 
-	if (browserIsFirefox === false) {
-		document.body.insertAdjacentHTML('beforeEnd', 
-		`<link rel="stylesheet" type="text/css" href="/firefox-banner/styles.css">
-		<aside id="firefox-banner-container">
-			<a href="https://www.mozilla.org/firefox/new/" target="_BLANK">
-				<div id="firefox-banner-wrap">
-					<figure id="firefox-logo-fig">
-						<img id="firefox-logo" src="/firefox-banner/logo/firefox-logo.svg">
-					</figure>
-					<div>
-						<p><span id="ff-banner-msg">${bannerDescription}</span></p>
-						<p class="ff-btn">${bannerBtnMsg}</p>
-					</div>
-				</div>
-			</a>
-			<div id="close-firefox-banner">X</div>
-		</aside>`
-		);
+			// Check for XMLHttpRequest feature and fallback to IE legacy syntax if feature is not supported
+			var xhr = null;
+			if (window.XMLHttpRequest) {
+				xhr = new XMLHttpRequest();
+			} else {
+				xhr = new ActiveXObject('Microsoft.XMLHTTP');
+			}
 
-		let closeBannerBtn = document.querySelector('#firefox-banner-container').querySelector('#close-firefox-banner');
-		closeBannerBtn.addEventListener('click', (event) => {
-			document.querySelector('#firefox-banner-container').remove();
-		});
+			xhr.open('GET', '/firefox-banner/styles.css');
+			xhr.onreadystatechange = function() {
+				if (xhr.readyState === 4) {
+
+					var styles = document.createElement('link');
+					styles.rel = 'stylesheet';
+					styles.type = 'text/css';
+					styles.href = '/firefox-banner/styles.css';
+					styles.onload = function() {
+						document.body.insertAdjacentHTML('beforeEnd', 
+						`<aside id="firefox-banner-container">
+							<a href="https://www.mozilla.org/firefox/new/" target="_BLANK">
+								<div id="firefox-banner-wrap">
+									<figure id="firefox-logo-fig">
+										<img id="firefox-logo" src="/firefox-banner/logo/firefox-logo.svg">
+									</figure>
+									<div>
+										${deprecationWarningHTML}
+										<p><span id="ff-banner-msg">${callToAction}</span></p>
+										<p class="ff-btn">${bannerBtnText}</p>
+									</div>
+								</div>
+							</a>
+							<div id="ff-close-firefox-banner">X</div>
+						</aside>`
+						);
+
+						var closeBannerBtn = document.querySelector('#ff-close-firefox-banner');
+						closeBannerBtn.addEventListener('click', function(event) {
+							document.querySelector('#firefox-banner-container').remove();
+						});
+					}
+					document.body.insertAdjacentElement('beforeEnd', styles);
+				}
+			}
+			xhr.send();
+		}
+	} catch(error) {
+
+		if (browser.match(/Internet Explorer/ig)) {
+			
+			var alertMsg = 'Web browser: ' + browser;
+			alert(deprecationWarning + '\n' + bannerBtnText);
+
+			if (typeof console !== 'undefined') {
+				if (console.debug) {
+					console.debug(alertMsg);
+				} else {
+					console.info(alertMsg);
+				}
+			}
+		}
 	}
 }
 
