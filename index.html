@@ -45,9 +45,15 @@
 		<script type="application/javascript" src="scripts/main.js" defer></script>
 		<script type="application/javascript" src="/firefox-banner/firefox-banner.js" defer></script>
 		<script>
-			window.onload = function(){
-				sharerboxIcons('Twitter, Facebook, WhatsApp, LinkedIn, Reddit, Tumblr, Pinterest, Telegram');
-				sharerSetup('popup', 'right', 'black', 'hidden', 'Juan F. Astudillo - Programmer & Web Developer');
+			window.onload = function() {
+				sharerbox({
+					socialNetworks: 'Twitter, Facebook, WhatsApp, LinkedIn, Reddit, Tumblr, Pinterest, Telegram Trello',
+					behavior: 'popup',
+					position: 'right',
+					color: 'black',
+					visibility: 'hidden',
+					message: 'Juan F. Astudillo - Programmer & Web Developer'
+				});
 			};
 		</script>
 	</head>

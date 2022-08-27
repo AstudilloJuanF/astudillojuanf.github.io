@@ -47,8 +47,15 @@
 				var size;
 				window.innerHeight <= 600 || window.innerWidth <= 400? size = 30 : size = 45;
 
-				sharerboxIcons('twitter facebook whatsapp linkedin reddit tumblr pinterest telegram', size);
-				sharerSetup('popup', 'right', 'dimgray', 'hidden', 'Check out Booster Lander! SpaceX inspired JavaScript minigame by AstudilloJuanF');
+				sharerbox({
+					socialNetworks: 'Twitter, Facebook, WhatsApp, LinkedIn, Reddit, Tumblr, Pinterest, Telegram Trello',
+					behavior: 'popup',
+					position: 'right',
+					color: 'black',
+					iconSize: size,
+					visibility: 'hidden',
+					message: 'Juan F. Astudillo - Programmer & Web Developer',
+				});
 			}
 
 			window.addEventListener('load', launchSharerbox);
