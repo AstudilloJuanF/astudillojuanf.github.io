@@ -1,7 +1,7 @@
 function firefoxBanner() {
 
 	var userAgent = navigator.userAgent;
-	var vendor = navigator.vendor || 'unknown';
+	var vendor = navigator.vendor || '';
 	var browser = 'Unknown Web Browser';
 
 	var isBrowserFirefox = false;
