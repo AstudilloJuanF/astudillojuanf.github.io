@@ -1,24 +1,22 @@
 function firefoxBanner() {
 
 	var userAgent = navigator.userAgent;
-	var vendor = null;
-	if (navigator.vendor) {
-		vendor = navigator.vendor;
-	}
+	var vendor = navigator.vendor || 'unknown';
 	var browser = 'Unknown Web Browser';
 
 	var isBrowserFirefox = false;
 
 	var deprecationWarning = 'Your current web browser is obsolete';
 	var callToAction = "Let's get a free web together";
-	var bannerBtnText = 'Get Firefox';
+	var bannerBtnText = 'Download Mozilla Firefox';
+	var firefoxDownloadUrl = 'https://www.mozilla.org/firefox/new/';
 
 	// Language
 	if (navigator.language.match(/^es$|^es-/ig)) {
 
 		deprecationWarning = 'Su navegador actual es obsoleto';
 		callToAction = 'Logremos una web libre juntos';
-		bannerBtnText = 'Obten Firefox';
+		bannerBtnText = 'Descargar Mozilla Firefox';
 	}
 
 	try {
@@ -26,8 +24,8 @@ function firefoxBanner() {
 		// Firefox
 		if (userAgent.match(/firefox/ig) && vendor.match(/(^$|null)/ig)) {
 
-				browser = 'Mozilla Firefox';
-				isBrowserFirefox = true;
+			browser = 'Mozilla Firefox';
+			isBrowserFirefox = true;
 		}
 
 		// Microsoft Internet Explorer
@@ -59,7 +57,7 @@ function firefoxBanner() {
 					styles.onload = function() {
 						document.body.insertAdjacentHTML('beforeEnd', 
 						`<aside id="firefox-banner-container">
-							<a href="https://www.mozilla.org/firefox/new/" target="_BLANK">
+							<a href="${firefoxDownloadUrl}" target="_BLANK">
 								<div id="firefox-banner-wrap">
 									<figure id="firefox-logo-fig">
 										<img id="firefox-logo" src="/firefox-banner/logo/firefox-logo.svg">
@@ -85,12 +83,19 @@ function firefoxBanner() {
 			}
 			xhr.send();
 		}
-	} catch(error) {
+	} catch (error) {
+
+		if (window.console) {
+			console.error(error);
+		}
 
 		if (browser.match(/Internet Explorer/ig)) {
 			
 			var alertMsg = 'Web browser: ' + browser;
-			alert(deprecationWarning + '\n' + bannerBtnText);
+			var userPrompt = confirm(deprecationWarning + '\n' + bannerBtnText);
+			if (userPrompt) {
+				window.open(firefoxDownloadUrl, '_SELF');
+			}
 
 			if (typeof console !== 'undefined') {
 				if (console.debug) {
