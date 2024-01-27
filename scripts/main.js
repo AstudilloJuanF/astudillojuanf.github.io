@@ -1,26 +1,3 @@
-// responsive footer section
-
-const doc = document.body;
-const footer = document.getElementsByTagName('footer')[0];
-
-function responsivePageFooter() {
-    doc.style.minHeight = `${window.innerHeight}px`;
-
-    if (footer.offsetTop < doc.offsetHeight - footer.offsetHeight) {
-        footer.setAttribute('style', 'position: absolute; left: 0; right: 0; bottom: 0;');
-    } else {
-        footer.removeAttribute('style');
-    }
-}
-
-window.addEventListener('load', responsivePageFooter);
-window.addEventListener('resize', responsivePageFooter);
-window.addEventListener('deviceorientation', responsivePageFooter);
-
-
-// -----------------------------------------------------------------------------------
-
-
 			/* Languages */
 
 const languagesArray = ['es','en','de','ja'];

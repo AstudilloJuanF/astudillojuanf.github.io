@@ -1,9 +1,10 @@
 body{
-	position: relative;
 	box-sizing: border-box;
+	position: relative;
 	font-family: calibri, arial, verdana;
-	margin: 0;
+	min-height: 100vh;
 	padding: 0;
+	margin: 0;
 }
 
 nav {
@@ -63,6 +64,10 @@ header > h1 {
 
 h1{
 	margin: 0;
+}
+
+main {
+	min-height: 50vh;
 }
 
 #profession-title-wrap{
