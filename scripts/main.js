@@ -260,7 +260,6 @@ function requestProjectCard(url, projecType, projectTags) {
 			}
 
 			resizeCards();
-			responsivePageFooter();
 
 			var projectCards = projectSection.getElementsByClassName('project-card');
 

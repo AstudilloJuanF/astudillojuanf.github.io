@@ -2,7 +2,7 @@
 							  Sharerbox
 						(preview page adaptation)
 
-							Base Version: 0.10.0;
+							Base Version: 0.10.1;
 						Author: Juan Astudillo
 
 	* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -29,12 +29,41 @@ let sharerboxIconSize;
 
 function sharerbox(options) {
 
+	// Utilities 
+
+	function capitalize(string) {
+
+		typeof string !== 'string' ? string = string.toString() : null;
+		string = string.slice(0,1).toUpperCase() + string.slice(1, string.length);
+		
+		return string;
+	}
+
+	function getType(variable) {
+
+		return typeof variable;
+	}
+
+	function hasType(type, variable) {
+
+		if (typeof variable === type.toLowerCase()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	function warnWrongType(variable, expectedType) {
+		throw new TypeError(`Property ${Object.keys(variable)} must be of type ${expectedType}.`);
+	}
+
+	
 	// Supported & default social networks
 	let supportedSocialNetworks = 'twitter, facebook, whatsapp, linkedin, reddit, tumblr, pinterest, telegram, trello';
-	let DefaultsocialNetworks = 'twitter, facebook, whatsapp, reddit';
+	let defaultSocialNetworks = 'twitter, facebook, whatsapp, reddit';
 
 	// Default options
-	let socialNetworksList = DefaultsocialNetworks;
+	let socialNetworksList = defaultSocialNetworks;
     let iconSize = 45;
     let behavior = 'popup';
     let position = 'right';
@@ -51,18 +80,33 @@ function sharerbox(options) {
 			throw new TypeError(`List of options must be of type object, ${argumentType} given.`);
 		}
 
-		options.socialNetworks ? socialNetworksList = options.socialNetworks : null;
+		if (options.socialNetworks) {
+
+			if (options.socialNetworks === '') {
+				socialNetworksList = 'none';
+			} else {
+				socialNetworksList = options.socialNetworks;
+			}
+		}
 
 		if (socialNetworksList.toLowerCase() === 'all') {
 			socialNetworksList = supportedSocialNetworks;
 		}
 
 		options.iconSize ? iconSize = options.iconSize : null;
-		options.behavior ? behavior = options.behavior : null;
-		options.position ? position = options.position : null;
-		options.color ? color = options.color : null;
 		options.visibility ? visibility = options.visibility : null;
+
+		options.behavior ? behavior = options.behavior : null;
+		!hasType('string', behavior) ? warnWrongType({behavior}, 'string') : null;
+
+		options.position ? position = options.position : null;
+		!hasType('string', position) ? warnWrongType({position}, 'string') : null;
+
+		options.color ? color = options.color : null;
+		!hasType('string', color) ? warnWrongType({color}, 'string') : null;
+
 		options.message ? message = options.message : null;
+		!hasType('string', message) ? warnWrongType({message}, 'string') : null;
 	}
 
 
@@ -74,21 +118,17 @@ function sharerbox(options) {
 	if (typeof iconSize === 'number') {
 		sharerboxIconSize = Math.round(iconSize);
 	} else if (typeof iconSize === 'string' && iconSize.match(/[\d]+/ig)) {
-		sharerboxIconSize = Number(iconSize.replaceAll(/[a-z]*/ig, ''));
+		sharerboxIconSize = Number(iconSize.replaceAll(/[^\d]+/ig, ''));
 	} else {
-		console.warn('iconSize must be a number');
 		sharerboxIconSize = defaultSize;
+		console.warn(`Value of property ${Object.keys({iconSize})[0]} is not a number, icon size set to default (${sharerboxIconSize}px).\n\nAccepted Sharerbox icon size ranges are ${minSize}px-${maxSize}px`);
 	}
 
 	if (typeof sharerboxIconSize === 'number' && (sharerboxIconSize < minSize || sharerboxIconSize > maxSize)) {
 		sharerboxIconSize < minSize ? (sharerboxIconSize = minSize, maxMin = maxMin[1]) : undefined;
 		sharerboxIconSize > maxSize ? (sharerboxIconSize = maxSize, maxMin = maxMin[0]) : undefined;
 
-		console.warn(`Currently the ${maxMin} accepted size value for SharerBox's icons is ${sharerboxIconSize}px, icon size set to ${maxMin} by default.\n\nAccepted Sharerbox icon size ranges are ${minSize}px-${maxSize}px`);
-	} else if (typeof sharerboxIconSize != 'number') {
-		sharerboxIconSize = defaultSize;
-
-		console.warn(`The value introduced to set SharerBox icon size is not a number, icon size set to default (${sharerboxIconSize}px).\n\nAccepted Sharerbox icon size ranges are ${minSize}px-${maxSize}px`);
+		console.warn(` ${capitalize(maxMin)} accepted size value for iconSize is ${sharerboxIconSize}px, icon size set to ${maxMin}.\n\nAccepted Sharerbox icon size ranges are ${minSize}px-${maxSize}px`);
 	}
 
 	var sharerboxExtraIconSize = Math.floor(sharerboxIconSize * 88.889 / 100);
@@ -110,16 +150,11 @@ function sharerbox(options) {
 		</a>
 	</object>`;
 
-	var twitterHTML = `<!--Twitter-->
+	var twitterHTML = `<!--Twitter/X-->
 	<object class="sharerbox-icon-fig" id="tw-fig">
-		<a class="sharerbox-socialmedia-link" id="tweet-link" target="_blank">
-			<svg class="sharerbox-icon" id="tw-icon" viewBox="0 0 72 72">
-				<g transform="translate(-264 -43)">
-					<g transform="translate(264 43)">
-						<polygon id="Square" points="0 72 72 72 72 0 0 0" fill="#1da1f2"/>
-						<path d="m55.087 25.715c.62155 13.851-9.7066 29.294-27.991 29.294-5.561 0-10.737-1.6311-15.095-4.4252 5.2236.61566 10.439-.83267 14.579-4.0784-4.3084-.079021-7.9457-2.9261-9.1983-6.8383 1.5427.29485 3.0606.20876 4.4464-.16748-4.7365-.95297-8.0047-5.2189-7.8986-9.7809 1.328.73714 2.8471 1.1806 4.4617 1.2301-4.3863-2.9297-5.6282-8.7206-3.0476-13.147 4.8557 5.9584 12.111 9.8788 20.297 10.29-1.4354-6.1613 3.2375-12.093 9.5934-12.093 2.833 0 5.3923 1.1948 7.1874 3.1089 2.2433-.4411 4.3509-1.2608 6.2533-2.3895-.73478 2.2999-2.2963 4.2306-4.3296 5.4477 1.992-.23706 3.8897-.76662 5.6565-1.5498-1.3198 1.9755-2.9898 3.7093-4.9135 5.0974" fill="#fff"/>
-					</g>
-				</g>
+		<a class="sharerbox-socialmedia-link" id="twitter-x-link" target="_blank">
+			<svg viewBox="0 0 24 24" class="sharerbox-icon" id="tw-icon" fill="white">
+				<path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"></path>
 			</svg>
 		</a>
 	</object>`;
@@ -366,7 +401,8 @@ function sharerbox(options) {
 		}
 
 		#tw-fig{
-			background: #1da1f2;
+			background: #000000;
+
 		}
 
 		#ws-fig{
@@ -405,7 +441,7 @@ function sharerbox(options) {
 		.extra-buttons{
 			width: ${sharerboxExtraIconSize}px;
 			height: ${sharerboxExtraIconSize}px;
-			aspect-ration: 1 / 1;
+			aspect-ratio: 1 / 1;
 			border-radius: 100%;
 			border: solid 1px gray;
 			transition: 0.1s linear;
@@ -541,14 +577,14 @@ function sharerbox(options) {
 	setTimeout(function(){hiddenIconsContainer.style.boxShadow = '0 0 15px limegreen';}, 0);
 	setTimeout(function(){hiddenIconsContainer.style.boxShadow = 'none';}, 900);
 	setTimeout(function(){hiddenIconsContainer.transition = 'none'}, 2000);
-
+	
 	var socialIconsCollection = document.getElementsByClassName('sharerbox-icon');
 
 
 	// Link elements variables
 
 	var fbLink = document.getElementById('fb-link');
-	var twLink = document.getElementById('tweet-link');
+	var twLink = document.getElementById('twitter-x-link');
 	var wsLink = document.getElementById('ws-link');
 	var redditLink = document.getElementById('reddit-link');
 	var linkedinLink = document.getElementById('linkedin-link');
@@ -583,7 +619,7 @@ function sharerbox(options) {
 		var facebookURL = `https://www.facebook.com/sharer/sharer.php?u=${currentUrl}`;
 
 		// Twitter sharer hyperlink
-		var tweetURL = `https://twitter.com/intent/tweet?text=${customDescription}&url=${currentUrl}`;
+		var tweetURL = `https://x.com/intent/tweet?text=${customDescription}&url=${currentUrl}`;
 
 		// Whatsapp sharer hyperlink
 		var whatsappURL = `whatsapp://send?text=${customDescription}%20${currentUrl}`;
@@ -637,7 +673,7 @@ function sharerbox(options) {
 
 		tumblrLink ? tumblrLink.onclick = function() {openWindow(tumblrURL)} : undefined; // Tumblr
 
-		telegramLink ? telegramLink.onclick = function() {openWindow(telegramURL)} : undefined; // telegram
+		telegramLink ? telegramLink.onclick = function() {openWindow(telegramURL)} : undefined; // Telegram
 
 		trelloLink ? trelloLink.onclick = function() {openWindow(trelloURL)} : undefined; // Trello
 
@@ -646,22 +682,22 @@ function sharerbox(options) {
 
 		// HREF attributes for new tabs
 
-		fbLink ? fbLink.href = facebookURL: undefined; // Facebook
+		fbLink ? fbLink.href = facebookURL : undefined; // Facebook
 
-		twLink ? twLink.href = tweetURL: undefined; // Twitter
+		twLink ? twLink.href = tweetURL : undefined; // Twitter
 
-		wsLink ? wsLink.href = whatsappURL: undefined; // WhatsApp
+		wsLink ? wsLink.href = whatsappURL : undefined; // WhatsApp
 
-		redditLink ? redditLink.href = redditURL: undefined; // Reddit
+		redditLink ? redditLink.href = redditURL : undefined; // Reddit
 
-		linkedinLink ? linkedinLink.href = linkedinURL: undefined; // LinkedIn
+		linkedinLink ? linkedinLink.href = linkedinURL : undefined; // LinkedIn
 
-		pinterestLink ? pinterestLink.href = pinterestURL: undefined; // Pinterest
+		pinterestLink ? pinterestLink.href = pinterestURL : undefined; // Pinterest
 
-		tumblrLink ? tumblrLink.href = tumblrURL: undefined; // Tumblr
+		tumblrLink ? tumblrLink.href = tumblrURL : undefined; // Tumblr
 
-		telegramLink ? telegramLink.href = telegramURL: undefined; // telegram
-
+		telegramLink ? telegramLink.href = telegramURL : undefined; // Telegram
+		
 		trelloLink ? (trelloURL = trelloURL.replace('&mode=popup', ''), trelloLink.href = trelloURL) : undefined; // Trello
 
 	}

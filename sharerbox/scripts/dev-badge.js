@@ -116,7 +116,7 @@ var badgeHTML = `<section class="disclaimer">
 		</div>
 		<div id="badge-wrapper">
 			<figure>
-				<img src="/images/developer.jpg" alt="Developer">
+				<img src="/images/developer.png" alt="Developer">
 			</figure>
 			<div id="badge-text-wrapper">
 				<p style="font-weight:bold; margin-top: 0.5rem;">Juan Astudillo</p>
@@ -133,10 +133,10 @@ var badgeHTML = `<section class="disclaimer">
 					</object>
 					<p style="margin: auto 3px; padding:0;">Developer</p>
 				</div>
-				<a href="https://www.linkedin.com/in/juan-astudillo" target="_blank" title="Profile">LinkedIn</a>
-				<a href="https://www.fiverr.com/users/astudillo_juan" target="_blank" title="Commissions">Fiverr</a>
-				<a href="https://github.com/AstudilloJuanF" target="_blank" title="Repositories">GitHub</a>
-				<address><a href="mailto:astudillojuanfrancisco@gmail.com" title="astudillojuanfrancisco@gmail.com">E-mail</a></address>
+				<a rel="me" href="https://www.linkedin.com/in/astudillojuanf" target="_blank" title="Profile">LinkedIn</a>
+				<a rel="me" href="https://www.fiverr.com/users/astudillo_juan" target="_blank" title="Gigs & Commissions">Fiverr</a>
+				<a rel="me" href="https://github.com/AstudilloJuanF" target="_blank" title="Repositories">GitHub</a>
+				<address><a rel="me" href="mailto:astudillojuanfrancisco@gmail.com" title="astudillojuanfrancisco@gmail.com">E-mail</a></address>
 			</div>
 		</div>
 	</div>
