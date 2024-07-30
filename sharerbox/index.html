@@ -5,14 +5,14 @@
 		<meta http-equiv="content-type" content="text/html" charset="utf-8">
 		<meta http-equiv="content-language" content="en-US">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
-		<meta name="description" content="SharerBox project - Preview">
+		<meta name="description" content="SharerBox project - Sneak Preview">
 		<meta name="distribution" content="global">
 		<meta name="robots" content="all">
 		<meta name="author" content="Juan Francisco Astudillo Palacios">
 		<!-- Open Graph metadata -->
 			<meta property="og:type" content="website">
 			<meta property="og:title" content="SharerBox">
-			<meta property="og:description" content="SharerBox Project (live preview)">
+			<meta property="og:description" content="SharerBox Project - Sneak Preview">
 			<meta property="og:image" content="https://astudillojuanf.github.io/sharerbox/images/cover/sharerbox-opengraph-image.png">
 			<meta property="og:url" content="https://astudillojuanf.github.io/sharerbox/">
 			<meta property="og:locale" content="en_US">
@@ -21,6 +21,7 @@
 			<meta name="twitter:title" content="SharerBox">
 			<meta name="twitter:image" content="https://astudillojuanf.github.io/sharerbox/images/cover/sharerbox-opengraph-image.png">
 		<link rel="shortcut icon" type="image/svg+xml" href="icons/favicon.svg">
+		<link rel="stylesheet" type="text/css" href="/styles/base.css">
 		<link rel="stylesheet" type="text/css" href="css/fonts.css">
 		<link rel="stylesheet" type="text/css" href="css/styles.css">
 		<link rel="preload" as="font" type="font/woff2" href="fonts/carlito-regular-webfont.woff2" crossorigin="anonymous">
@@ -30,6 +31,7 @@
 		<script type="application/javascript" src="scripts/scrolltop.js" defer></script>
 		<script type="application/javascript" src="scripts/dev-badge.js" defer></script>
 		<script type="application/javascript" src="/firefox-banner/firefox-banner.js" defer></script>
+		<script type="application/javascript" src="/scripts/common-javascript.js" defer></script>
 	</head>
 	<body>
 		<script>
@@ -45,27 +47,43 @@
 			});
 		</script>
 		<header>
-			<h1><img style="width:1.5rem; height:1.5rem; transform: rotate(180deg)" src="./icons/favicon.svg"> SharerBox</h1>
+			<div id="page-title-wrapper">
+				<h1><img src="./icons/favicon.svg"> SharerBox</h1>
+			</div>
 		</header>
 		<main>
 			<article id="main-section">
+				<div class="javascript-not-enabled">
+					<section class="sections">
+						<div class="info-subsection-wrap">
+							<h2><strong>JavaScript:</strong></h2>
+							<div style="text-align: center">
+								<p><strong><i>Oops!</i></strong> It seems that your current device and/or browser does not support JavaScript or JavaScript has been disabled.</p>
+								<p>To display this page properly, please enable JavaScript and reload the page or enter this page from a different device or browser.</p>
+							</div>
+						</div>
+					</section>
+				</div>
 				<section class="sections">
-					<h2 style="color: black;"><img class="h2-title-img" src="./icons/down-arrow-green.svg"> Download</h2>
-					<p style="text-align: center;">Free, minimalist and lightweight JavaScript-based social-media sharer for websites.</p>
-					<a class="github-btn-link" href="https://www.github.com/AstudilloJuanF/sharerbox/releases/latest" target="_blank">
-						<figure class="github-btn">
-							<img src="./icons/favicon.svg" alt="SharerBox logo">
-							<p style="margin: 4px; text-align: center;"><b>SharerBox</b><br><i><span id="github-btn-sharerbox-version-text">Get the latest version</span></i></p>
-						</figure>
-					</a>
-					<div class="separator"></div>
-					<h2 style="color: black;">View Repository</h2>
-					<a class="github-btn-link" href="https://www.github.com/AstudilloJuanF/sharerbox/" target="_blank">
-						<figure class="github-btn">
-							<img id="github-logo" src="./icons/github-logo.svg" alt="GitHub logo">
-							<p style="margin: 4px; text-align: center;"><b>GitHub repository</b><br><i>SharerBox</i></p>
-						</figure>
-					</a>
+					<div class="info-subsection-wrap">
+						<h2><img class="h2-title-img" src="./icons/down-arrow-green.svg"> Download</h2>
+						<p style="text-align: center;">Free, minimalist and lightweight JavaScript-based social-media sharer for websites.</p>
+						<a class="github-btn-link" href="https://www.github.com/AstudilloJuanF/sharerbox/releases/latest" target="_blank">
+							<figure class="github-btn">
+								<img src="./icons/favicon.svg" alt="SharerBox logo">
+								<p style="margin: 4px; text-align: center;"><b>SharerBox</b><br><i><span id="github-btn-sharerbox-version-text">Get the latest version</span></i></p>
+							</figure>
+						</a>
+					</div>
+					<div class="info-subsection-wrap">
+						<h2>Repositories</h2>
+						<a class="github-btn-link" href="https://www.github.com/AstudilloJuanF/sharerbox/" target="_blank">
+							<figure class="github-btn">
+								<img id="github-logo" src="./icons/github-logo.svg" alt="GitHub logo">
+								<p style="margin: 4px; text-align: center;"><b>GitHub repository</b><br><i>SharerBox</i></p>
+							</figure>
+						</a>
+					</div>
 				</section>
 				<section class="sections gradient-background">
 					<h2><img class="h2-title-img" src="./icons/info-icon-circle.svg"> Overview:</h2>
@@ -73,9 +91,9 @@
 						<img id="cover-image" src="./images/cover/sharerbox.svg" alt="SharerBox - Screenshot" title="Cover">
 					</figure>
 					<div id="overview-text-box">
-						<p> &nbsp; <strong>SharerBox</strong> is a free, minimalistic and lightweight <i>JavaScript-Based</i> social-media sharebar feature developed to provide fast and easy-to-use social-media sharing integration for small websites by eliminating the need of loading heavy/bulky third-party social APIs, which generally have a negative impact on loading speeds and unauthorizedly recolect private user information.</p>
-						<p> &nbsp; Integrating SharerBox directly on your website for sharing social-media instead of external social APIs should significantly reduce loading speeds for visitors connected on slow networks, which will result on improved SEO indexation for your website and enhanced performance, user experience and device portability for your visitors, this specially for users connected from old computers or low-end devices. Plus, since there is no need for implementing obscure social third-party code there is no unauthorized recolection of private user information directly derived from SharerBox use.</p>
-						<p> &nbsp; SharerBox is currently a personal development project, but its implementation is intended to be intuitive for unexperienced users as well as very easy to customize for developers.</p>
+						<p><strong>SharerBox</strong> is a free, minimalistic and lightweight <i>JavaScript-Based</i> social-media sharebar feature developed to provide fast and easy-to-use social-media sharing integration for small websites by eliminating the need of loading heavy/bulky third-party social APIs, which generally have a negative impact on loading speeds and unauthorizedly recolect private user information.</p>
+						<p>Integrating SharerBox directly on your website for sharing social-media instead of external social APIs should significantly reduce loading speeds for visitors connected on slow networks, which will result on improved SEO indexation for your website and enhanced performance, user experience and device portability for your visitors, this specially for users connected from old computers or low-end devices. Plus, since there is no need for implementing obscure social third-party code there is no unauthorized recolection of private user information directly derived from SharerBox use.</p>
+						<p>SharerBox is currently a personal development project, but its implementation is intended to be intuitive for unexperienced users as well as very easy to customize for developers.</p>
 					</div>
 					<h3 style="text-align: center;">Support:</h3>
 					<div id="supported-icons-wrapper">
@@ -84,6 +102,18 @@
 								<img class="supported-icon" src="./icons/facebook-logo.svg" alt="Facebook logo">
 							</figure>
 							<p class="supported-icon-title">Facebook</p>
+						</div>
+						<div class="supported-icon-fig-wrapper">
+							<figure class="supported-icon-fig">
+								<img class="supported-icon" src="./icons/twitter-x-icon-soft-square.svg" alt="Twitter logo">
+							</figure>
+							<p class="supported-icon-title">X (Twitter)</p>
+						</div>
+						<div class="supported-icon-fig-wrapper">
+							<figure class="supported-icon-fig">
+								<img class="supported-icon" src="./icons/mastodon-icon-soft-square.svg" alt="Mastodon logo">
+							</figure>
+							<p class="supported-icon-title">Mastodon</p>
 						</div>
 						<div class="supported-icon-fig-wrapper">
 							<figure class="supported-icon-fig">
@@ -99,15 +129,15 @@
 						</div>
 						<div class="supported-icon-fig-wrapper">
 							<figure class="supported-icon-fig">
-								<img class="supported-icon" src="./icons/twitter-x-icon-soft-square.svg" alt="X (Twitter) logo">
-							</figure>
-							<p class="supported-icon-title">X (Twitter)</p>
-						</div>
-						<div class="supported-icon-fig-wrapper">
-							<figure class="supported-icon-fig">
 								<img class="supported-icon" src="./icons/reddit-icon-soft-square.svg" alt="Reddit logo">
 							</figure>
 							<p class="supported-icon-title">Reddit</p>
+						</div>
+						<div class="supported-icon-fig-wrapper">
+							<figure class="supported-icon-fig">
+								<img class="supported-icon" src="./icons/lemmy-icon-soft-square.svg" alt="Lemmy logo">
+							</figure>
+							<p class="supported-icon-title">Lemmy</p>
 						</div>
 						<div class="supported-icon-fig-wrapper">
 							<figure class="supported-icon-fig">
@@ -133,42 +163,40 @@
 							</figure>
 							<p class="supported-icon-title">Trello</p>
 						</div>
-						<div class="supported-icon-fig-wrapper">
-							<figure class="supported-icon-fig">
-								<img class="supported-icon" src="./icons/mastodon-icon-soft-square.svg" alt="Mastodon logo">
-							</figure>
-							<p class="supported-icon-title">Mastodon</p>
-						</div>
-						<div class="supported-icon-fig-wrapper">
-							<figure class="supported-icon-fig">
-								<img class="supported-icon" src="./icons/lemmy-icon-soft-square.svg" alt="Lemmy logo">
-							</figure>
-							<p class="supported-icon-title">Lemmy</p>
-						</div>
 					</div>
 				</section>
 				<section class="sections gradient-background">
-					<h2>Preview</h2>
+					<h2><img class="h2-title-img" src="./icons/preview.svg"> Preview</h2>
 					<div>
 						<div id="input-options-wrap">
 							<div id="input-socialmedia-wrap">
 								<h3>Social Networks</h3>
-								<img class="input-options-img" src="./icons/worldwide-icon-color.svg">
-								<div>
+								<div id="toggle-socialmedia-checkbox-wrapper">
 									<p class="toggle-socialmedia-checkbox">&nbsp; Mark All <input id="check-all" type="checkbox"></p>
 									<p class="toggle-socialmedia-checkbox">&nbsp; Unmark All <input id="uncheck-all" type="checkbox"></p>
 								</div>
-								<p><input class="social-network-check" type="checkbox" value="facebook" checked> - <img class="h3-title-img" src="./icons/facebook-logo.svg"> Facebook</p>
-								<p><input class="social-network-check" type="checkbox" value="whatsapp" checked> - <img class="h3-title-img" src="./icons/whatsapp-icon-soft-square.svg"> WhatsApp</p>
-								<p><input class="social-network-check" type="checkbox" value="linkedin" checked> - <img class="h3-title-img" src="./icons/linkedin-logo.svg"> LinkedIn</p>
-								<p><input class="social-network-check" type="checkbox" value="twitter" checked> - <img class="h3-title-img" src="./icons/twitter-x-icon-soft-square.svg"> X (Twitter)</p>
-								<p><input class="social-network-check" type="checkbox" value="reddit" checked> - <img class="h3-title-img" src="./icons/reddit-icon-soft-square.svg"> Reddit</p>
-								<p><input class="social-network-check" type="checkbox" value="tumblr"> - <img class="h3-title-img" src="./icons/tumblr-icon-soft-square.svg"> Tumblr</p>
-								<p><input class="social-network-check" type="checkbox" value="pinterest"> - <img class="h3-title-img" src="./icons/pinterest-icon-soft-square.svg"> Pinterest</p>
-								<p><input class="social-network-check" type="checkbox" value="telegram"> - <img class="h3-title-img" src="./icons/telegram-icon-soft-square.svg"> Telegram</p>
-								<p><input class="social-network-check" type="checkbox" value="trello"> - <img class="h3-title-img" src="./icons/trello-logo.svg"> Trello</p>
-								<p><input class="social-network-check" type="checkbox" value="mastodon"> - <img class="h3-title-img" src="./icons/mastodon-icon-soft-square.svg"> Mastodon</p>
-								<p><input class="social-network-check" type="checkbox" value="lemmy"> - <img class="h3-title-img" src="./icons/lemmy-icon-soft-square.svg"> Lemmy</p>
+								<input class="social-network-check" id="social-network-check--twitterX" type="checkbox" value="x" checked hidden>
+								<label for="social-network-check--twitterX"><img class="h3-title-img" src="./icons/twitter-x-icon-soft-square.svg"><p>X (Twitter)</p></label>
+								<input class="social-network-check" id="social-network-check--mastodon" type="checkbox" value="mastodon" checked hidden>
+								<label for="social-network-check--mastodon"><img class="h3-title-img" src="./icons/mastodon-icon-soft-square.svg"><p>Mastodon</p></label>
+								<input class="social-network-check" id="social-network-check--facebook" type="checkbox" value="facebook" checked hidden>
+								<label for="social-network-check--facebook"><img class="h3-title-img" src="./icons/facebook-logo.svg"><p>Facebook</p></label>
+								<input class="social-network-check" id="social-network-check--whatsapp" type="checkbox" value="whatsapp" checked hidden>
+								<label for="social-network-check--whatsapp"><img class="h3-title-img" src="./icons/whatsapp-icon-soft-square.svg"><p>WhatsApp</p></label>
+								<input class="social-network-check" id="social-network-check--linkedin" type="checkbox" value="linkedin" checked hidden>
+								<label for="social-network-check--linkedin"><img class="h3-title-img" src="./icons/linkedin-logo.svg"><p>LinkedIn</p></label>
+								<input class="social-network-check" id="social-network-check--reddit" type="checkbox" value="reddit" checked hidden>
+								<label for="social-network-check--reddit"><img class="h3-title-img" src="./icons/reddit-icon-soft-square.svg"><p>Reddit</p></label>
+								<input class="social-network-check" id="social-network-check--lemmy" type="checkbox" value="lemmy" checked hidden>
+								<label for="social-network-check--lemmy"><img class="h3-title-img" src="./icons/lemmy-icon-soft-square.svg"><p>Lemmy</p></label>
+								<input class="social-network-check" id="social-network-check--tumblr" type="checkbox" value="tumblr" hidden>
+								<label for="social-network-check--tumblr"><img class="h3-title-img" src="./icons/tumblr-icon-soft-square.svg"><p>Tumblr</p></label>
+								<input class="social-network-check" id="social-network-check--pinterest" type="checkbox" value="pinterest" hidden>
+								<label for="social-network-check--pinterest"><img class="h3-title-img" src="./icons/pinterest-icon-soft-square.svg"><p>Pinterest</p></label>
+								<input class="social-network-check" id="social-network-check--telegram" type="checkbox" value="telegram" hidden>
+								<label for="social-network-check--telegram"><img class="h3-title-img" src="./icons/telegram-icon-soft-square.svg"><p>Telegram</p></label>
+								<input class="social-network-check" id="social-network-check--trello" type="checkbox" value="trello" hidden>
+								<label for="social-network-check--trello"><img class="h3-title-img" src="./icons/trello-logo.svg"><p>Trello</p></label>
 							</div>
 							<div id="input-options-flex-wrap">
 								<div>
@@ -318,6 +346,9 @@
 </pre>
 				</section>
 			</article>
+			<div>
+				<a target="_BLANK" href="https://github.com/astudillojuanf/sharerbox/issues">Bugs, Issues & Requests</a>
+			</div>
 		</main>
 		<footer>
 			<h3><a href="/" title="Homepage">Homepage</a></h3>
