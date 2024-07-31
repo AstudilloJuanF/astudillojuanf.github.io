@@ -249,15 +249,16 @@ a{
 }
 
 .supported-icon-title {
+	z-index: 1;
 	position: absolute;
-	bottom: -3rem;
+	top: calc(100% + 0.5rem);
 	display: block;
-	background: black;
+	background: rgba(0,0,0, 0.75);
 	opacity: 0;
-	font-weight: bold;
+	font-weight: normal;
 	color: white;
 	text-align: center;
-	padding: 4px;
+	padding: 4px 8px;
 	margin:auto;
 	border-radius: 4px;
 	box-shadow: 0 0 2px rgba(255,255,255, 0.5)
@@ -338,9 +339,10 @@ a{
 #input-socialmedia-wrap > label {
 	display: inline-block;
 	background: #F2F2F2;
-	padding: 6px;
+	padding: 1rem;
 	border-radius: 4px;
-	min-width: 10%;
+	width: 10%;
+	min-width: 90px;
 	margin: 0.5rem;
 	box-shadow: 0 0 4px rgba(0,0,0, 0.125);
 }
@@ -355,6 +357,7 @@ a{
 }
 
 #input-socialmedia-wrap > label p {
+	font-size: 12.5px;
 	margin-bottom: 0;
 }
 
