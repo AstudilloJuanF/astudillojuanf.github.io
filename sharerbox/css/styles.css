@@ -213,7 +213,8 @@ a{
 #supported-icons-wrapper{
 	display: flex;
 	flex-flow: row wrap;
-	justify-content: space-evenly;
+	justify-content: center;
+	gap: 1rem;
 }
 
 .supported-icon-fig-wrapper{
@@ -222,7 +223,6 @@ a{
 	flex-flow: row wrap;
 	justify-content: center;
 	padding: 0;
-	margin: 2rem;
 	margin-bottom: 0;
 }
 
@@ -343,6 +343,7 @@ a{
 	border-radius: 4px;
 	width: 10%;
 	min-width: 90px;
+	aspect-ratio: 1 / 1;
 	margin: 0.5rem;
 	box-shadow: 0 0 4px rgba(0,0,0, 0.125);
 }
@@ -358,7 +359,8 @@ a{
 
 #input-socialmedia-wrap > label p {
 	font-size: 12.5px;
-	margin-bottom: 0;
+	margin: auto;
+	margin-top: 0.5rem;
 }
 
 #input-socialmedia-wrap .toggle-socialmedia-checkbox {
